@@ -1,0 +1,12 @@
+type User {
+    id: ID!
+    email: String!
+}
+
+type Query {
+    me: User
+}
+
+type Mutation {
+    signIn(email: String! password: String!): String!
+}

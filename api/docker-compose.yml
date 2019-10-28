@@ -1,0 +1,6 @@
+multi:
+  image: leocavalcante/dwoole:dev
+  volumes:
+    - .:/app
+  ports:
+    - 8000:8000

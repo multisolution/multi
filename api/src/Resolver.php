@@ -1,0 +1,8 @@
+<?php declare(strict_types=1);
+
+namespace Multi;
+
+interface Resolver
+{
+    public function __invoke(array $root, array $args, Context $context);
+}
