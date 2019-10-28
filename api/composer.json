@@ -35,5 +35,8 @@
     "psr-4": {
       "Multi\\Test\\": "tests/"
     }
+  },
+  "scripts": {
+    "test": "phpunit"
   }
 }
