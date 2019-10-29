@@ -10,7 +10,7 @@ use function Siler\array_get;
 
 class SignIn implements Resolver
 {
-    public function __invoke(array $root, array $args, Context $context)
+    public function __invoke($root, array $args, Context $context)
     {
         $email = array_get($args, 'email');
         $password = array_get($args, 'password');

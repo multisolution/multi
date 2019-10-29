@@ -7,7 +7,7 @@ use Multi\Resolver;
 
 class Me implements Resolver
 {
-    public function __invoke(array $root, array $args, Context $context)
+    public function __invoke($root, array $args, Context $context)
     {
         return $context->user;
     }

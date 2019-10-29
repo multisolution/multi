@@ -22,6 +22,7 @@ type Meeting {
 
 type Query {
     me: User
+    meetingRooms: [MeetingRoom]!
 }
 
 type Mutation {
