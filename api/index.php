@@ -5,7 +5,6 @@ namespace Multi;
 use Firebase\JWT\JWT;
 use GraphQL\Error\Debug;
 use GraphQL\Error\FormattedError;
-use GraphQL\Error\UserError;
 use Monolog\Handler\StreamHandler;
 use Multi\User\User;
 use Siler\Dotenv as Env;
@@ -33,7 +32,7 @@ $context->appKey = Env\env('APP_KEY');
 $context->id = new UniqueId();
 
 include "$base_dir/seed.php";
-debug($context->debug ? Debug::INCLUDE_DEBUG_MESSAGE | Debug::RETHROW_INTERNAL_EXCEPTIONS : 0);
+debug($context->debug ? Debug::INCLUDE_DEBUG_MESSAGE | Debug::INCLUDE_TRACE : 0);
 
 $handler = function () use ($schema, $context) {
     try {
@@ -43,23 +42,8 @@ $handler = function () use ($schema, $context) {
         })->return();
 
         $result = execute($schema, decode(raw()), [], $context);
-    } catch (UserError $error) {
-        $result = FormattedError::createFromException($error);
     } catch (Throwable $exception) {
-        if ($context->debug) {
-            $result = [
-                'error' => true,
-                'message' => $exception->getMessage(),
-                'trace' => $exception->getTrace()
-            ];
-        } else {
-            $result = [
-                'error' => true,
-                'message' => 'Internal',
-            ];
-
-            Log\error($exception->getMessage());
-        }
+        $result = FormattedError::createFromException($exception);
     } finally {
         json($result);
     }
