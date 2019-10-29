@@ -3,7 +3,6 @@
 namespace Multi\Meeting;
 
 use Multi\Context;
-use Multi\Meeting;
 use Multi\Resolver;
 
 class Create implements Resolver

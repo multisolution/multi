@@ -2,6 +2,8 @@
 
 namespace Multi;
 
+use Multi\User\User;
+
 class Context
 {
     /** @var bool */

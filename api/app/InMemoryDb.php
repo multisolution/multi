@@ -2,6 +2,10 @@
 
 namespace Multi;
 
+use Multi\Meeting\Meeting;
+use Multi\MeetingRoom\MeetingRoom;
+use Multi\User\User;
+
 class InMemoryDb implements Database
 {
     /** @var User[] */

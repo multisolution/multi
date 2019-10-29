@@ -1,7 +1,8 @@
 <?php declare(strict_types=1);
 
-use Multi\MeetingRoom;
-use Multi\User;
+
+use Multi\MeetingRoom\MeetingRoom;
+use Multi\User\User;
 
 $root = new User();
 $root->email = 'multi@multisolution.art.br';

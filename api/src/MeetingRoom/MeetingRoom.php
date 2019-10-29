@@ -1,6 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Multi;
+namespace Multi\MeetingRoom;
+
+use Multi\Meeting\Meeting;
 
 class MeetingRoom
 {

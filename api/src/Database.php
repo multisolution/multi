@@ -2,6 +2,10 @@
 
 namespace Multi;
 
+use Multi\Meeting\Meeting;
+use Multi\MeetingRoom\MeetingRoom;
+use Multi\User\User;
+
 interface Database
 {
     public function userById(string $id): ?User;

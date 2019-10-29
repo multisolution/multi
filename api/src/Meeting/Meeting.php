@@ -1,8 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace Multi;
+namespace Multi\Meeting;
 
 use DateTime;
+use Multi\MeetingRoom\MeetingRoom;
+use Multi\User\User;
 
 class Meeting
 {
