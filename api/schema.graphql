@@ -1,6 +1,23 @@
+scalar DateTime
+
 type User {
     id: ID!
     email: String!
+}
+
+type MeetingRoom {
+    id: ID!
+    roomNumber: Int!
+    calendar: [Meeting]!
+    description: String
+}
+
+type Meeting {
+    id: ID!
+    room: MeetingRoom!
+    host: User!
+    startsAt: DateTime!
+    endsAt: DateTime!
 }
 
 type Query {
