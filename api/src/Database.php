@@ -30,4 +30,10 @@ interface Database
      * @return Meeting[]
      */
     public function meetingsByRoom(MeetingRoom $room): array;
+
+    /**
+     * @param User $host
+     * @return Meeting[]
+     */
+    public function meetingsByHost(User $host): array;
 }

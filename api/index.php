@@ -4,7 +4,10 @@ namespace Multi;
 
 use Firebase\JWT\JWT;
 use GraphQL\Error\Debug;
+use GraphQL\Error\FormattedError;
+use GraphQL\Error\UserError;
 use Monolog\Handler\StreamHandler;
+use Multi\User\User;
 use Siler\Dotenv as Env;
 use Siler\Monolog as Log;
 use Throwable;
@@ -40,13 +43,21 @@ $handler = function () use ($schema, $context) {
         })->return();
 
         $result = execute($schema, decode(raw()), [], $context);
+    } catch (UserError $error) {
+        $result = FormattedError::createFromException($error);
     } catch (Throwable $exception) {
-        $result = [
-            'error' => true,
-            'message' => $context->debug ? $exception->getMessage() : 'Internal error',
-        ];
+        if ($context->debug) {
+            $result = [
+                'error' => true,
+                'message' => $exception->getMessage(),
+                'trace' => $exception->getTrace()
+            ];
+        } else {
+            $result = [
+                'error' => true,
+                'message' => 'Internal',
+            ];
 
-        if (!$context->debug) {
             Log\error($exception->getMessage());
         }
     } finally {

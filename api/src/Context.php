@@ -8,7 +8,7 @@ class Context
 {
     /** @var bool */
     public $debug;
-    /** @var User */
+    /** @var User|null */
     public $user;
     /** @var Database */
     public $db;

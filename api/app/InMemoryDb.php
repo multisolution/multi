@@ -98,4 +98,17 @@ class InMemoryDb implements Database
 
         return $results;
     }
+
+    /**
+     * @param User $host
+     * @return Meeting[]
+     */
+    public function meetingsByHost(User $host): array
+    {
+        $results = array_filter($this->meetings, function (Meeting $meeting) use ($host): bool {
+            return $meeting->host === $host;
+        });
+
+        return $results;
+    }
 }

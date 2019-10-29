@@ -9,6 +9,7 @@ return [
     'Query' => [
         'me' => new User\Me(),
         'meetingRooms' => new MeetingRoom\MeetingRooms(),
+        'myMeetings' => new Meeting\MyMeetings(),
     ],
     'Mutation' => [
         'signIn' => new User\SignIn(),
