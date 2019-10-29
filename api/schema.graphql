@@ -27,4 +27,11 @@ type Query {
 
 type Mutation {
     signIn(email: String! password: String!): String!
+    createMeeting(input: MeetingInput!): Meeting
+}
+
+input MeetingInput {
+    roomId: ID!
+    startsAt: DateTime!
+    endsAt: DateTime!
 }

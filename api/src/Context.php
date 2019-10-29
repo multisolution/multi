@@ -12,4 +12,6 @@ class Context
     public $db;
     /** @var string */
     public $appKey;
+    /** @var IDGenerator */
+    public $id;
 }

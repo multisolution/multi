@@ -11,6 +11,8 @@ return [
         'meetingRooms' => new MeetingRoom\MeetingRooms(),
     ],
     'Mutation' => [
-        'signIn' => new User\SignIn()
-    ]
+        'signIn' => new User\SignIn(),
+        'createMeeting' => new Meeting\Create(),
+    ],
+    'DateTime' => new DateTimeScalar()
 ];

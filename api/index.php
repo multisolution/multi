@@ -27,13 +27,9 @@ $context = new Context();
 $context->debug = Env\bool_val('APP_DEBUG', false);
 $context->db = new InMemoryDb();
 $context->appKey = Env\env('APP_KEY');
+$context->id = new UniqueId();
 
-// seed
-$root = new User();
-$root->email = 'multi@multisolution.art.br';
-$root->password = password_hash('multi', PASSWORD_DEFAULT);
-$context->db->insertUser($root);
-
+include "$base_dir/seed.php";
 debug($context->debug ? Debug::INCLUDE_DEBUG_MESSAGE | Debug::RETHROW_INTERNAL_EXCEPTIONS : 0);
 
 $handler = function () use ($schema, $context) {
