@@ -1,6 +1,5 @@
 <?php declare(strict_types=1);
 
-
 use Multi\MeetingRoom\MeetingRoom;
 use Multi\User\User;
 

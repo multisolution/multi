@@ -3,8 +3,8 @@
 namespace Multi\Test\User;
 
 use Multi\Context;
-use Multi\User;
 use Multi\User\Me;
+use Multi\User\User;
 use PHPUnit\Framework\TestCase;
 
 class MeTest extends TestCase
