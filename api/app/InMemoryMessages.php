@@ -2,7 +2,7 @@
 
 namespace Multi;
 
-class HardCodedMessages implements Messages
+class InMemoryMessages implements Messages
 {
     /** @var array */
     private $messages;
