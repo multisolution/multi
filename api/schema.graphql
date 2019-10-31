@@ -29,10 +29,16 @@ type Query {
 type Mutation {
     signIn(email: String! password: String!): String!
     createMeeting(input: MeetingInput!): Meeting
+    createMeetingRoom(input: MeetingRoomInput!): MeetingRoom
 }
 
 input MeetingInput {
     roomId: ID!
     startsAt: DateTime!
     endsAt: DateTime!
+}
+
+input MeetingRoomInput {
+    roomNumber: Int!
+    description: String
 }

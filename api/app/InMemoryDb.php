@@ -111,4 +111,17 @@ class InMemoryDb implements Database
 
         return $results;
     }
+
+    public function meetingRoomByNumber(int $roomNumber): ?MeetingRoom
+    {
+        $results = array_filter($this->meetingRooms, function (MeetingRoom $meetingRoom) use ($roomNumber): bool {
+            return $meetingRoom->roomNumber === $roomNumber;
+        });
+
+        if (empty($results)) {
+            return null;
+        }
+
+        return $results[array_key_first($results)];
+    }
 }

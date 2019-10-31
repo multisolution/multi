@@ -16,6 +16,6 @@ class Context
     public $appKey;
     /** @var IDGenerator */
     public $id;
-    /** @var string */
-    public $userToken;
+    /** @var Messages */
+    public $messages;
 }

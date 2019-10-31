@@ -36,4 +36,6 @@ interface Database
      * @return Meeting[]
      */
     public function meetingsByHost(User $host): array;
+
+    public function meetingRoomByNumber(int $roomNumber): ?MeetingRoom;
 }

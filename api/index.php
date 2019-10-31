@@ -30,6 +30,7 @@ $context->debug = Env\bool_val('APP_DEBUG', false);
 $context->db = new InMemoryDb();
 $context->appKey = Env\env('APP_KEY');
 $context->id = new UniqueId();
+$context->messages = new HardCodedMessages();
 
 include "$base_dir/seed.php";
 debug($context->debug ? Debug::INCLUDE_DEBUG_MESSAGE | Debug::INCLUDE_TRACE : 0);

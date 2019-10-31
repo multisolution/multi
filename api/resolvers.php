@@ -15,6 +15,7 @@ return [
         'signIn' => new User\SignIn(),
         'signOut' => new User\SignOut(),
         'createMeeting' => new Meeting\Create(),
+        'createMeetingRoom' => new MeetingRoom\Create(),
     ],
     'DateTime' => new DateTimeScalar()
 ];
