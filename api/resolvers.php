@@ -13,6 +13,7 @@ return [
     ],
     'Mutation' => [
         'signIn' => new User\SignIn(),
+        'signOut' => new User\SignOut(),
         'createMeeting' => new Meeting\Create(),
     ],
     'DateTime' => new DateTimeScalar()
