@@ -14,7 +14,7 @@ return [
     'Mutation' => [
         'signIn' => new User\SignIn(),
         'signOut' => new User\SignOut(),
-        'createMeeting' => new Meeting\Create(),
+        'createMeeting' => new Meeting\Create(new Meeting\Conflicting()),
         'createMeetingRoom' => new MeetingRoom\Create(),
     ],
     'DateTime' => new DateTimeScalar()

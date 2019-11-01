@@ -8,10 +8,18 @@ use Multi\Resolver;
 
 class Create implements Resolver
 {
+    /** @var Conflicting */
+    private $conflicting;
+
+    public function __construct(Conflicting $conflicting)
+    {
+        $this->conflicting = $conflicting;
+    }
+
     public function __invoke($root, array $args, Context $context)
     {
         if ($context->user === null) {
-            throw new UserError('Meetings without hosts not allowed');
+            throw new UserError($context->messages->get('no_host'));
         }
 
         $meeting = new Meeting();
@@ -20,6 +28,13 @@ class Create implements Resolver
         $meeting->startsAt = $args['input']['startsAt'];
         $meeting->endsAt = $args['input']['endsAt'];
         $meeting->host = $context->user;
+
+        // Lazy-load room calendar
+        $meeting->room->calendar = $context->db->meetingsByRoom($meeting->room);
+
+        if (($this->conflicting)($meeting)) {
+            throw new UserError($context->messages->get('conflicting_meeting'));
+        }
 
         $context->db->insertMeeting($meeting);
 
