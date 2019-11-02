@@ -10,6 +10,9 @@ class DateTimeScalar extends CustomScalarType
     /** @var string */
     private const FORMAT = 'Y-m-d H:i:s';
 
+    /** @var string */
+    public $name = 'DateTime';
+
     public function serialize($value)
     {
         return $value->format(self::FORMAT);

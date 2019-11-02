@@ -38,4 +38,8 @@ interface Database
     public function meetingsByHost(User $host): array;
 
     public function meetingRoomByNumber(int $roomNumber): ?MeetingRoom;
+
+    public function meetingById(string $id): ?Meeting;
+
+    public function updateMeeting(?Meeting $meeting): void;
 }

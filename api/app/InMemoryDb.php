@@ -5,6 +5,7 @@ namespace Multi;
 use Multi\Meeting\Meeting;
 use Multi\MeetingRoom\MeetingRoom;
 use Multi\User\User;
+use function Siler\Functional\head;
 
 class InMemoryDb implements Database
 {
@@ -123,5 +124,20 @@ class InMemoryDb implements Database
         }
 
         return $results[array_key_first($results)];
+    }
+
+    public function meetingById(string $id): ?Meeting
+    {
+        $results = array_filter($this->meetings, function (Meeting $meeting) use ($id): bool {
+            return $meeting->id === $id;
+        });
+
+        return head($results);
+    }
+
+    public function updateMeeting(?Meeting $meeting): void
+    {
+        $index = array_search($meeting, $this->meetings);
+        array_splice($this->meetings, $index, 1, [$meeting]);
     }
 }

@@ -18,6 +18,12 @@ type Meeting {
     host: User!
     startsAt: DateTime!
     endsAt: DateTime!
+  status: MeetingStatus!
+}
+
+enum MeetingStatus {
+  SCHEDULED
+  CANCELLED
 }
 
 type Query {
@@ -30,6 +36,7 @@ type Mutation {
     signIn(email: String! password: String!): String!
     createMeeting(input: MeetingInput!): Meeting
     createMeetingRoom(input: MeetingRoomInput!): MeetingRoom
+  cancelMeeting(meetingId: ID!): Boolean
 }
 
 input MeetingInput {

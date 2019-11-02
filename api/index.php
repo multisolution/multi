@@ -44,10 +44,13 @@ $handler = function () use ($schema, $context) {
 
         $result = execute($schema, decode(raw()), [], $context);
     } catch (Throwable $exception) {
+        Log\error($exception->getMessage());
         $result = FormattedError::createFromException($exception);
     } finally {
         json($result);
     }
 };
 
-http($handler, 8000)->start();
+$server = http($handler, 8000);
+$server->set(['worker_num' => 1]); // While in dev
+$server->start();
