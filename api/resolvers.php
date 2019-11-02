@@ -16,6 +16,7 @@ return [
         'signOut' => new User\SignOut(),
         'createMeeting' => new Meeting\Create(new Meeting\Conflicting()),
         'createMeetingRoom' => new MeetingRoom\Create(),
+        'cancelMeeting' => new Meeting\Cancel(),
     ],
     'DateTime' => new DateTimeScalar()
 ];

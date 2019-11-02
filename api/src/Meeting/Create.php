@@ -4,6 +4,7 @@ namespace Multi\Meeting;
 
 use GraphQL\Error\UserError;
 use Multi\Context;
+use Multi\Meeting\Status\Scheduled;
 use Multi\Resolver;
 
 class Create implements Resolver
@@ -28,6 +29,7 @@ class Create implements Resolver
         $meeting->startsAt = $args['input']['startsAt'];
         $meeting->endsAt = $args['input']['endsAt'];
         $meeting->host = $context->user;
+        $meeting->status = new Scheduled();
 
         // Lazy-load room calendar
         $meeting->room->calendar = $context->db->meetingsByRoom($meeting->room);
