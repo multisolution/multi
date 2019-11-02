@@ -27,5 +27,7 @@ class Cancel implements Resolver
 
         $meeting->status = new Cancelled();
         $context->db->updateMeeting($meeting);
+
+        return true;
     }
 }

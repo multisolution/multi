@@ -4,4 +4,5 @@ namespace Multi\Meeting\Status;
 
 interface Status
 {
+    static public function scalar(): string;
 }

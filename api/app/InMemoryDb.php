@@ -138,6 +138,6 @@ class InMemoryDb implements Database
     public function updateMeeting(?Meeting $meeting): void
     {
         $index = array_search($meeting, $this->meetings);
-        array_splice($this->meetings, $index, 1, $meeting);
+        array_splice($this->meetings, $index, 1, [$meeting]);
     }
 }

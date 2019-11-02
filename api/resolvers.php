@@ -3,6 +3,9 @@
 namespace Multi;
 
 return [
+    'Meeting' => [
+        'status' => new Meeting\Status\Parser(),
+    ],
     'MeetingRoom' => [
         'calendar' => new MeetingRoom\Calendar(),
     ],
@@ -18,5 +21,5 @@ return [
         'createMeetingRoom' => new MeetingRoom\Create(),
         'cancelMeeting' => new Meeting\Cancel(),
     ],
-    'DateTime' => new DateTimeScalar()
+    'DateTime' => new DateTimeScalar(),
 ];
