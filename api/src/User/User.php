@@ -10,4 +10,6 @@ class User
     public $email;
     /** @var string */
     public $password;
+    /** @var Role */
+    public $role;
 }
