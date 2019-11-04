@@ -20,6 +20,7 @@ return [
         'createMeeting' => new Meeting\Create(new Meeting\Conflicting()),
         'createMeetingRoom' => new MeetingRoom\Create(),
         'cancelMeeting' => new Meeting\Cancel(),
+        'editMeeting' => new Meeting\Edit(),
     ],
     'DateTime' => new DateTimeScalar(),
 ];

@@ -36,10 +36,12 @@ type Mutation {
     signIn(email: String! password: String!): String!
     createMeeting(input: MeetingInput!): Meeting
     createMeetingRoom(input: MeetingRoomInput!): MeetingRoom
-  cancelMeeting(meetingId: ID!): Boolean
+    cancelMeeting(meetingId: ID!): Boolean
+    editMeeting(input: MeetingInput!): Meeting
 }
 
 input MeetingInput {
+    id: ID
     roomId: ID!
     startsAt: DateTime!
     endsAt: DateTime!
