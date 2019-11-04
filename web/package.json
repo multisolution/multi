@@ -1,0 +1,36 @@
+{
+  "name": "@multisolution/multi",
+  "version": "0.1.0",
+  "description": "Multi-purpose application for MultisolutiON collaborators.",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run test",
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/multisolution/multi.git"
+  },
+  "author": "multisolution <multisolution.web@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/multisolution/multi/issues"
+  },
+  "homepage": "https://github.com/multisolution/multi#readme",
+  "dependencies": {
+    "graphql": "^14.5.8",
+    "graphql-tag": "^2.10.1",
+    "next": "^9.1.2",
+    "react": "^16.11.0",
+    "react-dom": "^16.11.0",
+    "styled-components": "^4.4.1",
+    "typescript": "^3.6.4"
+  },
+  "devDependencies": {
+    "@types/node": "^12.12.5",
+    "@types/react": "^16.9.11",
+    "@types/styled-components": "^4.1.20"
+  }
+}
