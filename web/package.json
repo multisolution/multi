@@ -4,7 +4,7 @@
   "description": "Multi-purpose application for MultisolutiON collaborators.",
   "main": "index.js",
   "scripts": {
-    "test": "npm run test",
+    "test": "jest tests",
     "dev": "next",
     "build": "next build",
     "start": "next start"
@@ -38,8 +38,10 @@
   },
   "devDependencies": {
     "@types/cookie": "^0.3.3",
+    "@types/jest": "^24.0.21",
     "@types/node": "^12.12.5",
     "@types/react": "^16.9.11",
-    "@types/styled-components": "^4.1.20"
+    "@types/styled-components": "^4.1.20",
+    "jest": "^24.9.0"
   }
 }
