@@ -12,18 +12,18 @@ interface Database
 
     public function userByEmail(string $email): ?User;
 
-    public function insertUser(User $user): string;
+    public function insertUser(User $user): bool;
 
     public function meetingRoomById(string $id): ?MeetingRoom;
 
-    public function insertMeetingRoom(MeetingRoom $meetingRoom): void;
+    public function insertMeetingRoom(MeetingRoom $meetingRoom): bool;
 
     /**
      * @return MeetingRoom[]
      */
     public function meetingRooms(): array;
 
-    public function insertMeeting(Meeting $meeting);
+    public function insertMeeting(Meeting $meeting): bool;
 
     /**
      * @param MeetingRoom $room
@@ -41,5 +41,7 @@ interface Database
 
     public function meetingById(string $id): ?Meeting;
 
-    public function updateMeeting(?Meeting $meeting): void;
+    public function updateMeeting(?Meeting $meeting): bool;
+
+    public function meetingRoomByMeeting(Meeting $meeting): MeetingRoom;
 }
