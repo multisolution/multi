@@ -73,7 +73,7 @@ export const Container = styled.div<ContainerProps>`
   justify-content: ${props => (props.justifyContent ? props.justifyContent : "")};
   max-width: 1280px;
   width: ${props => (props.width ? props.width : "100%")};
-  height: ${props => (props.height ? props.height + "px" : "")}
+  height: ${props => (props.height ? props.height : "")}
   padding: 0 15px;
   margin:${props => (props.margin ? props.margin + "px" : "0px")}
   background-image: url(${props => (props.bgImage ? props.bgImage : "")});
