@@ -8,4 +8,6 @@ interface Role
      * @return Permission[]
      */
     public function permissions(): array;
+
+    static function scalar(): string;
 }
