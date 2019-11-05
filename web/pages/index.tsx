@@ -12,7 +12,7 @@ const Index: NextPage = () => {
         <Container>
           <header>
             <h1 style={{ color: "red" }}>INDEX</h1>
-            <Link href="/meeting-rooms"></Link>
+            {/* <Link href="/meeting-rooms"></Link> */}
           </header>
         </Container>
       </Section>

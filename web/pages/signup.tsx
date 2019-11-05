@@ -1,5 +1,5 @@
 import { NextPage } from "next";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import Button from "../components/button";
 import { Container, Section } from "../components/global-style";
 import Layout from "../components/layout";
@@ -8,10 +8,11 @@ import { Column } from "../components/column";
 
 const Signup: NextPage = () => {
   var emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
   const email = useRef<HTMLInputElement>(null);
   const pass = useRef<HTMLInputElement>(null);
   const confirmpass = useRef<HTMLInputElement>(null);
+  const [validEmail, setValidEmail] = useState(false);
+  const [validPass, setValidPass] = useState(false);
 
   return (
     <>
@@ -20,25 +21,40 @@ const Signup: NextPage = () => {
           <Container>
             <form name="form">
               <Column>
-                <Input
-                  type="text"
-                  skin="dark"
-                  placeholder="Email"
-                  ref={email}
-                />
-                <Input
-                  type="password"
-                  skin="dark"
-                  placeholder="Senha"
-                  ref={pass}
-                />
-                <Input
-                  type="password"
-                  skin="dark"
-                  placeholder="Confirmar senha"
-                  ref={confirmpass}
-                />
-                <Button skin="black" onClick={validateForm}>
+                <div>
+                  <Input
+                    onChange={onEmailChange}
+                    type="text"
+                    placeholder="Email"
+                    ref={email}
+                  />
+                  <img
+                    src={validEmail ? "success_icon.svg" : "error_icon.svg"}
+                  />
+                </div>
+                <div>
+                  <Input
+                    onChange={onPassChange}
+                    type="password"
+                    placeholder="Senha"
+                    ref={pass}
+                  />
+                  <img
+                    src={validPass ? "success_icon.svg" : "error_icon.svg"}
+                  />
+                </div>
+                <div>
+                  <Input
+                    onChange={onPassChange}
+                    type="password"
+                    placeholder="Confirmar senha"
+                    ref={confirmpass}
+                  />
+                  <img
+                    src={validPass ? "success_icon.svg" : "error_icon.svg"}
+                  />
+                </div>
+                <Button skin="primary" onClick={sendForm}>
                   Cadastrar
                 </Button>
               </Column>
@@ -49,34 +65,32 @@ const Signup: NextPage = () => {
     </>
   );
 
-  function validateForm(event: React.MouseEvent<HTMLButtonElement>) {
-    event.preventDefault();
-
-    if (validateEmail() && validatePass()) {
-      console.log("Pass");
-    }
-  }
-
-  function validateEmail() {
+  function onEmailChange() {
     if (email.current !== null) {
       if (emailRegex.test(String(email.current.value).toLocaleLowerCase())) {
-        console.log("Émail ok");
-        return true;
+        setValidEmail(true);
       } else {
-        console.log("Émail inválido");
-        return false;
+        setValidEmail(false);
       }
     }
   }
-  function validatePass() {
+
+  function onPassChange() {
     if (confirmpass.current !== null && pass.current !== null) {
-      if (confirmpass.current === pass.current) {
-        console.log("Senhas ok");
-        return true;
+      if (
+        confirmpass.current.value === pass.current.value &&
+        pass.current.value.length > 5
+      ) {
+        setValidPass(true);
       } else {
-        console.log("As senhas não são iguais");
-        return false;
+        setValidPass(false);
       }
+    }
+  }
+  function sendForm(event: React.MouseEvent<HTMLButtonElement>) {
+    event.preventDefault();
+    if (validEmail && validPass) {
+      console.log("Pass");
     }
   }
 };
