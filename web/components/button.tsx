@@ -1,11 +1,29 @@
 import styled from "styled-components";
+import {darken} from "polished";
 
-const Button = styled.button`
+type Props = {
+  skin: string;
+};
+
+const Button = styled.button<Props>`
   cursor: pointer;
-  background: lime;
+  background: ${props => props.theme.colors[props.skin]};
   color: white;
   border: none;
   min-height: 48px;
+  padding: 0 ${props => props.theme.space * 4}px;
+  border-radius: ${props => props.theme.borderRadius}px;
+  text-transform: uppercase;
+  font-weight: bold;
+
+  &:focus,
+  &:active {
+    outline: none;
+  }
+
+  &:hover {
+    background: ${props => darken(0.1, props.theme.colors[props.skin])};
+  }
 `;
 
 export default Button;

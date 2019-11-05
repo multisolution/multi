@@ -1,4 +1,4 @@
 // @ts-ignore
-test('example', () => {
+test("example", () => {
   expect(1 + 1).toBe(2);
 });

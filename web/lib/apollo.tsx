@@ -12,9 +12,9 @@ import fetch from "isomorphic-unfetch";
 let apolloClient: ApolloClient<NormalizedCacheObject> | null = null;
 
 export type WithApollo = {
-  apolloClient: ApolloClient<NormalizedCacheObject>,
-  apolloState: any,
-}
+  apolloClient: ApolloClient<NormalizedCacheObject>;
+  apolloState: any;
+};
 
 export function withApollo<PageProps>(PageComponent: NextPage, {ssr = true}: { ssr?: boolean } = {}) {
   const WithApollo = ({apolloClient, apolloState, ...pageProps}: WithApollo & PageProps) => {
@@ -23,15 +23,14 @@ export function withApollo<PageProps>(PageComponent: NextPage, {ssr = true}: { s
       <ApolloProvider client={client}>
         <PageComponent {...pageProps} />
       </ApolloProvider>
-    )
+    );
   };
 
-  if (process.env.NODE_ENV !== 'production') {
-    const displayName =
-      PageComponent.displayName || PageComponent.name || 'Component';
+  if (process.env.NODE_ENV !== "production") {
+    const displayName = PageComponent.displayName || PageComponent.name || "Component";
 
-    if (displayName === 'App') {
-      console.warn('This withApollo HOC only works with PageComponents.');
+    if (displayName === "App") {
+      console.warn("This withApollo HOC only works with PageComponents.");
     }
 
     WithApollo.displayName = `withApollo(${displayName})`;
@@ -42,18 +41,16 @@ export function withApollo<PageProps>(PageComponent: NextPage, {ssr = true}: { s
       const {AppTree} = context;
       const apolloClient = (context.apolloClient = initApolloClient({}));
 
-      const pageProps = PageComponent.getInitialProps
-        ? await PageComponent.getInitialProps(context)
-        : {};
+      const pageProps = PageComponent.getInitialProps ? await PageComponent.getInitialProps(context) : {};
 
-      if (typeof window === 'undefined') {
+      if (typeof window === "undefined") {
         if (context.res && context.res.finished) {
-          return {}
+          return {};
         }
 
         if (ssr) {
           try {
-            const {getDataFromTree} = await import('@apollo/react-ssr');
+            const {getDataFromTree} = await import("@apollo/react-ssr");
             await getDataFromTree(
               <AppTree
                 pageProps={{
@@ -61,13 +58,13 @@ export function withApollo<PageProps>(PageComponent: NextPage, {ssr = true}: { s
                   apolloClient
                 }}
               />
-            )
+            );
           } catch (error) {
-            console.error('Error while running `getDataFromTree`', error)
+            console.error("Error while running `getDataFromTree`", error);
           }
         }
 
-        Head.rewind()
+        Head.rewind();
       }
 
       const apolloState = apolloClient.cache.extract();
@@ -75,15 +72,15 @@ export function withApollo<PageProps>(PageComponent: NextPage, {ssr = true}: { s
       return {
         ...pageProps,
         apolloState
-      }
-    }
+      };
+    };
   }
 
-  return WithApollo
+  return WithApollo;
 }
 
 function initApolloClient(initialState: any): ApolloClient<NormalizedCacheObject> {
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     return createApolloClient(initialState);
   }
 
@@ -98,9 +95,9 @@ function createApolloClient(initialState: any): ApolloClient<NormalizedCacheObje
   const fetchOptions = {};
 
   const http = new HttpLink({
-    uri: 'http://localhost:8000',
+    uri: "http://localhost:8000",
     fetch,
-    fetchOptions,
+    fetchOptions
   });
 
   const auth = setContext((request, {headers}) => {
@@ -109,24 +106,24 @@ function createApolloClient(initialState: any): ApolloClient<NormalizedCacheObje
     return {
       headers: {
         ...headers,
-        authorization: token === null ? '' : `Bearer ${token}`,
+        authorization: token === null ? "" : `Bearer ${token}`
       }
     };
   });
 
   return new ApolloClient<NormalizedCacheObject>({
-    ssrMode: typeof window === 'undefined',
+    ssrMode: typeof window === "undefined",
     link: auth.concat(http),
-    cache: new InMemoryCache().restore(initialState),
+    cache: new InMemoryCache().restore(initialState)
   });
 }
 
 function getToken(context?: NextPageContext): string | null {
   if (context && context.req) {
-    return cookie.parse(context.req.headers.cookie || '').token || null;
+    return cookie.parse(context.req.headers.cookie || "").token || null;
   }
 
-  if (typeof window !== 'undefined') {
+  if (typeof window !== "undefined") {
     return cookie.parse(window.document.cookie).token || null;
   }
 
