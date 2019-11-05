@@ -9,6 +9,8 @@ class MeetingRooms implements Resolver
 {
     public function __invoke($root, array $args, Context $context)
     {
-        return $context->db->meetingRooms();
+        $meetingRooms = $context->db->meetingRooms();
+        var_dump($meetingRooms);
+        return $meetingRooms;
     }
 }

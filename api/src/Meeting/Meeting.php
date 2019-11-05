@@ -21,4 +21,19 @@ class Meeting
     public $endsAt;
     /** @var Status */
     public $status;
+
+    public function __construct()
+    {
+        if (isset($this->starts_at)) {
+            if (is_string($this->starts_at)) {
+                $this->startsAt = DateTime::createFromFormat('Y-m-d H:i:s', $this->starts_at);
+            }
+        }
+
+        if (isset($this->ends_at)) {
+            if (is_string($this->ends_at)) {
+                $this->endsAt = DateTime::createFromFormat('Y-m-d H:i:s', $this->ends_at);
+            }
+        }
+    }
 }

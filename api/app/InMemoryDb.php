@@ -49,11 +49,11 @@ class InMemoryDb implements Database
         return $results[array_key_first($results)];
     }
 
-    public function insertUser(User $user): string
+    public function insertUser(User $user): bool
     {
         $user->id = uniqid();
         $this->users[] = $user;
-        return $user->id;
+        return true;
     }
 
     public function meetingRoomById(string $id): ?MeetingRoom
@@ -69,9 +69,10 @@ class InMemoryDb implements Database
         return $results[array_key_first($results)];
     }
 
-    public function insertMeetingRoom(MeetingRoom $meetingRoom): void
+    public function insertMeetingRoom(MeetingRoom $meetingRoom): bool
     {
         $this->meetingRooms[] = $meetingRoom;
+        return true;
     }
 
     /**
@@ -82,9 +83,10 @@ class InMemoryDb implements Database
         return $this->meetingRooms;
     }
 
-    public function insertMeeting(Meeting $meeting)
+    public function insertMeeting(Meeting $meeting): bool
     {
         $this->meetings[] = $meeting;
+        return true;
     }
 
     /**
@@ -135,9 +137,15 @@ class InMemoryDb implements Database
         return head($results);
     }
 
-    public function updateMeeting(?Meeting $meeting): void
+    public function updateMeeting(?Meeting $meeting): bool
     {
         $index = array_search($meeting, $this->meetings);
         array_splice($this->meetings, $index, 1, [$meeting]);
+        return true;
+    }
+
+    public function meetingRoomByMeeting(Meeting $meeting): MeetingRoom
+    {
+        return $this->meetingRoomById($meeting->room->id);
     }
 }
