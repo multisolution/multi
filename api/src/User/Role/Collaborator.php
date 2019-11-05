@@ -10,4 +10,9 @@ class Collaborator implements Role
     {
         return [];
     }
+
+    static function scalar(): string
+    {
+        return 'COLLABORATOR';
+    }
 }

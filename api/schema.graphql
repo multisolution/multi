@@ -3,6 +3,12 @@ scalar DateTime
 type User {
     id: ID!
     email: String!
+    role: Role!
+}
+
+enum Role {
+    ADMINISTRATOR
+    COLLABORATOR
 }
 
 type MeetingRoom {
@@ -18,7 +24,7 @@ type Meeting {
     host: User!
     startsAt: DateTime!
     endsAt: DateTime!
-  status: MeetingStatus!
+    status: MeetingStatus!
 }
 
 enum MeetingStatus {
@@ -34,10 +40,17 @@ type Query {
 
 type Mutation {
     signIn(email: String! password: String!): String!
+    createUser(input: UserInput!): User
     createMeeting(input: MeetingInput!): Meeting
     createMeetingRoom(input: MeetingRoomInput!): MeetingRoom
     cancelMeeting(meetingId: ID!): Boolean
     editMeeting(input: MeetingInput!): Meeting
+}
+
+input UserInput {
+    email: String!
+    password: String!
+    role: Role!
 }
 
 input MeetingInput {

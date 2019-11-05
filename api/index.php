@@ -3,8 +3,10 @@
 namespace Multi;
 
 use Firebase\JWT\JWT;
+use Firebase\JWT\SignatureInvalidException;
 use GraphQL\Error\Debug;
 use GraphQL\Error\FormattedError;
+use GraphQL\Error\UserError;
 use Monolog\Handler\StreamHandler;
 use Multi\User\User;
 use Siler\Dotenv as Env;
@@ -38,7 +40,13 @@ debug($context->debug ? Debug::INCLUDE_DEBUG_MESSAGE | Debug::INCLUDE_TRACE : 0)
 $handler = function () use ($schema, $context) {
     try {
         $context->user = maybe(bearer())->bind(function (string $token) use ($context): ?User {
-            $token = JWT::decode($token, $context->appKey, ['HS256']);
+            try {
+                $token = JWT::decode($token, $context->appKey, ['HS256']);
+
+            } catch (SignatureInvalidException $exception) {
+                throw new UserError($context->messages->get('invalid_token'));
+            }
+
             return $context->db->userById($token->userId);
         })->return();
 
