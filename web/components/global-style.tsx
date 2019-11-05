@@ -6,14 +6,16 @@ export type Theme = {
   colors: {
     primary: string;
     transparent: string;
+    dark: string;
   };
 };
 
 export const theme: Theme = {
-  borderRadius: 2,
+  borderRadius: 5,
   space: 4,
   colors: {
     primary: "#bad531",
+    dark: "#808080",
     transparent: "transparent"
   }
 };
@@ -50,11 +52,31 @@ export const Content = styled.div`
   ${blockCss}
 `;
 
-export const Container = styled.div`
+type ContainerProps = {
+  bgImage?: string;
+  height?: string;
+  display?: string;
+  justifyContent?: string;
+  alignItems?: string;
+  width?: string;
+  bgColor?: string;
+  margin?: string;
+  border?: boolean;
+};
+
+export const Container = styled.div<ContainerProps>`
+  border-radius: ${props => (props.border ? props.theme.borderRadius : "0")}px;
+  display: ${props => (props.display ? props.display : "block")}
+  align-items: ${props => (props.alignItems ? props.alignItems : "")}
+  justify-content: ${props => (props.justifyContent ? props.justifyContent : "")};
   max-width: 1280px;
-  width: 100%;
+  width: ${props => (props.width ? props.width : "100%")};
+  height: ${props => (props.height ? props.height + "px" : "")}
   padding: 0 15px;
-  outline: 1px solid #000;
+  margin:${props => (props.margin ? props.margin + "px" : "0px")}
+  background-image: url(${props => (props.bgImage ? props.bgImage : "")});
+  background-repeat: no-repeat;
+  background-color:${props => (props.bgColor ? props.bgColor : "transparent")}
 `;
 
 export default GlobalStyle;

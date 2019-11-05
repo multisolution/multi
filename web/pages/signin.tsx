@@ -29,24 +29,34 @@ const Signin: NextPage = () => {
     <>
       <Layout>
         <Section>
-          <Container>
-            <form name="form">
-              <Column>
-                <div>
-                  <Input onChange={() => setError("")} type="text" placeholder="Email" ref={email} />
-                </div>
-                <div>
-                  <Input onChange={() => setError("")} type="password" placeholder="Senha" ref={pass} />
-                </div>
-                <Button skin="primary" onClick={onSignInClick}>
-                  Entrar
-                </Button>
-              </Column>
-            </form>
-            <Button skin="primary" onClick={recoveryPass}>
-              Esqueci minha senha
-            </Button>
-            {renderError()}
+          <Container display="flex" height="853" justifyContent="center" alignItems="flex-start">
+            <Container border={true} width="40%" bgColor="rgba(255, 255, 255, 0.9)" margin="90">
+              <div style={{ paddingTop: "60px", display: "flex", justifyContent: "center" }}>
+                <img src="/logo.png" />
+              </div>
+
+              <div style={{ margin: "40px" }}>
+                <Column>
+                  <form name="form">
+                    <div>
+                      <Input onChange={() => setError("")} type="text" placeholder="Email" ref={email} />
+                    </div>
+                    <div>
+                      <Input onChange={() => setError("")} type="password" placeholder="Senha" ref={pass} />
+                    </div>
+                    <div>
+                      <Button skin="primary" onClick={onSignInClick}>
+                        Entrar
+                      </Button>
+                    </div>
+                  </form>
+                  <Button colorText="dark" skin="transparent" onClick={recoveryPass}>
+                    Esqueci minha senha
+                  </Button>
+                  {renderError()}
+                </Column>
+              </div>
+            </Container>
           </Container>
         </Section>
       </Layout>
@@ -55,6 +65,7 @@ const Signin: NextPage = () => {
 
   function recoveryPass() {
     console.log("recovery pass");
+    redirect(null, "/pass-recovery");
   }
 
   function renderError() {

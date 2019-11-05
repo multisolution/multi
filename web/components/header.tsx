@@ -10,8 +10,8 @@ const Header = styled.header<HeaderProps>`
   height: 100px;
   display: flex;
   justify-content: center;
-  background: #000;
-  color: ${props => (props.bgdiferentao ? props.bgdiferentao : props.theme.colors.primary)};
+  background: #fff;
+  color: "${props => (props.bgdiferentao ? props.bgdiferentao : "white")};"
 `;
 
 export default Header;
