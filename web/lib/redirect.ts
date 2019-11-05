@@ -1,4 +1,4 @@
-import Router from 'next/router'
+import Router from "next/router";
 import {NextPageContext} from "next";
 
 export default (context: NextPageContext | null, target: string) => {
@@ -11,4 +11,4 @@ export default (context: NextPageContext | null, target: string) => {
     // In the browser, we just pretend like this never even happened ;)
     Router.replace(target);
   }
-}
+};

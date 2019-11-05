@@ -3,24 +3,24 @@ import React from "react";
 
 import Link from "next/link";
 import Button from "../components/button";
-import {Container, Section} from '../components/global-styled';
+import {Container, Section} from "../components/global-style";
 import Layout from "../components/layout";
 
 const MeetingRooms: NextPage = () => {
   return (
     <>
-    <Layout>
-      <Section>
-        <Container>
+      <Layout>
+        <Section>
+          <Container>
             <header>
-              <h1>Meeting rooms</h1> 
+              <h1>Meeting rooms</h1>
               <Link href="/">
-              <Button>Home</Button>
-            </Link>
-            </header>    
+                <Button skin="primary">Home</Button>
+              </Link>
+            </header>
           </Container>
-      </Section>
-    </Layout>
+        </Section>
+      </Layout>
     </>
   );
 };

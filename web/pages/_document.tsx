@@ -1,5 +1,5 @@
-import Document, {DocumentContext} from 'next/document'
-import {ServerStyleSheet} from 'styled-components'
+import Document, {DocumentContext} from "next/document";
+import {ServerStyleSheet} from "styled-components";
 import React from "react";
 
 export default class MyDocument extends Document {
@@ -22,7 +22,7 @@ export default class MyDocument extends Document {
             {sheet.getStyleElement()}
           </>
         )
-      }
+      };
     } finally {
       sheet.seal();
     }
