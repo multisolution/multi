@@ -1,11 +1,10 @@
 import { NextPage } from "next";
 import React, { useRef } from "react";
-
-import Link from "next/link";
 import Button from "../components/button";
-import { Container, Section, Column } from "../components/global-style";
+import { Container, Section } from "../components/global-style";
 import Layout from "../components/layout";
 import Input from "../components/input";
+import { Column } from "../components/column";
 
 const Signup: NextPage = () => {
   var emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -39,7 +38,7 @@ const Signup: NextPage = () => {
                   placeholder="Confirmar senha"
                   ref={confirmpass}
                 />
-                <Button skin="primary" onClick={validateForm}>
+                <Button skin="black" onClick={validateForm}>
                   Cadastrar
                 </Button>
               </Column>

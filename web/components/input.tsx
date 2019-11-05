@@ -5,10 +5,10 @@ type Props = {
   skin: string;
 };
 
-const Button = styled.button<Props>`
+const Input = styled.input<Props>`
   cursor: pointer;
   background: ${props => props.theme.colors[props.skin]};
-  color: white;
+  color: black;
   border: none;
   min-height: 48px;
   padding: 0 ${props => props.theme.space * 4}px;
@@ -26,4 +26,4 @@ const Button = styled.button<Props>`
   }
 `;
 
-export default Button;
+export default Input;
