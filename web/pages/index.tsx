@@ -1,8 +1,8 @@
-import {NextPage} from "next";
+import { NextPage } from "next";
 import React from "react";
 import Link from "next/link";
 import Button from "../components/button";
-import {Container, Section} from "../components/global-style";
+import { Container, Section } from "../components/global-style";
 import Layout from "../components/layout";
 
 const Index: NextPage = () => {
@@ -11,10 +11,8 @@ const Index: NextPage = () => {
       <Section>
         <Container>
           <header>
-            <h1 style={{color: "red"}}>INDEX</h1>
-            <Link href="/meeting-rooms">
-              <Button skin="primary">Home</Button>
-            </Link>
+            <h1 style={{ color: "red" }}>INDEX</h1>
+            {/* <Link href="/meeting-rooms"></Link> */}
           </header>
         </Container>
       </Section>

@@ -3,6 +3,7 @@
 namespace Multi;
 
 use Firebase\JWT\JWT;
+
 use Firebase\JWT\SignatureInvalidException;
 use GraphQL\Error\Debug;
 use GraphQL\Error\FormattedError;
@@ -15,7 +16,7 @@ use Throwable;
 use function Siler\Encoder\Json\decode;
 use function Siler\Functional\Monad\maybe;
 use function Siler\GraphQL\{debug, execute, schema};
-use function Siler\Swoole\{bearer, http, json, raw};
+use function Siler\Swoole\{bearer, http, json, raw,cors};
 
 $base_dir = __DIR__;
 require_once "$base_dir/vendor/autoload.php";
@@ -54,7 +55,9 @@ $handler = function () use ($schema, $context) {
     } catch (Throwable $exception) {
         Log\error($exception->getMessage());
         $result = FormattedError::createFromException($exception);
+
     } finally {
+        cors('*','authorization,content-type');
         json($result);
     }
 };
