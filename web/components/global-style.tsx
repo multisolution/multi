@@ -4,10 +4,14 @@ export type Theme = {
   borderRadius: number;
   space: number;
   colors: {
-    primary: string;
-    transparent: string;
+    [name: string]: string
   };
 };
+
+declare module 'styled-components' {
+  export interface DefaultTheme extends Theme {
+  }
+}
 
 export const theme: Theme = {
   borderRadius: 2,
