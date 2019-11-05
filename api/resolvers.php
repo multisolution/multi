@@ -9,6 +9,7 @@ use Multi\User\Role\Collaborator;
 return [
     'Meeting' => [
         'status' => new Meeting\Status\Parser(),
+        'room' => new Meeting\Room(),
     ],
     'MeetingRoom' => [
         'calendar' => new MeetingRoom\Calendar(),

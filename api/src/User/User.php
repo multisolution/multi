@@ -2,6 +2,8 @@
 
 namespace Multi\User;
 
+use Multi\User\Role\Parser;
+
 class User
 {
     /** @var string */
@@ -12,4 +14,11 @@ class User
     public $password;
     /** @var Role */
     public $role;
+
+    public function __construct()
+    {
+        if (is_string($this->role)) {
+            $this->role = (new Parser())($this->role);
+        }
+    }
 }
