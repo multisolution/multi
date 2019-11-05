@@ -13,4 +13,9 @@ class Administrator implements Role
             new Permission\CreateMeetingRoom(),
         ];
     }
+
+    static function scalar(): string
+    {
+        return 'ADMINISTRATOR';
+    }
 }
