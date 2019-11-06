@@ -148,4 +148,17 @@ class InMemoryDb implements Database
     {
         return $this->meetingRoomById($meeting->room->id);
     }
+
+    /**
+     * @return User[]
+     */
+    public function users(): array
+    {
+        // TODO: Implement users() method.
+    }
+
+    public function deleteUser(string $id): bool
+    {
+        // TODO: Implement deleteUser() method.
+    }
 }
