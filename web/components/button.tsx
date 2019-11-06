@@ -1,12 +1,13 @@
 import styled from "styled-components";
-import { darken } from "polished";
+import {darken} from "polished";
+import React, {ButtonHTMLAttributes, FunctionComponent} from "react";
 
-type Props = {
+type StyledButtonProps = {
   skin: string;
   colorText?: string;
 };
 
-const Button = styled.button<Props>`
+const StyledButton = styled.button<StyledButtonProps>`
   cursor: pointer;
   background: ${props => props.theme.colors[props.skin]};
   color: ${props => (props.colorText ? props.theme.colors[props.colorText] : "white")};
@@ -26,5 +27,21 @@ const Button = styled.button<Props>`
     background: ${props => darken(0.1, props.theme.colors[props.skin])};
   }
 `;
+
+type ButtonProps = {
+  loading?: boolean;
+};
+
+type Props = ButtonHTMLAttributes<HTMLButtonElement> & StyledButtonProps & ButtonProps;
+
+const Button: FunctionComponent<Props> = (props) => {
+  const {loading = false, children} = props;
+
+  return (
+    <StyledButton {...props}>
+      {loading ? 'Carregando...' : children}
+    </StyledButton>
+  )
+};
 
 export default Button;

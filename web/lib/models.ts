@@ -9,10 +9,12 @@ export type UserInput = {
   password: string;
   role: Role;
 };
+
 export type UserLoginInput = {
   email: string;
   password: string;
 };
+
 export type UserLogin = {
   email: string;
   password: string;
@@ -28,4 +30,16 @@ export type MeetingRoom = {
   roomNumber: number;
   description: string;
   color: string;
+};
+
+export type Meeting = {
+  id: string;
+  startsAt: Date;
+  endsAt: Date;
+};
+
+export type MeetingInput = {
+  roomId: string;
+  startsAt: Date;
+  endsAt: Date;
 };
