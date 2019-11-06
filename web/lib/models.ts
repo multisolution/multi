@@ -26,4 +26,5 @@ export enum Role {
 export type MeetingRoom = {
   id: string;
   roomNumber: number;
-}
+  description: string;
+};

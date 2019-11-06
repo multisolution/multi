@@ -3,10 +3,14 @@
 namespace Multi\User\Role;
 
 use Multi\User\Permission\CreateMeetingRoom;
+use Multi\User\Permission\DeleteUser;
+use Multi\User\Permission\CreateUser;
 use Multi\User\Permission\Permission;
 
 class Administrator implements Role
 {
+
+
     const ADMINISTRATOR = 'ADMINISTRATOR';
 
     /**
@@ -16,6 +20,9 @@ class Administrator implements Role
     {
         return [
             new CreateMeetingRoom(),
+            new DeleteUser(),
+            new CreateUser(),
+
         ];
     }
 

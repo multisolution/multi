@@ -16,6 +16,7 @@ type MeetingRoom {
     roomNumber: Int!
     calendar: [Meeting]!
     description: String
+    color: String
 }
 
 type Meeting {
@@ -46,6 +47,7 @@ type Mutation {
     createMeetingRoom(input: MeetingRoomInput!): MeetingRoom
     cancelMeeting(meetingId: ID!): Boolean
     editMeeting(input: MeetingInput!): Meeting
+    deleteUser(userId: ID!): Boolean
 }
 
 input UserInput {

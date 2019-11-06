@@ -25,6 +25,7 @@ return [
         'createMeetingRoom' => new MeetingRoom\Create(),
         'cancelMeeting' => new Meeting\Cancel(),
         'editMeeting' => new Meeting\Edit(),
+        'deleteUser' => new User\Delete(),
     ],
     'DateTime' => new DateTimeScalar(),
     'MeetingStatus' => new Meeting\Status\EnumType(),
