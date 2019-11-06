@@ -35,6 +35,10 @@ class Create implements Resolver
         $user->password = password_hash($password, PASSWORD_DEFAULT);
         $user->role = $role;
 
+        
+
+        
+
         $context->db->insertUser($user);
 
         return $user;

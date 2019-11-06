@@ -22,6 +22,7 @@ class DoctrineDBAL implements Database
         $this->conn = $conn;
     }
 
+
     public function userById(string $id): ?User
     {
         /** @var ResultStatement $stmt */
@@ -70,10 +71,12 @@ class DoctrineDBAL implements Database
                 'id' => '?',
                 'email' => '?',
                 'password' => '?',
+                'role' => '?',
             ])
             ->setParameter(0, $user->id, ParameterType::STRING)
             ->setParameter(1, $user->email, ParameterType::STRING)
             ->setParameter(2, $user->password, ParameterType::STRING)
+            ->setParameter(3, 'COLLABORATOR')
             ->execute();
 
         return $affectedRows > 0;
@@ -113,6 +116,19 @@ class DoctrineDBAL implements Database
             ->execute();
 
         return $affectedRows > 0;
+    }
+
+    /**
+    * @return User[]
+    */
+    public function users():array{
+        $stmt = $this->conn->createQueryBuilder()
+            ->select('*')
+            ->from('users')
+            ->execute();
+
+        $stmt->setFetchMode(FetchMode::CUSTOM_OBJECT, User::class);
+        return $stmt->fetchAll() ?? [];
     }
 
     /**

@@ -28,18 +28,19 @@ type Meeting {
 }
 
 enum MeetingStatus {
-  SCHEDULED
-  CANCELLED
+    SCHEDULED
+    CANCELLED
 }
 
 type Query {
     me: User
     meetingRooms: [MeetingRoom]!
     myMeetings: [Meeting]!
+    allUsers: [User]!
 }
 
 type Mutation {
-    signIn(email: String! password: String!): String!
+    signIn(email: String!, password: String!): String!
     createUser(input: UserInput!): User
     createMeeting(input: MeetingInput!): Meeting
     createMeetingRoom(input: MeetingRoomInput!): MeetingRoom
