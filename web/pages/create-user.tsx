@@ -1,4 +1,4 @@
-import { useApolloClient, useMutation } from "@apollo/react-hooks";
+import { useMutation } from "@apollo/react-hooks";
 import { NextPage } from "next";
 import React, { useRef, useState } from "react";
 import Button from "../components/button";
@@ -10,7 +10,7 @@ import { withApollo } from "../lib/apollo";
 import gql from "graphql-tag";
 import { User, UserInput, Role } from "../lib/models";
 
-const Signup: NextPage = () => {
+const CreateUser: NextPage = () => {
   var emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   const email = useRef<HTMLInputElement>(null);
   const pass = useRef<HTMLInputElement>(null);
@@ -39,37 +39,16 @@ const Signup: NextPage = () => {
             <form name="form">
               <Column>
                 <div>
-                  <Input
-                    onChange={validateEmail}
-                    type="text"
-                    placeholder="Email"
-                    ref={email}
-                  />
-                  <img
-                    src={validEmail ? "success_icon.svg" : "error_icon.svg"}
-                  />
+                  <Input onChange={validateEmail} type="text" placeholder="Email" ref={email} />
+                  <img src={validEmail ? "success_icon.svg" : "error_icon.svg"} />
                 </div>
                 <div>
-                  <Input
-                    onChange={validatePass}
-                    type="password"
-                    placeholder="Senha"
-                    ref={pass}
-                  />
-                  <img
-                    src={validPass ? "success_icon.svg" : "error_icon.svg"}
-                  />
+                  <Input onChange={validatePass} type="password" placeholder="Senha" ref={pass} />
+                  <img src={validPass ? "success_icon.svg" : "error_icon.svg"} />
                 </div>
                 <div>
-                  <Input
-                    onChange={validatePass}
-                    type="password"
-                    placeholder="Confirmar senha"
-                    ref={confirmpass}
-                  />
-                  <img
-                    src={validPass ? "success_icon.svg" : "error_icon.svg"}
-                  />
+                  <Input onChange={validatePass} type="password" placeholder="Confirmar senha" ref={confirmpass} />
+                  <img src={validPass ? "success_icon.svg" : "error_icon.svg"} />
                 </div>
                 <Button skin="primary" onClick={sendForm}>
                   Cadastrar
@@ -108,11 +87,7 @@ const Signup: NextPage = () => {
   }
 
   function validatePass() {
-    if (
-      confirmpass.current !== null &&
-      pass.current !== null &&
-      validateMinimumPassSize()
-    ) {
+    if (confirmpass.current !== null && pass.current !== null && validateMinimumPassSize()) {
       if (confirmpass.current.value === pass.current.value) {
         setpassError("");
         setPassValue(confirmpass.current.value);
@@ -158,4 +133,4 @@ const Signup: NextPage = () => {
   }
 };
 
-export default withApollo(Signup);
+export default withApollo(CreateUser);
