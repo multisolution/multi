@@ -20,7 +20,7 @@ class Create implements Resolver
     public function __invoke($root, array $args, Context $context)
     {
         if ($context->user === null) {
-            throw new UserError($context->messages->get('no_host'));
+            throw new UserError($context->messages->get('unauthenticated'));
         }
 
         $meeting = new Meeting();

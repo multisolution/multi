@@ -27,3 +27,15 @@ export type MeetingRoom = {
   id: string;
   roomNumber: number;
 }
+
+export type Meeting = {
+  id: string;
+  startsAt: Date;
+  endsAt: Date;
+}
+
+export type MeetingInput = {
+  roomId: string;
+  startsAt: Date;
+  endsAt: Date;
+}
