@@ -1,13 +1,13 @@
-import { useMutation, useApolloClient } from "@apollo/react-hooks";
-import { NextPage } from "next";
-import React, { useRef, useState } from "react";
+import {useApolloClient, useMutation} from "@apollo/react-hooks";
+import {NextPage} from "next";
+import React, {useRef, useState} from "react";
 import Button from "../components/button";
 import gql from "graphql-tag";
 import cookie from "cookie";
 import redirect from "../lib/redirect";
-import { withApollo } from "../lib/apollo";
-import { Column } from "../components/column";
-import Input from "../components/input";
+import {withApollo} from "../lib/apollo";
+import {Column} from "../components/grid";
+import {Input} from "../components/form";
 
 const Signin: NextPage = () => {
   var emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;

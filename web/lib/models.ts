@@ -22,3 +22,8 @@ export enum Role {
   ADMINISTRATOR = "ADMINISTRATOR",
   COLLABORATOR = "COLLABORATOR"
 }
+
+export type MeetingRoom = {
+  id: string;
+  roomNumber: number;
+}

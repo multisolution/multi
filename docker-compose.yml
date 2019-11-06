@@ -36,3 +36,14 @@ services:
       - ./.env
     depends_on:
       - db
+
+#  web:
+#    container_name: multi_web
+#    image: node:alpine
+#    volumes:
+#      - ./web:/app
+#    ports:
+#      - "${DOCKER_WEB_PORT}:3000"
+#    working_dir: /app
+#    entrypoint: npm
+#    command: "run dev -- -H 0.0.0.0"

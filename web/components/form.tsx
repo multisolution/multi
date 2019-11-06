@@ -1,6 +1,6 @@
-import styled from "styled-components";
+import styled, {css} from "styled-components";
 
-const Input = styled.input`
+const formControl = css`
   padding: 0.9em;
   margin-bottom: 10px;
   width: 100%;
@@ -10,4 +10,10 @@ const Input = styled.input`
   border-radius: ${props => props.theme.borderRadius}px;
 `;
 
-export default Input;
+export const Input = styled.input`
+  ${formControl}
+`;
+
+export const Select = styled.select`
+  ${formControl}
+`;
