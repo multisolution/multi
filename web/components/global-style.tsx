@@ -90,5 +90,12 @@ export const UserListElement = styled.div`
   min-width: 150px;
   margin-left: 10px;
 `;
+export const Room = styled.div`
+  border-radius: ${props => props.theme.borderRadius};
+  width:200px
+  height:200px
+  background-color:#000
+  margin-left: 150px;
+`;
 
 export default GlobalStyle;

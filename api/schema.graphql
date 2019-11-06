@@ -16,6 +16,7 @@ type MeetingRoom {
     roomNumber: Int!
     calendar: [Meeting]!
     description: String
+    color: String
 }
 
 type Meeting {

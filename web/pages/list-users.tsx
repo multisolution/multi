@@ -6,7 +6,8 @@ import gql from "graphql-tag";
 import Layout from "../components/layout";
 import { Section, Container, UserListElement } from "../components/global-style";
 import { User } from "../lib/models";
-import { Column } from "../components/column";
+import { Column } from "../components/grid";
+
 const ListUsers: NextPage = () => {
   const getUsers = useQuery(
     gql`

@@ -11,6 +11,7 @@ use function Siler\array_get;
 
 class Create implements Resolver
 {
+    
     public function __invoke($root, array $args, Context $context)
     {
         if ($context->user === null) {
@@ -35,8 +36,6 @@ class Create implements Resolver
         $user->email = $email;
         $user->password = password_hash($password, PASSWORD_DEFAULT);
         $user->role = $role;
-
-        var_dump($user);
 
         $context->db->insertUser($user);
 
