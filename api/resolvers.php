@@ -18,6 +18,7 @@ return [
         'me' => new User\Me(),
         'meetingRooms' => new MeetingRoom\MeetingRooms(),
         'myMeetings' => new Meeting\MyMeetings(),
+        'allUsers' => new User\AllUsers(),
     ],
     'Mutation' => [
         'signIn' => new User\SignIn(),

@@ -22,6 +22,11 @@ interface Database
      * @return MeetingRoom[]
      */
     public function meetingRooms(): array;
+    
+    /**
+     * @return User[]
+     */
+    public function users(): array;
 
     public function insertMeeting(Meeting $meeting): bool;
 
