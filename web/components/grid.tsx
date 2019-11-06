@@ -12,3 +12,16 @@ export const Column = styled.div<{ space?: number }>`
     }
   }
 `;
+
+export const Row = styled.div<{ space?: number }>`
+  display: flex;
+  flex-direction: row;
+
+  & > * {
+    margin-bottom: ${({space = 8}) => space}px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+`;

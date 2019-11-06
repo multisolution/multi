@@ -1,10 +1,10 @@
-import { NextPage } from "next";
-import React, { useRef, useState } from "react";
+import {NextPage} from "next";
+import React, {useRef, useState} from "react";
 import Button from "../components/button";
-import { Container, Section } from "../components/global-style";
+import {Container, Section} from "../components/global-style";
 import Layout from "../components/layout";
-import { Column } from "../components/column";
-import Input from "../components/input";
+import {Column} from "../components/grid";
+import {Input} from "../components/form";
 import redirect from "../lib/redirect";
 
 const PassRecovery: NextPage = () => {
