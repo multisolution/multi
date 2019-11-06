@@ -90,11 +90,15 @@ export const UserListElement = styled.div`
   min-width: 150px;
   margin-left: 10px;
 `;
-export const Room = styled.div`
+
+type RoomProps = {
+  bgColor: string;
+};
+export const Room = styled.div<RoomProps>`
   border-radius: ${props => props.theme.borderRadius};
   width:200px
   height:200px
-  background-color:#000
+  background-color:${props => props.bgColor}
   margin-left: 150px;
 `;
 
