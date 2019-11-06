@@ -75,7 +75,7 @@ class DoctrineDBAL implements Database
             ->setParameter(0, $user->id)
             ->setParameter(1, $user->email)
             ->setParameter(2, $user->password)
-            ->setParameter(3, $user->role->toString())
+            ->setParameter(3, $user->role)
             ->execute();
 
         return $affectedRows > 0;
