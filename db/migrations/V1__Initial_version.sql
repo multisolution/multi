@@ -33,3 +33,9 @@ create table meetings
 insert into users
 values ('root', 'multi@multisolution.art.br', '$2y$10$edZ0ukUfvvcmRP/jWzFaveIisvigFJoM6WvXiC98q.CnsXsYXoO.S',
         'ADMINISTRATOR');
+
+insert into meeting_rooms (id, room_number, description)
+values ('room1', 1, 'Room 1 is very cool');
+
+insert into meeting_rooms (id, room_number, description)
+values ('room2', 2, 'Room 2 is very nice');
