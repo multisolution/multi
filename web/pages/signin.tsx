@@ -10,6 +10,7 @@ import redirect from "../lib/redirect";
 import { withApollo } from "../lib/apollo";
 import { Column } from "../components/column";
 import Input from "../components/input";
+import { margin } from "polished";
 
 const Signin: NextPage = () => {
   var emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -27,20 +28,25 @@ const Signin: NextPage = () => {
 
   return (
     <>
-      <Section>
-        <Container
-          display="flex"
-          height="853px"
-          justifyContent="center"
-          alignItems="flex-start"
-          bgImage="/signin_bg.jpg"
-        >
-          <Container border={true} width="40%" bgColor="rgba(255, 255, 255, 0.9)" margin="90">
+
+      <div
+        style={{ backgroundSize: 'cover', width: "100%", height: "100%", backgroundImage: "url(/signin_bg.jpg)" }}
+      // display="flex"
+      // height="853px"
+      // justifyContent="center"
+      // alignItems="flex-start"
+      // bgImage="/signin_bg.jpg"
+      >
+
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+
+          <div style={{ width: '40%', backgroundColor: "rgba(255, 255, 255, 0.9)", marginTop: "100px", borderRadius: '10px' }}>
+
             <div style={{ paddingTop: "60px", display: "flex", justifyContent: "center" }}>
               <img src="/logo.png" />
             </div>
+            <div style={{ margin: '40px' }}>
 
-            <div style={{ margin: "40px" }}>
               <Column>
                 <form name="form">
                   <div>
@@ -61,9 +67,15 @@ const Signin: NextPage = () => {
                 {renderError()}
               </Column>
             </div>
-          </Container>
-        </Container>
-      </Section>
+          </div>
+
+        </div>
+      </div >
+
+      <div>
+
+      </div>
+
     </>
   );
 
