@@ -18,6 +18,7 @@ const MeetingRooms: NextPage = () => {
           id
           roomNumber
           description
+          color
         }
       }
     `
@@ -38,7 +39,10 @@ const MeetingRooms: NextPage = () => {
   function renderTable() {
     if (getRooms.data) {
       return getRooms.data.meetingRooms.map((room: MeetingRoom, index: number) => (
-        <Room key={room.id}>{room.roomNumber}</Room>
+        <Room bgColor={room.color} key={room.id}>
+          {room.roomNumber}
+          {room.color.toString()}
+        </Room>
       ));
     }
   }
