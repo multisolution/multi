@@ -1,6 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Multi\User;
+namespace Multi\User\Role;
+
+use Multi\User\Permission\Permission;
 
 interface Role
 {
@@ -9,5 +11,5 @@ interface Role
      */
     public function permissions(): array;
 
-    static function scalar(): string;
+    public function __toString();
 }

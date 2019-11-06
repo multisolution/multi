@@ -4,8 +4,10 @@ namespace Multi\Meeting\Status;
 
 class Cancelled implements Status
 {
-    static public function scalar(): string
+    const CANCELLED = 'CANCELLED';
+
+    public function __toString()
     {
-        return 'CANCELLED';
+        return self::CANCELLED;
     }
 }

@@ -3,6 +3,7 @@
 namespace Multi\Meeting;
 
 use DateTime;
+use Multi\Meeting\Status\Parse;
 use Multi\Meeting\Status\Status;
 use Multi\MeetingRoom\MeetingRoom;
 use Multi\User\User;
@@ -34,6 +35,10 @@ class Meeting
             if (is_string($this->ends_at)) {
                 $this->endsAt = DateTime::createFromFormat('Y-m-d H:i:s', $this->ends_at);
             }
+        }
+
+        if (is_string($this->status)) {
+            $this->status = (new Parse())($this->status);
         }
     }
 }

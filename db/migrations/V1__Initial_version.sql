@@ -1,4 +1,5 @@
 create type role as enum ('ADMINISTRATOR', 'COLLABORATOR');
+create type status as enum ('SCHEDULED', 'CANCELLED');
 
 create table users
 (
@@ -25,6 +26,7 @@ create table meetings
     room_id   varchar   not null references meeting_rooms (id),
     starts_at timestamp not null,
     ends_at   timestamp not null,
+    status    status    not null,
     timestamp timestamp not null default current_timestamp
 );
 
