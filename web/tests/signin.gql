@@ -1,3 +1,10 @@
 mutation Siginin($email: String = "multi@multisolution.art.br", $password: String = "multi") {
   signIn(email: $email, password: $password)
 }
+
+query AllUsers {
+  allUsers {
+    id
+    email
+  }
+}

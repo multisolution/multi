@@ -1,5 +1,5 @@
-import React, {FunctionComponent, PropsWithChildren} from "react";
-import {Container} from "./global-style";
+import React, { FunctionComponent, PropsWithChildren } from "react";
+import { Container } from "./global-style";
 import Header from "./header";
 
 type LayoutProps = {};

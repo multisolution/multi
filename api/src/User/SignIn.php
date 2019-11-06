@@ -22,7 +22,7 @@ class SignIn implements Resolver
         $user = $context->db->userByEmail($email);
 
         if ($user === null || !password_verify($password, $user->password)) {
-            throw new UserError('Email or password is invalid');
+            throw new UserError('Credenciais inválidas');
         }
 
         $payload = ['userId' => $user->id];
