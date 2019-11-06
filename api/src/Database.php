@@ -28,6 +28,11 @@ interface Database
      */
     public function users(): array;
 
+    /**
+     * @return Boolean
+     */
+    public function deleteUser(string $id): bool;
+
     public function insertMeeting(Meeting $meeting): bool;
 
     /**

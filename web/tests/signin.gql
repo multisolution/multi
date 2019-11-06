@@ -8,3 +8,7 @@ query AllUsers {
     email
   }
 }
+
+mutation DeleteUser($input: String = "5dc2e670e3523") {
+  deleteUser(id: $input)
+}

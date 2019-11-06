@@ -46,6 +46,7 @@ type Mutation {
     createMeetingRoom(input: MeetingRoomInput!): MeetingRoom
     cancelMeeting(meetingId: ID!): Boolean
     editMeeting(input: MeetingInput!): Meeting
+    deleteUser(input: String!): Boolean
 }
 
 input UserInput {

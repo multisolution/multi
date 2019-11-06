@@ -21,6 +21,18 @@ class DoctrineDBAL implements Database
         $this->conn = $conn;
     }
 
+    public function deleteUser(string $id):bool{
+        echo 'adasddasdsasdsaddas';
+        echo 'adasddasdsasdsaddas';
+        $stmt = $this->conn->createQueryBuilder()
+        ->delete()
+        ->from('users')
+        ->where('id = ?')
+        ->setParameter(0, $id)
+        ->execute();
+        $result = $stmt->fetch();
+    }
+
 
     public function userById(string $id): ?User
     {

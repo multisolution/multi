@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 import React, { useState, useEffect } from "react";
 import { withApollo } from "../lib/apollo";
-import { useQuery } from "@apollo/react-hooks";
+import { useQuery, useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import Layout from "../components/layout";
 import { Section, Container, UserListElement } from "../components/global-style";
@@ -20,12 +20,23 @@ const ListUsers: NextPage = () => {
       }
     `
   );
+  const deleteUser = useMutation(
+    gql`
+      query AllUsers {
+        allUsers {
+          id
+          email
+          role
+        }
+      }
+    `
+  );
   useEffect(() => {
     const result = getUsers;
     setUsers(result.data.allUsers);
   }, []);
 
-  function deleteUser(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+  function deleteUserClickHandler(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     console.log(event.currentTarget.id);
   }
 
@@ -39,7 +50,7 @@ const ListUsers: NextPage = () => {
           <UserListElement>{user.id}</UserListElement>
           <UserListElement>{user.email}</UserListElement>
           <UserListElement>{user.role}</UserListElement>
-          <button style={{ color: "transparent", border: "none" }} id={user.id} onClick={deleteUser}>
+          <button style={{ color: "transparent", border: "none" }} id={user.id} onClick={deleteUserClickHandler}>
             <img style={{ width: "20px" }} src="/delete.svg" />
           </button>
         </div>
