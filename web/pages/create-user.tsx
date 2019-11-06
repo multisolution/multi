@@ -1,14 +1,14 @@
-import { useMutation } from "@apollo/react-hooks";
-import { NextPage } from "next";
-import React, { useRef, useState } from "react";
+import {useMutation} from "@apollo/react-hooks";
+import {NextPage} from "next";
+import React, {useRef, useState} from "react";
 import Button from "../components/button";
-import { Container, Section } from "../components/global-style";
+import {Container, Section} from "../components/global-style";
 import Layout from "../components/layout";
-import Input from "../components/input";
-import { Column } from "../components/column";
-import { withApollo } from "../lib/apollo";
+import {Input} from "../components/form";
+import {Column} from "../components/grid";
+import {withApollo} from "../lib/apollo";
 import gql from "graphql-tag";
-import { User, UserInput, Role } from "../lib/models";
+import {Role, User, UserInput} from "../lib/models";
 
 const CreateUser: NextPage = () => {
   var emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
