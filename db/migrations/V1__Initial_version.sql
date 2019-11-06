@@ -39,4 +39,4 @@ insert into meeting_rooms (id, room_number, description,color)
 values ('room1', 1, 'Room 1 is very cool','#ccff99');
 
 insert into meeting_rooms (id, room_number, description,color)
-values ('room2', 2, 'Room 2 is very nice','##ffcc99');
+values ('room2', 2, 'Room 2 is very nice','#ffcc99');
