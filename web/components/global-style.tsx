@@ -81,4 +81,14 @@ export const Container = styled.div<ContainerProps>`
   background-color:${props => (props.bgColor ? props.bgColor : "transparent")}
 `;
 
+export const UserListElement = styled.div`
+  border-radius: ${props => props.theme.borderRadius};
+  display: "flex";
+  align-items: "flex-start";
+  justify-content: "flex-start";
+  padding: 10px 15px;
+  min-width: 150px;
+  margin-left: 10px;
+`;
+
 export default GlobalStyle;
