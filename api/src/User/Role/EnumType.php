@@ -10,6 +10,10 @@ class EnumType extends EnumTypeDefinition
     {
         parent::__construct([
             'name' => 'Role',
+            'values' => [
+                Collaborator::COLLABORATOR => new Collaborator(),
+                Administrator::ADMINISTRATOR => new Administrator(),
+            ],
         ]);
     }
 

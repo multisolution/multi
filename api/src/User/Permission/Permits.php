@@ -1,7 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Multi\User;
+namespace Multi\User\Permission;
 
+use Multi\User\User;
 use function Siler\Functional\any;
 
 class Permits

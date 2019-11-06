@@ -6,6 +6,7 @@ use GraphQL\Error\UserError;
 use Multi\Context;
 use Multi\Resolver;
 use Multi\User\Permission\CreateUser;
+use Multi\User\Permission\Permits;
 use function Siler\array_get;
 
 class Create implements Resolver
@@ -34,6 +35,8 @@ class Create implements Resolver
         $user->email = $email;
         $user->password = password_hash($password, PASSWORD_DEFAULT);
         $user->role = $role;
+
+        var_dump($user);
 
         $context->db->insertUser($user);
 
