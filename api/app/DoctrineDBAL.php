@@ -22,15 +22,12 @@ class DoctrineDBAL implements Database
     }
 
     public function deleteUser(string $id):bool{
-        echo 'adasddasdsasdsaddas';
-        echo 'adasddasdsasdsaddas';
         $stmt = $this->conn->createQueryBuilder()
-        ->delete()
-        ->from('users')
+        ->delete('users')
         ->where('id = ?')
         ->setParameter(0, $id)
         ->execute();
-        $result = $stmt->fetch();
+        return $stmt > 0;
     }
 
 
@@ -254,26 +251,15 @@ class DoctrineDBAL implements Database
 
     public function updateMeeting(?Meeting $meeting): bool
     {
-        $stmt = $this->conn->createQueryBuilder()
+        $affectedRows = $this->conn->createQueryBuilder()
             ->update('meetings')
-            ->where('id = :meeting_id')
-            ->setParameter('meeting_id', $meeting->id);
+            ->values([
+                'room_id' => $meeting->room->id,
+                'starts_at' => $meeting->startsAt->format('Y-m-d H:i:s'),
+                'ends_at' => $meeting->endsAt->format('Y-m-d H:i:s'),
+            ]);
 
-        $stmt->set('starts_at', $stmt->createNamedParameter($meeting->startsAt->format('Y-m-d H:i:s')));
-        $stmt->set('ends_at', $stmt->createNamedParameter($meeting->endsAt->format('Y-m-d H:i:s')));
-        $stmt->set('status', $stmt->createNamedParameter($meeting->status));
-
-        if ($meeting->room !== null) {
-            $stmt->set('room_id', $stmt->createNamedParameter($meeting->room->id));
-        }
-
-        $result = $stmt->execute();
-
-        if (is_int($result)) {
-            return $result > 0;
-        }
-
-        return false;
+        return $affectedRows > 0;
     }
 
     public function meetingRoomByMeeting(Meeting $meeting): MeetingRoom

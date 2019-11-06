@@ -8,7 +8,6 @@ import { Section, Container, UserListElement } from "../components/global-style"
 import { User } from "../lib/models";
 import { Column } from "../components/column";
 const ListUsers: NextPage = () => {
-  const [users, setUsers] = useState<[User]>();
   const getUsers = useQuery(
     gql`
       query AllUsers {
@@ -20,33 +19,31 @@ const ListUsers: NextPage = () => {
       }
     `
   );
-  const deleteUser = useMutation(
+
+  const [deleteUser] = useMutation(
     gql`
-      query AllUsers {
-        allUsers {
-          id
-          email
-          role
-        }
+      mutation DeleteUser($id: ID!) {
+        deleteUser(userId: $id)
       }
     `
   );
-  useEffect(() => {
-    const result = getUsers;
-    setUsers(result.data.allUsers);
-  }, []);
 
-  function deleteUserClickHandler(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    console.log(event.currentTarget.id);
+  async function deleteUserClickHandler(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    const result = await deleteUser({
+      variables: {
+        id: event.currentTarget.id
+      }
+    });
+    if (result.data.deleteUser) {
+      getUsers.refetch();
+      //   setUsers(result.data.allUsers);
+    }
   }
 
   function renderTable() {
-    if (users) {
-      return users.map((user: User) => (
-        <div
-          key={users.indexOf(user)}
-          style={{ display: "flex", margin: "flex-start", alignSelf: "center", flexDirection: "row" }}
-        >
+    if (getUsers.data) {
+      return getUsers.data.allUsers.map((user: User, index: number) => (
+        <div key={index} style={{ display: "flex", margin: "flex-start", alignSelf: "center", flexDirection: "row" }}>
           <UserListElement>{user.id}</UserListElement>
           <UserListElement>{user.email}</UserListElement>
           <UserListElement>{user.role}</UserListElement>

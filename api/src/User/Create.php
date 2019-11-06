@@ -17,7 +17,7 @@ class Create implements Resolver
             throw new UserError($context->messages->get('unauthenticated'));
         }
 
-        if ((new Permits($context->user))(new CreateUser())) {
+        if (!(new Permits($context->user))(new CreateUser())) {
             throw new UserError($context->messages->get('unauthorized'));
         }
 
