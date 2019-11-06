@@ -12,17 +12,20 @@ class Cancel implements Resolver
 {
     public function __invoke($root, array $args, Context $context)
     {
+        if ($context->user === null) {
+            throw new UserError($context->messages->get('unauthenticated'));
+        }
+
         /** @var string $meetingId */
         $meetingId = array_get($args, 'meetingId');
-
         $meeting = $context->db->meetingById($meetingId);
 
         if ($meeting === null) {
-            throw new UserError($context->messages->get('meeting_not_found'));
+            throw new UserError($context->messages->get('not_found'));
         }
 
         if ($meeting->host !== $context->user) {
-            throw new UserError($context->messages->get('host_only_cancel'));
+            throw new UserError($context->messages->get('unauthorized'));
         }
 
         $meeting->status = new Cancelled();
