@@ -2,17 +2,22 @@
 
 namespace Multi\User\Role;
 
-use Multi\User\Role;
+use Multi\User\Permission\Permission;
 
 class Collaborator implements Role
 {
+    const COLLABORATOR = 'COLLABORATOR';
+
+    /**
+     * @return Permission[]
+     */
     public function permissions(): array
     {
         return [];
     }
 
-    static function scalar(): string
+    public function __toString()
     {
-        return 'COLLABORATOR';
+        return self::COLLABORATOR;
     }
 }

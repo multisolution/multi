@@ -5,7 +5,6 @@ namespace Multi;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\ResultStatement;
 use Doctrine\DBAL\FetchMode;
-use Doctrine\DBAL\ParameterType;
 use DomainException;
 use Multi\Meeting\Meeting;
 use Multi\MeetingRoom\MeetingRoom;
@@ -73,10 +72,10 @@ class DoctrineDBAL implements Database
                 'password' => '?',
                 'role' => '?',
             ])
-            ->setParameter(0, $user->id, ParameterType::STRING)
-            ->setParameter(1, $user->email, ParameterType::STRING)
-            ->setParameter(2, $user->password, ParameterType::STRING)
-            ->setParameter(3, 'COLLABORATOR')
+            ->setParameter(0, $user->id)
+            ->setParameter(1, $user->email)
+            ->setParameter(2, $user->password)
+            ->setParameter(3, $user->role)
             ->execute();
 
         return $affectedRows > 0;
@@ -119,9 +118,10 @@ class DoctrineDBAL implements Database
     }
 
     /**
-    * @return User[]
-    */
-    public function users():array{
+     * @return User[]
+     */
+    public function users(): array
+    {
         $stmt = $this->conn->createQueryBuilder()
             ->select('*')
             ->from('users')
@@ -155,12 +155,14 @@ class DoctrineDBAL implements Database
                 'room_id' => '?',
                 'starts_at' => '?',
                 'ends_at' => '?',
+                'status' => '?',
             ])
             ->setParameter(0, $meeting->id)
             ->setParameter(1, $meeting->host->id)
             ->setParameter(2, $meeting->room->id)
             ->setParameter(3, $meeting->startsAt->format('Y-m-d H:i:s'))
             ->setParameter(4, $meeting->endsAt->format('Y-m-d H:i:s'))
+            ->setParameter(5, $meeting->status)
             ->execute();
 
         return $affectedRows > 0;

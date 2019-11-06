@@ -2,13 +2,10 @@
 
 namespace Multi;
 
-use GraphQL\Type\Definition\EnumType;
-use Multi\User\Role\Administrator;
-use Multi\User\Role\Collaborator;
+use Multi\Meeting;
 
 return [
     'Meeting' => [
-        'status' => new Meeting\Status\Parser(),
         'room' => new Meeting\Room(),
     ],
     'MeetingRoom' => [
@@ -30,11 +27,6 @@ return [
         'editMeeting' => new Meeting\Edit(),
     ],
     'DateTime' => new DateTimeScalar(),
-    'Role' => new EnumType([
-        'name' => 'Role',
-        'values' => [
-            Administrator::scalar() => new Administrator(),
-            Collaborator::scalar() => new Collaborator(),
-        ]
-    ])
+    'MeetingStatus' => new Meeting\Status\EnumType(),
+    'Role' => new User\Role\EnumType(),
 ];

@@ -2,7 +2,8 @@
 
 namespace Multi\User;
 
-use Multi\User\Role\Parser;
+use Multi\User\Role\Parse;
+use Multi\User\Role\Role;
 
 class User
 {
@@ -18,7 +19,7 @@ class User
     public function __construct()
     {
         if (is_string($this->role)) {
-            $this->role = (new Parser())($this->role);
+            $this->role = (new Parse())($this->role);
         }
     }
 }

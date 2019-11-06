@@ -2,20 +2,25 @@
 
 namespace Multi\User\Role;
 
-use Multi\User\Permission;
-use Multi\User\Role;
+use Multi\User\Permission\CreateMeetingRoom;
+use Multi\User\Permission\Permission;
 
 class Administrator implements Role
 {
+    const ADMINISTRATOR = 'ADMINISTRATOR';
+
+    /**
+     * @return Permission[]
+     */
     public function permissions(): array
     {
         return [
-            new Permission\CreateMeetingRoom(),
+            new CreateMeetingRoom(),
         ];
     }
 
-    static function scalar(): string
+    public function __toString()
     {
-        return 'ADMINISTRATOR';
+        return self::ADMINISTRATOR;
     }
 }
