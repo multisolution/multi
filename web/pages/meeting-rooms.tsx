@@ -1,16 +1,13 @@
 import { NextPage } from "next";
 import React from "react";
-
 import { Container, Section, Room } from "../components/global-style";
 import Layout from "../components/layout";
 import { Row, Column } from "../components/grid";
 import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
-import { MeetingRoom, Meeting } from "../lib/models";
+import { MeetingRoom } from "../lib/models";
 import { withApollo } from "../lib/apollo";
-import { array } from "prop-types";
 import Calendar from "../components/calendar";
-import { CalendarDayBlock } from "../components/calendar-day-block";
 
 const MeetingRooms: NextPage = () => {
   const getRooms = useQuery(
@@ -33,7 +30,6 @@ const MeetingRooms: NextPage = () => {
           <Container>
             <Column>
               <Row>{renderRooms()}</Row>
-
               <Calendar></Calendar>
             </Column>
           </Container>
