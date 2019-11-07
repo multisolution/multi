@@ -5,6 +5,7 @@ import React, {ButtonHTMLAttributes, FunctionComponent} from "react";
 type StyledButtonProps = {
   skin: string;
   colorText?: string;
+  loading?: boolean;
 };
 
 const StyledButton = styled.button<StyledButtonProps>`
@@ -18,12 +19,12 @@ const StyledButton = styled.button<StyledButtonProps>`
   text-transform: uppercase;
   font-weight: bold;
   width: 100%;
+  opacity: ${props => props.loading ? '0.8' : '1'};
+  
   &:focus,
-  &:active {
-    outline: none;
-  }
-
+  &:active,
   &:hover {
+    outline: none;
     background: ${props => darken(0.1, props.theme.colors[props.skin])};
   }
 `;
