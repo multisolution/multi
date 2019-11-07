@@ -94,6 +94,9 @@ const MeetingRooms: NextPage = () => {
     }
   }
 
+
+  
+
   function meetingRoomClickHandler(event: React.MouseEvent<HTMLElement, MouseEvent>) {
     console.log(event.currentTarget.id);
   }
