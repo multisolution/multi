@@ -18,12 +18,11 @@ const StyledButton = styled.button<StyledButtonProps>`
   text-transform: uppercase;
   font-weight: bold;
   width: 100%;
+  
   &:focus,
-  &:active {
-    outline: none;
-  }
-
+  &:active,
   &:hover {
+    outline: none;
     background: ${props => darken(0.1, props.theme.colors[props.skin])};
   }
 `;
