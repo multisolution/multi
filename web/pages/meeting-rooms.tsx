@@ -10,55 +10,15 @@ import { withApollo } from "../lib/apollo";
 import Calendar from "../components/calendar";
 
 const MeetingRooms: NextPage = () => {
-  const getRooms = useQuery(
-    gql`
-      query meetingRooms {
-        meetingRooms {
-          id
-          roomNumber
-          description
-          color
-        }
-      }
-    `
-  );
-
   return (
     <>
       <Layout>
-        <Section>
-          <Container>
-            <Column>
-              <Row>{renderRooms()}</Row>
-              <Calendar></Calendar>
-            </Column>
-          </Container>
-        </Section>
+        <Column>
+          <Calendar></Calendar>
+        </Column>
       </Layout>
     </>
   );
-
-  function renderRooms() {
-    if (getRooms.data) {
-      return getRooms.data.meetingRooms.map((room: MeetingRoom, index: number) => (
-        <Room id={room.id} onClick={meetingRoomClickHandler} bgColor={room.color} key={room.id}>
-          <div>
-            <b>{room.id} </b>
-            <b>{room.description}</b>
-          </div>
-
-          <div>
-            <b>{room.id}</b>
-            <input type="checkbox" />;
-          </div>
-        </Room>
-      ));
-    }
-  }
-
-  function meetingRoomClickHandler(event: React.MouseEvent<HTMLElement, MouseEvent>) {
-    console.log(event.currentTarget.id);
-  }
 };
 
 export default withApollo(MeetingRooms);
