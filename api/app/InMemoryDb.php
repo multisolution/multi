@@ -2,6 +2,7 @@
 
 namespace Multi;
 
+use DateTimeInterface;
 use Multi\Meeting\Meeting;
 use Multi\MeetingRoom\MeetingRoom;
 use Multi\User\User;
@@ -160,5 +161,16 @@ class InMemoryDb implements Database
     public function deleteUser(string $id): bool
     {
         // TODO: Implement deleteUser() method.
+    }
+
+    /**
+     * @param DateTimeInterface $from
+     * @param DateTimeInterface $to
+     *
+     * @return Meeting[]
+     */
+    public function meetings(DateTimeInterface $from, DateTimeInterface $to): array
+    {
+        // TODO: Implement meetings() method.
     }
 }
