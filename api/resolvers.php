@@ -16,6 +16,7 @@ return [
         'meetingRooms' => new MeetingRoom\MeetingRooms(),
         'myMeetings' => new Meeting\MyMeetings(),
         'allUsers' => new User\AllUsers(),
+        'calendar' => new Meeting\Calendar(),
     ],
     'Mutation' => [
         'signIn' => new User\SignIn(),
