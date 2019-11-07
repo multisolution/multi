@@ -3,7 +3,7 @@
 namespace Multi\Test\User;
 
 use Multi\User\Permission\CreateMeetingRoom;
-use Multi\User\Permits;
+use Multi\User\Permission\Permits;
 use Multi\User\Role\Administrator;
 use Multi\User\Role\Collaborator;
 use Multi\User\User;

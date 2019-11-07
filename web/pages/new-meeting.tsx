@@ -36,7 +36,7 @@ const NewMeetingForm: FunctionComponent = () => {
         }
     `);
 
-  async function onSubmit(event: FormEvent<HTMLFormElement>) {
+  function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const data = new FormData(event.currentTarget);
