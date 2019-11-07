@@ -33,11 +33,17 @@ enum MeetingStatus {
     CANCELLED
 }
 
+type Calendar {
+    date: String!
+    meetings: [Meeting]!
+}
+
 type Query {
     me: User
     meetingRooms: [MeetingRoom]!
     myMeetings: [Meeting]!
     allUsers: [User]!
+    calendar(from: DateTime, to: DateTime): [Calendar]!
 }
 
 type Mutation {
