@@ -36,6 +36,7 @@ export type Meeting = {
   id: string;
   startsAt: Date;
   endsAt: Date;
+  room: MeetingRoom;
 };
 
 export type MeetingInput = {
