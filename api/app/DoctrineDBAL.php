@@ -2,6 +2,7 @@
 
 namespace Multi;
 
+use DateTimeInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\ResultStatement;
 use Doctrine\DBAL\FetchMode;
@@ -23,10 +24,10 @@ class DoctrineDBAL implements Database
 
     public function deleteUser(string $id):bool{
         $stmt = $this->conn->createQueryBuilder()
-        ->delete('users')
-        ->where('id = ?')
-        ->setParameter(0, $id)
-        ->execute();
+            ->delete('users')
+            ->where('id = ?')
+            ->setParameter(0, $id)
+            ->execute();
         return $stmt > 0;
     }
 
@@ -287,5 +288,27 @@ class DoctrineDBAL implements Database
         }
 
         return $result;
+    }
+
+    /**
+     * @param DateTimeInterface $from
+     * @param DateTimeInterface $to
+     *
+     * @return Meeting[]
+     */
+    public function meetings(DateTimeInterface $from, DateTimeInterface $to): array
+    {
+        $stmt = $this->conn->createQueryBuilder()
+            ->select('*')
+            ->from('meetings')
+            ->where('starts_at between ? and ?')
+            ->setParameters([
+                $from->format('Y-m-d H:i:s'),
+                $to->format('Y-m-d H:i:s'),
+            ])
+            ->execute();
+
+        $stmt->setFetchMode(FetchMode::CUSTOM_OBJECT, Meeting::class);
+        return $stmt->fetchAll();
     }
 }

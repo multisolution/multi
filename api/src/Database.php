@@ -2,6 +2,7 @@
 
 namespace Multi;
 
+use DateTimeInterface;
 use Multi\Meeting\Meeting;
 use Multi\MeetingRoom\MeetingRoom;
 use Multi\User\User;
@@ -22,15 +23,12 @@ interface Database
      * @return MeetingRoom[]
      */
     public function meetingRooms(): array;
-    
+
     /**
      * @return User[]
      */
     public function users(): array;
 
-    /**
-     * @return Boolean
-     */
     public function deleteUser(string $id): bool;
 
     public function insertMeeting(Meeting $meeting): bool;
@@ -54,4 +52,12 @@ interface Database
     public function updateMeeting(?Meeting $meeting): bool;
 
     public function meetingRoomByMeeting(Meeting $meeting): MeetingRoom;
+
+    /**
+     * @param DateTimeInterface $from
+     * @param DateTimeInterface $to
+     *
+     * @return Meeting[]
+     */
+    public function meetings(DateTimeInterface $from, DateTimeInterface $to): array;
 }
