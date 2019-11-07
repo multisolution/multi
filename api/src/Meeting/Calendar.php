@@ -20,7 +20,7 @@ class Calendar implements Resolver
         $meetings = $context->db->meetings($from, $to);
 
         $groupedMeetings = array_reduce($meetings, function (array $groups, Meeting $meeting): array {
-            $date = $meeting->startsAt->format('Y-m-d');
+            $date = $meeting->startsAt->format('Y-m-d\TH:00:00.000\Z');
 
             if (empty($groups[$date])) {
                 $groups[$date] = [
