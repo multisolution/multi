@@ -1,31 +1,24 @@
-import { FunctionComponent, PropsWithChildren } from "react";
-import GlobalStyled, {Container} from "./global-styled";
-import Header from "./header"
+import React, { FunctionComponent, PropsWithChildren } from "react";
+import { Container } from "./global-style";
+import Header from "./header";
 
-// import logo from "../public/logo.png";
-
-type LayoutProps = {}
+type LayoutProps = {};
 
 
 const Layout: FunctionComponent = (props: PropsWithChildren<LayoutProps>) => {
+  return (
+    <>
+      <Header>
+        <Container>
+          <h1>HEADER</h1>
+        </Container>
+      </Header>
 
-    return(
-        <>
-            <Header>
-                <Container>
-                   <img src="assets/img/logo.png" />
-                </Container>
-            </Header>
+      <main role="main">{props.children}</main>
 
-            <main role="main">
-                {props.children}
-            </main>
-
-            <footer>
-
-            </footer>
-        </>
-    )
-}
+      <footer>MULTI</footer>
+    </>
+  );
+};
 
 export default Layout;

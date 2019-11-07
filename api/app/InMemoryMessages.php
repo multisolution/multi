@@ -11,6 +11,9 @@ class InMemoryMessages implements Messages
     {
         $this->messages = [
             'room_number_already_exists' => 'This room number already exists.',
+            'unauthenticated' => 'There is no token on the request or the token is invalid.',
+            'unauthorized' => 'You don\'t have permission for this operation.',
+            'invalid_email' => 'Invalid email.',
         ];
     }
 

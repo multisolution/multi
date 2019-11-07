@@ -1,125 +1,253 @@
-import {NextPage} from "next";
-import React, {useState, useEffect, Component} from "react";
-import Link from "next/link";
-import Button from "../components/button";
-import {Container, Section} from '../components/global-styled';
+import { NextPage } from "next";
+import React from "react";
+
+import { Container, Section, Room } from "../components/global-style";
 import Layout from "../components/layout";
-import Room from "../components/room";
-import styled from "styled-components";
-import TitlePage from "../components/title-page"
-
-// import Slider from "react-slick";
-// import "slick-carousel/slick/slick.css"; 
-// import "slick-carousel/slick/slick-theme.css";
-
-
-// export class Carrosel extends Component {
-    
-//   render() {
-      
-//       const settings = {
-//         dots: true,
-//         infinite: true,
-//         speed: 500,
-//         slidesToShow: 1,
-//         slidesToScroll: 1
-//       };
-//   return (
-//     <div className="carroselCursos">
-//       <Slider {...settings}>
-
-//         <div className="item-carrosel">
-
-//         <Room roomId={1} roomName="Sala 01"></Room>
-//         </div>
-
-//         <div className="item-carrosel">
-//         <Room roomId={1} roomName="Sala 02"></Room>
-//         </div>
-//       </Slider>
-//     </div>
-//   );
-// }
-// }
-
-
-
-// const Meetings = [
-//   {
-//     sala: "Borboleta",
-//     time:
-//     {hoursStart: "", hoursFinished: ""},
-//     available: true
-
-//   }]; 
-
-//   const SetMeeting = (day: string, hoursStart :string, hoursFinished: string) => {
-   
-//     return 
-//   }
-  
-
-  const ContainerRoom = styled(Container)`
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-  ` 
-
+import { Row, Column } from "../components/grid";
+import { useQuery } from "@apollo/react-hooks";
+import gql from "graphql-tag";
+import { MeetingRoom, Meeting } from "../lib/models";
+import { withApollo } from "../lib/apollo";
+import { array } from "prop-types";
+import { CalendarDayBlock } from "../components/calendar-day-block";
 
 const MeetingRooms: NextPage = () => {
-
-  const [roomSelected, setRoomSelected] = useState("");
-
-
-  useEffect(() =>{
-
-  }, []);
-
+  const getRooms = useQuery(
+    gql`
+      query meetingRooms {
+        meetingRooms {
+          id
+          roomNumber
+          description
+          color
+        }
+      }
+    `
+  );
 
   return (
     <>
-    <Layout>
-    <Section>
-      <Container>
-        <TitlePage>Salas de reuniões</TitlePage> 
-            {/* <Link href="/">
-            <Button>Home</Button>
-            </Link> */}
-      </Container>
-    </Section>    
-      <Section>
-        <ContainerRoom>
-            <Room roomId={1} roomName="Sala 01" onClick={() => setRoomSelected("1")}></Room>
-            <Room roomId={2} roomName="Sala 02" onClick={() => setRoomSelected("2")}></Room>
-            <Room roomId={3} roomName="Sala 03" onClick={() => setRoomSelected("3")}></Room>
-            <Room roomId={3} roomName="Sala 04" onClick={() => setRoomSelected("4")}></Room>
-            <Room roomId={3} roomName="Sala 05" onClick={() => setRoomSelected("5")}></Room>
-            <Room roomId={3} roomName="Sala 06" onClick={() => setRoomSelected("6")}></Room>
-            <Room roomId={3} roomName="Sala 07" onClick={() => setRoomSelected("7")}></Room>
-            <Room roomId={3} roomName="Sala 08" onClick={() => setRoomSelected("8")}></Room>
-            <Room roomId={3} roomName="Sala 09" onClick={() => setRoomSelected("9")}></Room>
-            <Room roomId={3} roomName="Sala 10" onClick={() => setRoomSelected("10")}></Room>
-          </ContainerRoom>
-      </Section>
+      <Layout>
+        <Section>
+          <Container>
+            <Column>
+              <Row>{renderTable()}</Row>
 
-      <Section>
-      <Container>
-        <TitlePage>Reuniões Agendadas </TitlePage>
-        </Container>
-      </Section>
-
-
-
-      <Section>
-      <Container>
-        <TitlePage>Agendar nova reunião</TitlePage>
-        {roomSelected}
-        </Container>
-      </Section>
-    </Layout>
+              <Row>
+                {renderHours()}
+                {renderCalenddar()}
+              </Row>
+            </Column>
+          </Container>
+        </Section>
+      </Layout>
     </>
   );
+  function renderHours() {
+    return (
+      <Column>
+        <div>Horários</div>
+        {Array.from({ length: 24 }).map((_, index: number) => {
+          return <CalendarDayBlock>{index + ':00'}</CalendarDayBlock>
+        })}
+      </Column>
+    );
+  }
+
+  function renderCalenddar() {
+    return calendarData.map((data: any, index: number) => (
+      <Column>
+        <div>{data.date}</div>
+        {baseCalendar(data.mettings)}
+      </Column>
+    ));
+  }
+
+  function baseCalendar(mettings: Meeting[]) {
+    return (
+      <Column>
+        {Array.from({ length: 24 }).map((_, index: number) => {
+          <div>{index}</div>;
+          const hasMeetings = mettings.filter(meeting => {
+            return Math.random() > 0.5; //index>= meeting.startsAt && index< meeting.endsAt
+          });
+
+          if (hasMeetings.length > 0) {
+            return <CalendarDayBlock bgColor='#aabbcc'>{`${hasMeetings.length} reuniões`}</CalendarDayBlock>;
+          }
+          return <CalendarDayBlock>disponível</CalendarDayBlock>;
+        })}
+      </Column>
+    );
+  }
+
+  function renderTable() {
+    if (getRooms.data) {
+      return getRooms.data.meetingRooms.map((room: MeetingRoom, index: number) => (
+        <Room id={room.id} onClick={meetingRoomClickHandler} bgColor={room.color} key={room.id}>
+          <div>
+            <b>{room.id} </b>
+            <b>{room.description}</b>
+          </div>
+        </Room>
+      ));
+    }
+  }
+
+
+  
+
+  function meetingRoomClickHandler(event: React.MouseEvent<HTMLElement, MouseEvent>) {
+    console.log(event.currentTarget.id);
+  }
 };
 
+const calendarData = [
+  {
+    date: "06-11-19",
+    mettings: [
+      {
+        id: "String",
+        startsAt: "Date",
+        endsAt: "Date",
+        room: {
+          id: "string",
+          roomNumber: "number",
+          description: "string",
+          color: "string"
+        }
+      }
+    ]
+  },
+  {
+    date: "06-11-19",
+    mettings: [
+      {
+        id: "String",
+        startsAt: "Date",
+        endsAt: "Date",
+        room: {
+          id: "string",
+          roomNumber: "number",
+          description: "string",
+          color: "string"
+        }
+      },
+      {
+        id: "String",
+        startsAt: "Date",
+        endsAt: "Date",
+        room: {
+          id: "string",
+          roomNumber: "number",
+          description: "string",
+          color: "string"
+        }
+      },
+      {
+        id: "String",
+        startsAt: "Date",
+        endsAt: "Date",
+        room: {
+          id: "string",
+          roomNumber: "number",
+          description: "string",
+          color: "string"
+        }
+      }
+    ]
+  },
+  {
+    date: "06-11-19",
+    mettings: [
+      {
+        id: "String",
+        startsAt: "Date",
+        endsAt: "Date",
+        room: {
+          id: "string",
+          roomNumber: "number",
+          description: "string",
+          color: "string"
+        }
+      }
+    ]
+  },
+  {
+    date: "06-11-19",
+    mettings: [
+      {
+        id: "String",
+        startsAt: "Date",
+        endsAt: "Date",
+        room: {
+          id: "string",
+          roomNumber: "number",
+          description: "string",
+          color: "string"
+        }
+      }
+    ]
+  },
+  {
+    date: "06-11-19",
+    mettings: [
+      {
+        id: "String",
+        startsAt: "Date",
+        endsAt: "Date",
+        room: {
+          id: "string",
+          roomNumber: "number",
+          description: "string",
+          color: "string"
+        }
+      }
+    ]
+  },
+  {
+    date: "06-11-19",
+    mettings: [
+      {
+        id: "String",
+        startsAt: "Date",
+        endsAt: "Date",
+        room: {
+          id: "string",
+          roomNumber: "number",
+          description: "string",
+          color: "string"
+        }
+      }
+    ]
+  },
+  {
+    date: "06-11-19",
+    mettings: [
+      {
+        id: "String",
+        startsAt: "Date",
+        endsAt: "Date",
+        room: {
+          id: "string",
+          roomNumber: "number",
+          description: "string",
+          color: "string"
+        }
+      }
+    ]
+  }
+];
 
-export default MeetingRooms;
+// document.addEventListener("DOMContentLoaded", function() {
+//   var calendarEl = document.getElementById("calendar");
+//   if (calendarEl) {
+//     var calendar = new Calendar(calendarEl, {
+//       plugins: [dayGridPlugin]
+//     });
+
+//     calendar.render();
+//   }
+// });
+
+export default withApollo(MeetingRooms);

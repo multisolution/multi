@@ -1,0 +1,49 @@
+version: "3"
+services:
+  db:
+    container_name: multi_pgsql
+    image: postgres:alpine
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "${DOCKER_PGSQL_PORT}:5432"
+
+  flyway:
+    container_name: multi_flyway
+    image: flyway/flyway:latest-alpine
+    command: migrate
+    environment:
+      FLYWAY_URL: "jdbc:postgresql://db/${DB_NAME}"
+      FLYWAY_USER: ${DB_USER}
+      FLYWAY_PASSWORD: ${DB_PASSWORD}
+      FLYWAY_CONNECT_RETRIES: 8 #secs waiting for PostgreSQL
+    volumes:
+      - ./db/migrations:/flyway/sql
+    depends_on:
+      - db
+
+  api:
+    container_name: multi_api
+    image: leocavalcante/dwoole:dev
+    volumes:
+      - ./api:/app
+    ports:
+      - "${DOCKER_API_PORT}:8000"
+      - "${DOCKER_API_DEBUG_PORT}:9000"
+    env_file:
+      - ./.env
+    depends_on:
+      - db
+
+#  web:
+#    container_name: multi_web
+#    image: node:alpine
+#    volumes:
+#      - ./web:/app
+#    ports:
+#      - "${DOCKER_WEB_PORT}:3000"
+#    working_dir: /app
+#    entrypoint: npm
+#    command: "run dev -- -H 0.0.0.0"

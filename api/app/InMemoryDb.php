@@ -2,6 +2,7 @@
 
 namespace Multi;
 
+use DateTimeInterface;
 use Multi\Meeting\Meeting;
 use Multi\MeetingRoom\MeetingRoom;
 use Multi\User\User;
@@ -49,11 +50,11 @@ class InMemoryDb implements Database
         return $results[array_key_first($results)];
     }
 
-    public function insertUser(User $user): string
+    public function insertUser(User $user): bool
     {
         $user->id = uniqid();
         $this->users[] = $user;
-        return $user->id;
+        return true;
     }
 
     public function meetingRoomById(string $id): ?MeetingRoom
@@ -69,9 +70,10 @@ class InMemoryDb implements Database
         return $results[array_key_first($results)];
     }
 
-    public function insertMeetingRoom(MeetingRoom $meetingRoom): void
+    public function insertMeetingRoom(MeetingRoom $meetingRoom): bool
     {
         $this->meetingRooms[] = $meetingRoom;
+        return true;
     }
 
     /**
@@ -82,9 +84,10 @@ class InMemoryDb implements Database
         return $this->meetingRooms;
     }
 
-    public function insertMeeting(Meeting $meeting)
+    public function insertMeeting(Meeting $meeting): bool
     {
         $this->meetings[] = $meeting;
+        return true;
     }
 
     /**
@@ -135,9 +138,39 @@ class InMemoryDb implements Database
         return head($results);
     }
 
-    public function updateMeeting(?Meeting $meeting): void
+    public function updateMeeting(?Meeting $meeting): bool
     {
         $index = array_search($meeting, $this->meetings);
         array_splice($this->meetings, $index, 1, [$meeting]);
+        return true;
+    }
+
+    public function meetingRoomByMeeting(Meeting $meeting): MeetingRoom
+    {
+        return $this->meetingRoomById($meeting->room->id);
+    }
+
+    /**
+     * @return User[]
+     */
+    public function users(): array
+    {
+        // TODO: Implement users() method.
+    }
+
+    public function deleteUser(string $id): bool
+    {
+        // TODO: Implement deleteUser() method.
+    }
+
+    /**
+     * @param DateTimeInterface $from
+     * @param DateTimeInterface $to
+     *
+     * @return Meeting[]
+     */
+    public function meetings(DateTimeInterface $from, DateTimeInterface $to): array
+    {
+        // TODO: Implement meetings() method.
     }
 }

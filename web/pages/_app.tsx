@@ -1,7 +1,7 @@
-import App from 'next/app'
-import React from 'react'
-import {ThemeProvider} from 'styled-components'
-import GlobalStyle, {theme} from "../components/global-styled"
+import App from "next/app";
+import React from "react";
+import {ThemeProvider} from "styled-components";
+import GlobalStyle, {theme} from "../components/global-style";
 
 export default class MyApp extends App {
   render() {
@@ -13,6 +13,6 @@ export default class MyApp extends App {
           <Component {...pageProps} />
         </>
       </ThemeProvider>
-    )
+    );
   }
 }

@@ -14,4 +14,13 @@ class MeetingRoom
     public $calendar;
     /** @var string */
     public $description;
+    /** @var string */
+    public $color;
+
+    public function __construct()
+    {
+        if (isset($this->room_number)) {
+            $this->roomNumber = $this->room_number;
+        }
+    }
 }

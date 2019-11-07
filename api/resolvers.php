@@ -2,9 +2,11 @@
 
 namespace Multi;
 
+use Multi\Meeting;
+
 return [
     'Meeting' => [
-        'status' => new Meeting\Status\Parser(),
+        'room' => new Meeting\Room(),
     ],
     'MeetingRoom' => [
         'calendar' => new MeetingRoom\Calendar(),
@@ -13,13 +15,20 @@ return [
         'me' => new User\Me(),
         'meetingRooms' => new MeetingRoom\MeetingRooms(),
         'myMeetings' => new Meeting\MyMeetings(),
+        'allUsers' => new User\AllUsers(),
+        'calendar' => new Meeting\Calendar(),
     ],
     'Mutation' => [
         'signIn' => new User\SignIn(),
         'signOut' => new User\SignOut(),
+        'createUser' => new User\Create(),
         'createMeeting' => new Meeting\Create(new Meeting\Conflicting()),
         'createMeetingRoom' => new MeetingRoom\Create(),
         'cancelMeeting' => new Meeting\Cancel(),
+        'editMeeting' => new Meeting\Edit(),
+        'deleteUser' => new User\Delete(),
     ],
     'DateTime' => new DateTimeScalar(),
+    'MeetingStatus' => new Meeting\Status\EnumType(),
+    'Role' => new User\Role\EnumType(),
 ];

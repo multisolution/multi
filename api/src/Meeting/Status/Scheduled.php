@@ -4,8 +4,10 @@ namespace Multi\Meeting\Status;
 
 class Scheduled implements Status
 {
-    static public function scalar(): string
+    const SCHEDULED = 'SCHEDULED';
+
+    public function __toString()
     {
-        return 'SCHEDULED';
+        return self::SCHEDULED;
     }
 }

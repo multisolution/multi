@@ -19,9 +19,10 @@ class CancelTest extends TestCase
         $context = new Context();
         $context->db = new InMemoryDb();
         $context->messages = new InMemoryMessages();
+        $context->user = new User();
 
         $this->expectException(UserError::class);
-        $this->expectExceptionMessage($context->messages->get('meeting_not_found'));
+        $this->expectExceptionMessage($context->messages->get('not_found'));
 
         $cancel = new Cancel();
         $cancel(null, ['meetingId' => 'test'], $context);
@@ -32,6 +33,7 @@ class CancelTest extends TestCase
         $context = new Context();
         $context->db = new InMemoryDb();
         $context->messages = new InMemoryMessages();
+        $context->user = new User();
 
         $meeting = new Meeting();
         $meeting->id = 'test';
@@ -40,7 +42,7 @@ class CancelTest extends TestCase
         $context->db->insertMeeting($meeting);
 
         $this->expectException(UserError::class);
-        $this->expectExceptionMessage($context->messages->get('host_only_cancel'));
+        $this->expectExceptionMessage($context->messages->get('unauthorized'));
 
         $cancel = new Cancel();
         $cancel(null, ['meetingId' => 'test'], $context);

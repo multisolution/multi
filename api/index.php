@@ -3,8 +3,10 @@
 namespace Multi;
 
 use Firebase\JWT\JWT;
+use Firebase\JWT\SignatureInvalidException;
 use GraphQL\Error\Debug;
 use GraphQL\Error\FormattedError;
+use GraphQL\Error\UserError;
 use Monolog\Handler\StreamHandler;
 use Multi\User\User;
 use Siler\Dotenv as Env;
@@ -13,12 +15,13 @@ use Throwable;
 use function Siler\Encoder\Json\decode;
 use function Siler\Functional\Monad\maybe;
 use function Siler\GraphQL\{debug, execute, schema};
-use function Siler\Swoole\{bearer, http, json, raw};
+use function Siler\Swoole\{bearer, cors, http, json, raw};
 
 $base_dir = __DIR__;
 require_once "$base_dir/vendor/autoload.php";
 
-Env\init($base_dir);
+$dbs = include "$base_dir/app/dbs.php";
+
 Log\handler(new StreamHandler("$base_dir/app.log"));
 
 $type_defs = file_get_contents("$base_dir/schema.graphql");
@@ -27,18 +30,23 @@ $schema = schema($type_defs, $resolvers);
 
 $context = new Context();
 $context->debug = Env\bool_val('APP_DEBUG', false);
-$context->db = new InMemoryDb();
+$context->db = $dbs[Env\env('APP_DB_USE', 'in_memory')](Env\env('APP_DB_URI'));
 $context->appKey = Env\env('APP_KEY');
 $context->id = new UniqueId();
 $context->messages = new InMemoryMessages();
 
-include "$base_dir/seed.php";
 debug($context->debug ? Debug::INCLUDE_DEBUG_MESSAGE | Debug::INCLUDE_TRACE : 0);
 
 $handler = function () use ($schema, $context) {
     try {
         $context->user = maybe(bearer())->bind(function (string $token) use ($context): ?User {
-            $token = JWT::decode($token, $context->appKey, ['HS256']);
+            try {
+                $token = JWT::decode($token, $context->appKey, ['HS256']);
+
+            } catch (SignatureInvalidException $exception) {
+                throw new UserError($context->messages->get('invalid_token'));
+            }
+
             return $context->db->userById($token->userId);
         })->return();
 
@@ -47,6 +55,7 @@ $handler = function () use ($schema, $context) {
         Log\error($exception->getMessage());
         $result = FormattedError::createFromException($exception);
     } finally {
+        cors('*', 'authorization,content-type');
         json($result);
     }
 };

@@ -8,7 +8,7 @@ use GraphQL\Type\Definition\CustomScalarType;
 class DateTimeScalar extends CustomScalarType
 {
     /** @var string */
-    private const FORMAT = 'Y-m-d H:i:s';
+    const FORMAT = 'Y-m-d\TH:i:s.v\Z';
 
     /** @var string */
     public $name = 'DateTime';
