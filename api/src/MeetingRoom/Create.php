@@ -6,7 +6,7 @@ use GraphQL\Error\UserError;
 use Multi\Context;
 use Multi\Resolver;
 use Multi\User\Permission\CreateMeetingRoom;
-use Multi\User\Permits;
+use Multi\User\Permission\Permits;
 use function Siler\array_get;
 
 class Create implements Resolver
