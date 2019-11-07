@@ -2,6 +2,8 @@
 
 namespace Multi\Meeting;
 
+use DateInterval;
+use DatePeriod;
 use DateTime;
 use Multi\Meeting\Status\Parse;
 use Multi\Meeting\Status\Status;
@@ -22,6 +24,8 @@ class Meeting
     public $endsAt;
     /** @var Status */
     public $status;
+    /** @var DatePeriod */
+    public $period;
 
     public function __construct()
     {
@@ -39,6 +43,10 @@ class Meeting
 
         if (is_string($this->status)) {
             $this->status = (new Parse())($this->status);
+        }
+
+        if ($this->startsAt !== null && $this->endsAt !== null) {
+            $this->period = new DatePeriod($this->startsAt, new DateInterval('PT15M'), $this->endsAt);
         }
     }
 }

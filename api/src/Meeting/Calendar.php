@@ -2,7 +2,11 @@
 
 namespace Multi\Meeting;
 
+use DateInterval;
+use DatePeriod;
+use DateTime;
 use DateTimeImmutable;
+use DateTimeInterface;
 use Multi\Context;
 use Multi\Resolver;
 use function Siler\array_get;
@@ -16,24 +20,32 @@ class Calendar implements Resolver
         $now = new DateTimeImmutable();
         $from = array_get($args, 'from', $now);
         $to = array_get($args, 'to', $now->modify(self::DEFAULT_INTERVAL));
-
         $meetings = $context->db->meetings($from, $to);
+        $period = new DatePeriod($from, new DateInterval('P1D'), $to);
+        $calendar = [];
 
-        $groupedMeetings = array_reduce($meetings, function (array $groups, Meeting $meeting): array {
-            $date = $meeting->startsAt->format('Y-m-d\TH:00:00.000\Z');
+        /** @var DateTimeInterface $date */
+        foreach ($period as $date) {
+            $times = [];
+            $dateKey = $date->format('Y-m-d');
+            $timePeriod = new DatePeriod(new DateTime("$dateKey 00:00:00"), new DateInterval('PT15M'), new DateTime("$dateKey 23:59:59"));
 
-            if (empty($groups[$date])) {
-                $groups[$date] = [
-                    'date' => $date,
-                    'meetings' => [],
+            /** @var DateTimeInterface $time */
+            foreach ($timePeriod as $time) {
+                $times[] = [
+                    'hour' => $time->format('H:i'),
+                    'meetings' => array_filter($meetings, function (Meeting $meeting) use ($time): bool {
+                        return (new Between($meeting))($time);
+                    }),
                 ];
             }
 
-            $groups[$date]['meetings'][] = $meeting;
+            $calendar[] = [
+                'date' => $date->format('d/m'),
+                'times' => $times,
+            ];
+        }
 
-            return $groups;
-        }, []);
-
-        return $groupedMeetings;
+        return $calendar;
     }
 }

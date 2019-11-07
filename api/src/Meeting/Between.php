@@ -2,7 +2,7 @@
 
 namespace Multi\Meeting;
 
-use DateTime;
+use DateTimeInterface;
 
 class Between
 {
@@ -14,7 +14,7 @@ class Between
         $this->meeting = $meeting;
     }
 
-    public function __invoke(DateTime $dateTime): bool
+    public function __invoke(DateTimeInterface $dateTime): bool
     {
         return $dateTime >= $this->meeting->startsAt && $dateTime < $this->meeting->endsAt;
     }
