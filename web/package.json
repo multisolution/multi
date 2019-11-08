@@ -35,11 +35,7 @@
     "next": "^9.1.2",
     "polished": "^3.4.2",
     "react": "^16.11.0",
-    "react-big-calendar": "^0.23.0",
     "react-dom": "^16.11.0",
-    "react-icons": "^3.8.0",
-    "react-slick": "^0.25.2",
-    "slick-carousel": "^1.8.1",
     "styled-components": "^4.4.1",
     "typescript": "^3.6.4"
   },
