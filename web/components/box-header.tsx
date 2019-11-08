@@ -1,63 +1,28 @@
-import React, {useState, useCallback, useEffect, MouseEvent} from "react";
-import Label from "./label";
-import styled from "styled-components"
-import Link from 'next/link'
-const ContainerUsersBox = styled.div`
-    display: flex;
-    flex-direction: row;
+import React, {FunctionComponent} from "react";
+import Link from "next/link";
+import {Align, Row} from "./grid";
+import Button, {ButtonSkin} from "./button";
 
-`
+const BoxHeader: FunctionComponent = () => {
+  return (
+    <Row mainAxis={Align.Center} crossAxis={Align.End}>
+      <span>Usuário/Admin</span>
 
-const UserBox = styled.div`
-    display: flex;
-    flex-direction: column;
-    margin-left: 20px;
+      <Link href="/meeting-rooms">
+        <Button skin={ButtonSkin.Text}>Calendario</Button>
+      </Link>
 
-    button{
-        border: none;
-        outline: none;
-        font-weight:bold;
-        font-size: 16px;
-    
-        &:hover{
-            color: #bad531;
-            cursor: pointer;
-        }
+      <Link href="/create-user">
+        <Button skin={ButtonSkin.Text}>Cadastrar Usuário</Button>
+      </Link>
 
-    }
-    
-`
-    const BoxHeader = () =>{
+      <Link href="/index">
+        <Button skin={ButtonSkin.Text}>Perfil</Button>
+      </Link>
 
-    return(
-        <ContainerUsersBox>
-            <UserBox>
-                <span>Usuário/Admin</span>
-            </UserBox>
-            
-            <UserBox>
-                <Link href="/meeting-rooms">
-                    <button>Calendario</button>
-                </Link>
-            </UserBox>
-            <UserBox>
-                <Link href="/create-user">
-                    <button>Cadastrar Usuário</button>
-                </Link>
-            </UserBox>
-            
-            <UserBox>
-                <Link href="/index">
-                <button>Perfil</button>
-                </Link>
-            </UserBox>
+      <Button skin={ButtonSkin.Text}>Sair</Button>
+    </Row>
+  );
+};
 
-            <UserBox>
-                <button>Sair</button>
-            </UserBox>
-        </ContainerUsersBox>
-    )
-}
-
-
-export default BoxHeader
+export default BoxHeader;
