@@ -27,6 +27,9 @@ const Calendar = () => {
             hour
             meetings {
               id
+              room {
+                id
+              }
             }
           }
         }
@@ -135,7 +138,7 @@ const Calendar = () => {
   function intervalCell(time: Array<Time>) {
     return (
       <div style={{ width: "100%", borderTop: "1px solid lightgray" }}>
-        {time.map(t => (
+        {time.map((t, i) => (
           <Row>
             {getRooms.data.meetingRooms.map((room: MeetingRoom, index: number) => (
               <RoomIndicator occuped={t.meetings.length > 0}>{renderRoom(room, index)}</RoomIndicator>
