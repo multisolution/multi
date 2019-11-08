@@ -1,19 +1,22 @@
 import {useApolloClient, useMutation} from "@apollo/react-hooks";
 import {NextPage} from "next";
-import React, {useRef, useState} from "react";
+import React, {useRef, useState, useEffect} from "react";
 import Button from "../components/button";
 import gql from "graphql-tag";
 import cookie from "cookie";
 import redirect from "../lib/redirect";
 import {withApollo} from "../lib/apollo";
 import {Column} from "../components/grid";
-import {Input} from "../components/form";
+import {Form, Input} from "../components/form";
+import styled from "styled-components";
+import PassRecovery from "./pass-recovery";
 
 const Signin: NextPage = () => {
   var emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   const email = useRef<HTMLInputElement>(null);
   const pass = useRef<HTMLInputElement>(null);
   const [errorMessage, setError] = useState("");
+  const [formLogin, setFormLogin] = useState(true);
 
   const [sigin] = useMutation(gql`
     mutation Siginin($email: String!, $password: String!) {
@@ -23,24 +26,40 @@ const Signin: NextPage = () => {
 
   const appoloClient = useApolloClient();
 
+  const BoxHome = styled(Column)`
+      width: 40%;
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius:  10px;
+      padding: 0 40px;
+      max-width: 600px;
+      min-width: 460px;
+
+
+      @media screen and (max-width: 700px){
+        width: 100%;
+        min-width: auto;
+        padding: 0 20px;
+        margin: 0 10px;
+
+      }
+
+
+  `
+
+
   return (
     <>
       <div style={{ backgroundSize: "cover", width: "100%", height: "100%", backgroundImage: "url(/signin_bg.jpg)" }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <div
-            style={{
-              width: "40%",
-              backgroundColor: "rgba(255, 255, 255, 0.9)",
-              marginTop: "100px",
-              borderRadius: "10px"
-            }}
-          >
-            <div style={{ paddingTop: "60px", display: "flex", justifyContent: "center" }}>
-              <img src="/logo.png" />
-            </div>
-            <div style={{ margin: "40px" }}>
-              <Column>
-                <form name="form">
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100vh" }}>
+
+          {formLogin === true ? 
+              <BoxHome>
+                
+                <div style={{ paddingTop: "60px", display: "flex", justifyContent: "center", width: "100%" }}>
+                  <img src="/logo.png" />
+                </div>
+
+                <Form name="form">
                   <div>
                     <Input onChange={() => setError("")} type="text" placeholder="Email" ref={email} />
                   </div>
@@ -52,23 +71,26 @@ const Signin: NextPage = () => {
                       Entrar
                     </Button>
                   </div>
-                </form>
+                </Form>
                 <Button colorText="dark" skin="transparent" onClick={recoveryPass}>
                   Esqueci minha senha
                 </Button>
                 {renderError()}
-              </Column>
-            </div>
-          </div>
+              </BoxHome>
+            :
+              <PassRecovery></PassRecovery>
+              // <PassRecovery setFormLogin={()=> setFormLogin(true)} ></PassRecovery>
+            }
         </div>
       </div>
 
-      <div></div>
+     
     </>
   );
 
   function recoveryPass() {
-    redirect(null, "/pass-recovery");
+    // redirect(null, "/pass-recovery");
+    setFormLogin(false);
   }
 
   function renderError() {
