@@ -24,7 +24,7 @@ export const Column = styled.div<GridProps>`
   ${gridCss}
   flex-direction: column;
   height: 100%;
-
+  
   & > * {
     margin-bottom: ${({ space = 8 }) => space}px;
 
