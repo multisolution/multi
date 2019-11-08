@@ -1,10 +1,10 @@
 import styled from "styled-components";
-import { darken } from "polished";
-import React, { ButtonHTMLAttributes, FunctionComponent } from "react";
+import React from "react";
 
 type CalendarDayProps = {
   bgColor?: string;
 };
+
 export const CalendarDayBlock = styled.div<CalendarDayProps>`
   background-color: ${props => (props.bgColor ? props.bgColor : "white")}
   color: #000;
@@ -71,4 +71,9 @@ export const RoomIndicator = styled.div<RoomIndicatorProps>`
     height:8px;
     align-items:space-around ;
     justify-content:space-around ;
+    cursor: pointer;
+    
+    &:hover {
+      background-color: lightgray;
+    }
 `;

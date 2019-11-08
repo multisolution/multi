@@ -1,19 +1,27 @@
 import { NextPage } from "next";
-import React from "react";
-import { Container, Section, Room } from "../components/global-style";
+import React, { useState } from "react";
 import Layout from "../components/layout";
-import { Row, Column } from "../components/grid";
-import { useQuery } from "@apollo/react-hooks";
-import gql from "graphql-tag";
-import { MeetingRoom } from "../lib/models";
 import { withApollo } from "../lib/apollo";
 import Calendar from "../components/calendar";
+import Modal from "../components/modal";
+import NewMeetingForm from "../components/new-meeting-form";
+import { Time } from "../lib/models";
 
 const MeetingRooms: NextPage = () => {
+  const [modal, setModal] = useState(false);
+
+  function onCellClick(times: Time[]) {
+    console.log(times);
+    setModal(true);
+  }
+
   return (
-    <>
+    <>s
       <Layout>
-        <Calendar></Calendar>
+        <Calendar onCellClick={onCellClick} />
+        <Modal isOpen={modal} onClose={() => setModal(false)}>
+          <NewMeetingForm />
+        </Modal>
       </Layout>
     </>
   );

@@ -52,7 +52,7 @@ const CreateUser: NextPage = () => {
                   <Input onChange={validatePass} type="password" placeholder="Confirmar senha" ref={confirmpass} />
                   <img src={validPass ? "success_icon.svg" : "error_icon.svg"} />
                 </div>
-                <Button skin="primary" onClick={sendForm}>
+                <Button onClick={sendForm}>
                   Cadastrar
                 </Button>
               </Column>

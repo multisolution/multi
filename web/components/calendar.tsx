@@ -10,11 +10,15 @@ import {
 import { Meeting, MeetingRoom, Time } from "../lib/models";
 import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
-import React, { useState } from "react";
+import React, {FunctionComponent, useState} from "react";
 import { Room } from "./global-style";
 import { css } from "styled-components";
 
-const Calendar = () => {
+type CalendarProps = {
+  onCellClick: (times: Time[]) => void;
+}
+
+const Calendar: FunctionComponent<CalendarProps> = ({onCellClick}) => {
   const [roomCheck, setRoomCheck] = useState();
 
   let calendarKey: any;
@@ -105,6 +109,7 @@ const Calendar = () => {
       return (
         <Column
           decoration={css`
+            width: 100%;
             border-right: 1px solid lightgray;
             &:last-child {
               border-right: none;
@@ -131,7 +136,7 @@ const Calendar = () => {
     return (
       <CalendarDayBlock>
         {getCalendar.data.calendar[rowIndex].times.map((block: Array<Time>, index: number) => (
-          <div style={{ width: "100%" }} onClick={() => console.log(block)}>
+          <div style={{ width: "100%" }} onClick={() => onCellClick(block)}>
             {intervalCell(block)}
           </div>
         ))}
