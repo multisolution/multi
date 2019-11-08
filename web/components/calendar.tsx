@@ -130,7 +130,11 @@ const Calendar = () => {
 
     return (
       <CalendarDayBlock>
-        {getCalendar.data.calendar[rowIndex].times.map((block: Array<Time>) => intervalCell(block))}
+        {getCalendar.data.calendar[rowIndex].times.map((block: Array<Time>, index: number) => (
+          <div style={{ width: "100%" }} onClick={() => console.log(block)}>
+            {intervalCell(block)}
+          </div>
+        ))}
       </CalendarDayBlock>
     );
   }
@@ -140,21 +144,23 @@ const Calendar = () => {
       <div style={{ width: "100%", borderTop: "1px solid lightgray" }}>
         {time.map((t, i) => (
           <Row>
-            {getRooms.data.meetingRooms.map((room: MeetingRoom, index: number) => (
-              <RoomIndicator occuped={t.meetings.length > 0}>{renderRoom(room, index)}</RoomIndicator>
-            ))}
+            {getRooms.data.meetingRooms.map((room: MeetingRoom, index: number) => renderRoom(room, index, t.meetings))}
           </Row>
         ))}
       </div>
     );
   }
 
-  function renderRoom(room: MeetingRoom, index: number) {
-    return <Row></Row>;
-  }
+  function renderRoom(room: MeetingRoom, index: number, allMeetings: Array<Meeting>) {
+    const hasMeeting = allMeetings.filter(m => {
+      return m.room.id == room.id;
+    });
 
-  function dayBlockClickHandler(event: React.MouseEvent<HTMLElement, MouseEvent>) {
-    console.log(event.currentTarget);
+    return (
+      <Row>
+        <RoomIndicator occuped={hasMeeting.length > 0}></RoomIndicator>
+      </Row>
+    );
   }
 };
 export default Calendar;

@@ -19,19 +19,10 @@ type GridProps = {
   decoration?: FlattenSimpleInterpolation;
 };
 
-
 export const Column = styled.div<GridProps>`
 ${gridCss}
 flex-direction: column;
 height:100%;
-
-export const Column = styled.div<ColumnProps>`
-  display: flex;
-  flex-direction: column;
-  justify-content:flex-start;
-  align-items:flex-start;
-
-
   & > * {
     
     margin-bottom: ${props => (props.space != 8 ? props.space : 8)}px
@@ -44,15 +35,7 @@ export const Column = styled.div<ColumnProps>`
 export const Row = styled.div<GridProps>`
   ${gridCss}
   flex-direction: row;
-
   width: 100%;
-
-  align-items:flex-start;
-  justify-content:flex-start;
-
-  & > * {
-    margin-bottom: ${({ space = 8 }) => space}px;
-
 
   & > * {
     flex: 1;
