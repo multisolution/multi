@@ -58,7 +58,7 @@ export const DayIndicatorContainer = styled.div`
 `;
 
 export type RoomIndicatorProps = {
-  occuped: boolean;
+  occuped?: boolean;
 };
 export const RoomIndicator = styled.div<RoomIndicatorProps>`
     background-color: ${props => (props.occuped ? props.theme.colors["primary"] : "#fff")}
