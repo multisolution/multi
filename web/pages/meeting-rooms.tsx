@@ -13,9 +13,7 @@ const MeetingRooms: NextPage = () => {
   return (
     <>
       <Layout>
-        <Column>
-          <Calendar></Calendar>
-        </Column>
+        <Calendar></Calendar>
       </Layout>
     </>
   );
