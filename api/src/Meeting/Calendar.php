@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Multi\Meeting;
 
@@ -40,12 +42,13 @@ class Calendar implements Resolver
                 ];
             }
 
+            $chuncked = array_chunk($times, 4, true);
+
+
             $calendar[] = [
                 'date' => $date->format('d/m'),
-                'times' => array_chunk($times,4,true)[0],
+                'times' => $chuncked
             ];
-
-
         }
 
         return $calendar;
