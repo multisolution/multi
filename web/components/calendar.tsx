@@ -15,27 +15,22 @@ import React, { useState } from "react";
 import { Room } from "./global-style";
 
 const Calendar = () => {
-  const [roomCheck, setRoomCheck] = useState([]);
+  const [roomCheck, setRoomCheck] = useState();
 
   let calendarKey: any;
   const getCalendar = useQuery(
     gql`
-      query Calendar {
-        calendar {
-          date
-          meetings {
-            id
-            startsAt
-            endsAt
-            room {
-              roomNumber
-              color
-              description
-              id
-            }
-          }
-        }
+   query calendar{
+  calendar{
+    date
+    times{
+      hour
+      meetings{
+        id
       }
+    }
+  }
+}
     `
   );
   const getRooms = useQuery(
@@ -49,6 +44,7 @@ const Calendar = () => {
     `
   );
   if (getCalendar.data) {
+    console.log(getCalendar.data)
     calendarKey = getCalendar.data.calendar.reduce(
       (acc: { [date: string]: Meeting[] }, date: { date: string; meetings: Meeting[] }) => {
         acc[date.date] = date.meetings;
@@ -76,10 +72,22 @@ const Calendar = () => {
       <Row>
         <Column>{renderRooms()}</Column>
         {renderHours()}
-        {renderCalenddar()}
+        {renderRows()}
       </Row>
     </div>
   );
+
+  function renderHours() {
+    return (
+      <Column>
+        <div style={{ minHeight: "81px" }}></div>
+        {Array.from({ length: 24 }).map((_, index: number) => {
+          return <HourContainer key={index * Math.random() * 1000}>{index + ":00"}</HourContainer>;
+        })}
+      </Column>
+    );
+  }
+
 
   function renderRooms() {
     if (getRooms.data) {
@@ -99,61 +107,90 @@ const Calendar = () => {
     }
   }
 
-  function renderHours() {
-    return (
-      <Column>
-        <div style={{ minHeight: "81px" }}></div>
-        {Array.from({ length: 24 }).map((_, index: number) => {
-          return <HourContainer key={index * Math.random() * 1000}>{index + ":00"}</HourContainer>;
-        })}
-      </Column>
-    );
-  }
 
-  function renderCalenddar() {
-    return dates.map((data: any, index: number) => (
-      <Column key={data.date.toISOString + index}>
+  function renderRows() {
+
+
+
+    return Array.from({ length: calendarSize }).map((_, index: number) => {
+
+      const cellDate = new Date()
+      cellDate.setDate(cellDate.getDate() + index)
+      cellDate.setSeconds(0);
+      cellDate.setMilliseconds(0);
+      cellDate.setUTCHours(index, 0, 0);
+
+      return (<Column key={index}>
         <DayIndicatorContainer>
-          <WeekDay>{daysNames[data.date.getDay()]}</WeekDay>
-          <MonthDay current={new Date().toString() == data.date.toString()}>{data.date.getDate()}</MonthDay>
+
+
+          <WeekDay>{daysNames[cellDate.getDay()]}</WeekDay>
+          <MonthDay current={new Date().toString() == cellDate.toString()}>{cellDate.getDate()}</MonthDay>
         </DayIndicatorContainer>
-        {baseCalendar(data.mettings, data.date)}
-      </Column>
-    ));
+        {renderColumns(cellDate, index)}
+      </Column>);
+    });
   }
 
-  function baseCalendar(mettings: Meeting[], currentDate: Date) {
+  function renderColumns(cellDate: Date, rowIndex: number) {
+    console.log(getCalendar.data)
     return (
-      <Column space={0}>
+      <Column key={new Date().toISOString() + Math.random()} space={0}>
         {Array.from({ length: 24 }).map((_, index: number) => {
-          <div>{index}</div>;
-          {
-            currentDate.setSeconds(0);
-            currentDate.setMilliseconds(0);
-            currentDate.setUTCHours(index, 0, 0);
-          }
-          if (!calendarKey) {
-            return;
-          }
-          const meettings = calendarKey[currentDate.toISOString()];
-          if (meettings) {
-            return (
-              <CalendarDayBlock onClick={dayBlockClickHandler} key={currentDate.toISOString()}>
-                {meettings.map((meeting: Meeting) => {
-                  return (
-                    <MeetingIndicator roomColor={meeting.room.color}>
-                      <RoomNumber>{meeting.room.id[meeting.room.id.length - 1]}</RoomNumber>
-                    </MeetingIndicator>
-                  );
-                })}
-              </CalendarDayBlock>
-            );
-          }
 
-          return <CalendarDayBlock onClick={dayBlockClickHandler} key={currentDate.toISOString()} />;
-        })}
-      </Column>
+          let currentCell = (rowIndex + 1) * (index + 1)
+          // console.log('CELL NUM ' + ((index + 1) * daysNames.length))
+          // console.log('CURRENTE CELL' + (currentCell))
+
+
+          // console.log(index)
+          // if (!calendarKey) {
+          //   return;
+          // }
+          // const meettings = calendarKey[cellDate.toISOString()];
+
+
+
+
+
+
+
+          // if (meettings) {
+          //   return (
+          //     <CalendarDayBlock onClick={dayBlockClickHandler} key={currentDate.toISOString()}>
+          //       {meettings.map((meeting: Meeting) => {
+          //         return (
+          //           <MeetingIndicator roomColor={meeting.room.color}>
+          //             <RoomNumber>{meeting.room.id[meeting.room.id.length - 1]}</RoomNumber>
+          //           </MeetingIndicator>
+          //         );
+          //       })}
+          //     </CalendarDayBlock>
+          //   );
+          // }
+
+          return <CalendarDayBlock onClick={dayBlockClickHandler} key={cellDate.toISOString() + cellDate.getDay()}>
+
+            {(() => {
+              // console.log(getRooms.data)
+
+              if (1 > 0) {
+                return <div>Tem reunião</div>;
+              }
+              else {
+                return <div>Não tem reunião reunião</div>;
+              }
+            })()}
+          </CalendarDayBlock>;
+        })
+        }
+      </Column >
     );
+  }
+
+
+  function renderContent() {
+
   }
 
   function dayBlockClickHandler(event: React.MouseEvent<HTMLElement, MouseEvent>) {
