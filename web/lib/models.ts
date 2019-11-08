@@ -44,3 +44,8 @@ export type MeetingInput = {
   startsAt: Date;
   endsAt: Date;
 };
+
+export type Time = {
+  hour: "00:00";
+  meetings: [Meeting];
+};

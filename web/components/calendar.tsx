@@ -8,7 +8,7 @@ import {
   RoomNumber,
   HourContainer
 } from "./calendar-styles";
-import { Meeting, MeetingRoom } from "../lib/models";
+import { Meeting, MeetingRoom, Time } from "../lib/models";
 import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import React, { useState } from "react";
@@ -20,17 +20,17 @@ const Calendar = () => {
   let calendarKey: any;
   const getCalendar = useQuery(
     gql`
-   query calendar{
-  calendar{
-    date
-    times{
-      hour
-      meetings{
-        id
+      query calendar {
+        calendar {
+          date
+          times {
+            hour
+            meetings {
+              id
+            }
+          }
+        }
       }
-    }
-  }
-}
     `
   );
   const getRooms = useQuery(
@@ -44,7 +44,7 @@ const Calendar = () => {
     `
   );
   if (getCalendar.data) {
-    console.log(getCalendar.data)
+    console.log(getCalendar.data);
     calendarKey = getCalendar.data.calendar.reduce(
       (acc: { [date: string]: Meeting[] }, date: { date: string; meetings: Meeting[] }) => {
         acc[date.date] = date.meetings;
@@ -88,7 +88,6 @@ const Calendar = () => {
     );
   }
 
-
   function renderRooms() {
     if (getRooms.data) {
       return getRooms.data.meetingRooms.map((room: MeetingRoom, index: number) => (
@@ -107,53 +106,44 @@ const Calendar = () => {
     }
   }
 
-
   function renderRows() {
-
-
-
     return Array.from({ length: calendarSize }).map((_, index: number) => {
-
-      const cellDate = new Date()
-      cellDate.setDate(cellDate.getDate() + index)
+      const cellDate = new Date();
+      cellDate.setDate(cellDate.getDate() + index);
       cellDate.setSeconds(0);
       cellDate.setMilliseconds(0);
       cellDate.setUTCHours(index, 0, 0);
 
-      return (<Column key={index}>
-        <DayIndicatorContainer>
-
-
-          <WeekDay>{daysNames[cellDate.getDay()]}</WeekDay>
-          <MonthDay current={new Date().toString() == cellDate.toString()}>{cellDate.getDate()}</MonthDay>
-        </DayIndicatorContainer>
-        {renderColumns(cellDate, index)}
-      </Column>);
+      return (
+        <Column key={index}>
+          <DayIndicatorContainer>
+            <WeekDay>{daysNames[cellDate.getDay()]}</WeekDay>
+            <MonthDay current={new Date().toString() == cellDate.toString()}>{cellDate.getDate()}</MonthDay>
+          </DayIndicatorContainer>
+          {renderColumns(cellDate, index)}
+        </Column>
+      );
     });
   }
 
   function renderColumns(cellDate: Date, rowIndex: number) {
-    console.log(getCalendar.data)
+    if (!getCalendar.data) {
+      return;
+    }
+
     return (
       <Column key={new Date().toISOString() + Math.random()} space={0}>
         {Array.from({ length: 24 }).map((_, index: number) => {
+          let currentCell = (rowIndex + 1) * (index + 1);
 
-          let currentCell = (rowIndex + 1) * (index + 1)
           // console.log('CELL NUM ' + ((index + 1) * daysNames.length))
           // console.log('CURRENTE CELL' + (currentCell))
-
 
           // console.log(index)
           // if (!calendarKey) {
           //   return;
           // }
           // const meettings = calendarKey[cellDate.toISOString()];
-
-
-
-
-
-
 
           // if (meettings) {
           //   return (
@@ -169,28 +159,22 @@ const Calendar = () => {
           //   );
           // }
 
-          return <CalendarDayBlock onClick={dayBlockClickHandler} key={cellDate.toISOString() + cellDate.getDay()}>
-
-            {(() => {
-              // console.log(getRooms.data)
-
-              if (1 > 0) {
-                return <div>Tem reunião</div>;
-              }
-              else {
-                return <div>Não tem reunião reunião</div>;
-              }
-            })()}
-          </CalendarDayBlock>;
-        })
-        }
-      </Column >
+          return (
+            <CalendarDayBlock onClick={dayBlockClickHandler} key={cellDate.toISOString() + cellDate.getDay()}>
+              {(() => {
+                return getCalendar.data.calendar[rowIndex].times.map((time: Time) => {
+                  return cell(time);
+                });
+              })()}
+            </CalendarDayBlock>
+          );
+        })}
+      </Column>
     );
   }
 
-
-  function renderContent() {
-
+  function cell(time: Time) {
+    return <Column>{time.hour}</Column>;
   }
 
   function dayBlockClickHandler(event: React.MouseEvent<HTMLElement, MouseEvent>) {
