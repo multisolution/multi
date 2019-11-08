@@ -130,7 +130,11 @@ const Calendar = () => {
 
     return (
       <CalendarDayBlock>
-        {getCalendar.data.calendar[rowIndex].times.map((block: Array<Time>) => intervalCell(block))}
+        {getCalendar.data.calendar[rowIndex].times.map((block: Array<Time>, index: number) => (
+          <div style={{ width: "100%" }} onClick={() => console.log(block)}>
+            {intervalCell(block)}
+          </div>
+        ))}
       </CalendarDayBlock>
     );
   }
@@ -157,10 +161,6 @@ const Calendar = () => {
         <RoomIndicator occuped={hasMeeting.length > 0}></RoomIndicator>
       </Row>
     );
-  }
-
-  function dayBlockClickHandler(event: React.MouseEvent<HTMLElement, MouseEvent>) {
-    console.log(event.currentTarget);
   }
 };
 export default Calendar;
