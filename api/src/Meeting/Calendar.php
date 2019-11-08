@@ -34,7 +34,7 @@ class Calendar implements Resolver
             foreach ($timePeriod as $time) {
                 $times[] = [
                     'hour' => $time->format('H:i'),
-                    'meetings' => array_filter($meetings, function (Meeting $meeting) use ($time): bool {
+                    'meetings' =>  array_filter($meetings, function (Meeting $meeting) use ($time): bool {
                         return (new Between($meeting))($time);
                     }),
                 ];
@@ -42,8 +42,10 @@ class Calendar implements Resolver
 
             $calendar[] = [
                 'date' => $date->format('d/m'),
-                'times' => $times,
+                'times' => array_chunk($times,4,true)[0],
             ];
+
+
         }
 
         return $calendar;
