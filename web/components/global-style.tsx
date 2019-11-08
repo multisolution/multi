@@ -18,12 +18,14 @@ export const theme: Theme = {
   colors: {
     primary: "#bad531",
     dark: "#808080",
-    transparent: "transparent"
+    transparent: "transparent",
+    text: "transparent"
   }
 };
 
 const GlobalStyle = createGlobalStyle`
-@import url('https://fonts.googleapis.com/css?family=PT+Sans:400,700&display=swap');
+  @import url('https://fonts.googleapis.com/css?family=PT+Sans:400,700&display=swap');
+
   * {
     box-sizing: border-box;
     transition: all 200ms;
@@ -75,10 +77,10 @@ export const Container = styled.div<ContainerProps>`
   width: ${props => (props.width ? props.width : "100%")};
   height: ${props => (props.height ? props.height : "")};
   padding: 0 15px;
-  margin:${props => (props.margin ? props.margin + "px" : "0px")};
+  margin: ${props => (props.margin ? props.margin + "px" : "0px")};
   background-image: url(${props => (props.bgImage ? props.bgImage : "")});
   background-repeat: no-repeat;
-  background-color:${props => (props.bgColor ? props.bgColor : "transparent")};
+  background-color: ${props => (props.bgColor ? props.bgColor : "transparent")};
 `;
 
 export const UserListElement = styled.div`
@@ -97,9 +99,9 @@ type RoomProps = {
 
 export const Room = styled.div<RoomProps>`
   border-radius: ${props => props.theme.borderRadius};
-  width:200px;
-  height:200px;
-  background-color:${props => props.bgColor};
+  width: 200px;
+  height: 200px;
+  background-color: ${props => props.bgColor};
   margin-left: 150px;
 `;
 

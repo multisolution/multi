@@ -105,6 +105,7 @@ const Calendar = () => {
       return (
         <Column
           decoration={css`
+            width: 100%;
             border-right: 1px solid lightgray;
             &:last-child {
               border-right: none;

@@ -1,58 +1,27 @@
-import React from "react";
-import styled from "styled-components";
+import React, {FunctionComponent} from "react";
 import Link from "next/link";
+import {Align, Row} from "./grid";
+import Button, {ButtonSkin} from "./button";
 
-const ContainerUsersBox = styled.div`
-  display: flex;
-  flex-direction: row;
-`;
-
-const UserBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-left: 20px;
-
-  button {
-    border: none;
-    outline: none;
-    font-weight: bold;
-    font-size: 16px;
-    background: none;
-
-    &:hover {
-      color: #bad531;
-      cursor: pointer;
-    }
-  }
-`;
-const BoxHeader = () => {
+const BoxHeader: FunctionComponent = () => {
   return (
-    <ContainerUsersBox>
-      <UserBox>
-        <span>Usuário/Admin</span>
-      </UserBox>
+    <Row mainAxis={Align.Center} crossAxis={Align.End}>
+      <span>Usuário/Admin</span>
 
-      <UserBox>
-        <Link href="/meeting-rooms">
-          <button>Calendario</button>
-        </Link>
-      </UserBox>
-      <UserBox>
-        <Link href="/create-user">
-          <button>Cadastrar Usuário</button>
-        </Link>
-      </UserBox>
+      <Link href="/meeting-rooms">
+        <Button skin={ButtonSkin.Text}>Calendario</Button>
+      </Link>
 
-      <UserBox>
-        <Link href="/index">
-          <button>Perfil</button>
-        </Link>
-      </UserBox>
+      <Link href="/create-user">
+        <Button skin={ButtonSkin.Text}>Cadastrar Usuário</Button>
+      </Link>
 
-      <UserBox>
-        <button>Sair</button>
-      </UserBox>
-    </ContainerUsersBox>
+      <Link href="/index">
+        <Button skin={ButtonSkin.Text}>Perfil</Button>
+      </Link>
+
+      <Button skin={ButtonSkin.Text}>Sair</Button>
+    </Row>
   );
 };
 
