@@ -4,11 +4,12 @@ import React, {useRef, useState} from "react";
 import Button from "../components/button";
 import {Container, Section} from "../components/global-style";
 import Layout from "../components/layout";
-import {Input} from "../components/form";
+import {Input, Form} from "../components/form";
 import {Column} from "../components/grid";
 import {withApollo} from "../lib/apollo";
 import gql from "graphql-tag";
 import {Role, User, UserInput} from "../lib/models";
+import TitlePage from "../components/title-page"
 
 const CreateUser: NextPage = () => {
   var emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -35,18 +36,19 @@ const CreateUser: NextPage = () => {
     <>
       <Layout>
         <Section>
-          <Container>
-            <form name="form">
+          <Container style={{display: "flex", justifyContent:"center"}}>
+            <Form name="form" style={{padding: "30px 0", maxWidth: "600px"}}>
               <Column>
-                <div>
+              <TitlePage>Novo usuário</TitlePage>
+                <div style={{width: "100%"}}>
                   <Input onChange={validateEmail} type="text" placeholder="Email" ref={email} />
                   <img src={validEmail ? "success_icon.svg" : "error_icon.svg"} />
                 </div>
-                <div>
+                <div style={{width: "100%"}}>
                   <Input onChange={validatePass} type="password" placeholder="Senha" ref={pass} />
                   <img src={validPass ? "success_icon.svg" : "error_icon.svg"} />
                 </div>
-                <div>
+                <div style={{width: "100%"}}>
                   <Input onChange={validatePass} type="password" placeholder="Confirmar senha" ref={confirmpass} />
                   <img src={validPass ? "success_icon.svg" : "error_icon.svg"} />
                 </div>
@@ -54,7 +56,7 @@ const CreateUser: NextPage = () => {
                   Cadastrar
                 </Button>
               </Column>
-            </form>
+            </Form>
             {renderError()}
           </Container>
         </Section>
