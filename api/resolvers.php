@@ -7,6 +7,7 @@ use Multi\Meeting;
 return [
     'Meeting' => [
         'room' => new Meeting\Room(),
+        'host' => new Meeting\Host(),
     ],
     'MeetingRoom' => [
         'calendar' => new MeetingRoom\Calendar(),

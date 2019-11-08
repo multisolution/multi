@@ -1,13 +1,17 @@
 import styled from "styled-components";
 
-export const Column = styled.div<{ space?: number }>`
+type ColumnProps = {
+  space?: number;
+};
+
+export const Column = styled.div<ColumnProps>`
   display: flex;
   flex-direction: column;
   justify-content:flex-start;
   align-items:flex-start;
 
   & > * {
-    margin-bottom: ${({ space = 8 }) => space}px;
+    margin-bottom: ${props => (props.space != 8 ? props.space : 8)}px
 
     &:last-child {
       margin-bottom: 0;

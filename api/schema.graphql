@@ -33,9 +33,14 @@ enum MeetingStatus {
     CANCELLED
 }
 
+type CalendarTime {
+    hour: String!
+    meetings: [Meeting]!
+}
+
 type Calendar {
     date: String!
-    meetings: [Meeting]!
+    times: [[CalendarTime]]!
 }
 
 type Query {

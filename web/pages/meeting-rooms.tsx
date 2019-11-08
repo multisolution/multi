@@ -1,48 +1,25 @@
 import { NextPage } from "next";
 import React from "react";
-
 import { Container, Section, Room } from "../components/global-style";
 import Layout from "../components/layout";
 import { Row, Column } from "../components/grid";
 import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
-import { MeetingRoom, Meeting } from "../lib/models";
+import { MeetingRoom } from "../lib/models";
 import { withApollo } from "../lib/apollo";
-import { array } from "prop-types";
-import { CalendarDayBlock } from "../components/calendar-day-block";
+import Calendar from "../components/calendar";
 
 const MeetingRooms: NextPage = () => {
-  const getRooms = useQuery(
-    gql`
-      query meetingRooms {
-        meetingRooms {
-          id
-          roomNumber
-          description
-          color
-        }
-      }
-    `
-  );
-
   return (
     <>
       <Layout>
-        <Section>
-          <Container>
-            <Column>
-              <Row>{renderTable()}</Row>
-
-              <Row>
-                {renderHours()}
-                {renderCalenddar()}
-              </Row>
-            </Column>
-          </Container>
-        </Section>
+        <Column>
+          <Calendar></Calendar>
+        </Column>
       </Layout>
     </>
   );
+
   function renderHours() {
     return (
       <Column>
@@ -93,161 +70,10 @@ const MeetingRooms: NextPage = () => {
       ));
     }
   }
-
-
   
-
   function meetingRoomClickHandler(event: React.MouseEvent<HTMLElement, MouseEvent>) {
     console.log(event.currentTarget.id);
   }
 };
-
-const calendarData = [
-  {
-    date: "06-11-19",
-    mettings: [
-      {
-        id: "String",
-        startsAt: "Date",
-        endsAt: "Date",
-        room: {
-          id: "string",
-          roomNumber: "number",
-          description: "string",
-          color: "string"
-        }
-      }
-    ]
-  },
-  {
-    date: "06-11-19",
-    mettings: [
-      {
-        id: "String",
-        startsAt: "Date",
-        endsAt: "Date",
-        room: {
-          id: "string",
-          roomNumber: "number",
-          description: "string",
-          color: "string"
-        }
-      },
-      {
-        id: "String",
-        startsAt: "Date",
-        endsAt: "Date",
-        room: {
-          id: "string",
-          roomNumber: "number",
-          description: "string",
-          color: "string"
-        }
-      },
-      {
-        id: "String",
-        startsAt: "Date",
-        endsAt: "Date",
-        room: {
-          id: "string",
-          roomNumber: "number",
-          description: "string",
-          color: "string"
-        }
-      }
-    ]
-  },
-  {
-    date: "06-11-19",
-    mettings: [
-      {
-        id: "String",
-        startsAt: "Date",
-        endsAt: "Date",
-        room: {
-          id: "string",
-          roomNumber: "number",
-          description: "string",
-          color: "string"
-        }
-      }
-    ]
-  },
-  {
-    date: "06-11-19",
-    mettings: [
-      {
-        id: "String",
-        startsAt: "Date",
-        endsAt: "Date",
-        room: {
-          id: "string",
-          roomNumber: "number",
-          description: "string",
-          color: "string"
-        }
-      }
-    ]
-  },
-  {
-    date: "06-11-19",
-    mettings: [
-      {
-        id: "String",
-        startsAt: "Date",
-        endsAt: "Date",
-        room: {
-          id: "string",
-          roomNumber: "number",
-          description: "string",
-          color: "string"
-        }
-      }
-    ]
-  },
-  {
-    date: "06-11-19",
-    mettings: [
-      {
-        id: "String",
-        startsAt: "Date",
-        endsAt: "Date",
-        room: {
-          id: "string",
-          roomNumber: "number",
-          description: "string",
-          color: "string"
-        }
-      }
-    ]
-  },
-  {
-    date: "06-11-19",
-    mettings: [
-      {
-        id: "String",
-        startsAt: "Date",
-        endsAt: "Date",
-        room: {
-          id: "string",
-          roomNumber: "number",
-          description: "string",
-          color: "string"
-        }
-      }
-    ]
-  }
-];
-
-// document.addEventListener("DOMContentLoaded", function() {
-//   var calendarEl = document.getElementById("calendar");
-//   if (calendarEl) {
-//     var calendar = new Calendar(calendarEl, {
-//       plugins: [dayGridPlugin]
-//     });
-
-//     calendar.render();
-//   }
-// });
 
 export default withApollo(MeetingRooms);
