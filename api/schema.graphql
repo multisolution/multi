@@ -40,7 +40,7 @@ type CalendarTime {
 
 type Calendar {
     date: String!
-    times: [CalendarTime]!
+    times: [[CalendarTime]]!
 }
 
 type Query {
