@@ -1,4 +1,4 @@
-import styled, { createGlobalStyle, css } from "styled-components";
+import styled, {createGlobalStyle, css} from "styled-components";
 
 export type Theme = {
   borderRadius: number;
@@ -19,7 +19,9 @@ export const theme: Theme = {
     primary: "#bad531",
     dark: "#808080",
     transparent: "transparent",
-    text: "transparent"
+    white: "#ffffff",
+    black: "#222222",
+    error: "#f20000",
   }
 };
 

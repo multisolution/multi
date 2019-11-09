@@ -45,7 +45,12 @@ export type MeetingInput = {
   endsAt: Date;
 };
 
-export type Time = {
-  hour: "00:00";
-  meetings: [Meeting];
+export type CalendarTime = {
+  hour: string;
+  meetings: Meeting[];
+};
+
+export type Calendar = {
+  date: string;
+  times: CalendarTime[][];
 };

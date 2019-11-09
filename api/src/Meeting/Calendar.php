@@ -42,12 +42,9 @@ class Calendar implements Resolver
                 ];
             }
 
-            $chuncked = array_chunk($times, 4, true);
-
-
             $calendar[] = [
-                'date' => $date->format('d/m'),
-                'times' => $chuncked
+                'date' => $date->format('Y-m-d'),
+                'times' => array_chunk($times, 4, true),
             ];
         }
 

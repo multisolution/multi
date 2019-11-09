@@ -8,6 +8,11 @@ const formControl = css`
   border-width: 1px;
   border-color: ${props => props.theme.colors["primary"]};
   border-radius: ${props => props.theme.borderRadius}px;
+  outline: none;
+  
+  &:hover, &:active, &:focus {
+    box-shadow: 0px 2px 0px 0px ${props => props.theme.colors["primary"]}; 
+  }
 `;
 
 export const Input = styled.input`
