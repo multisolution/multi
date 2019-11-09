@@ -1,4 +1,4 @@
-import styled, { css, FlattenSimpleInterpolation } from "styled-components";
+import styled, {css, FlattenSimpleInterpolation} from "styled-components";
 
 export enum Align {
   Start = "flex-start",
@@ -23,8 +23,7 @@ const gridCss = css<GridProps>`
 export const Column = styled.div<GridProps>`
   ${gridCss}
   flex-direction: column;
-  height: 100%;
-  
+    
   & > * {
     margin-bottom: ${({ space = 8 }) => space}px;
 
@@ -37,7 +36,6 @@ export const Column = styled.div<GridProps>`
 export const Row = styled.div<GridProps>`
   ${gridCss}
   flex-direction: row;
-  width: 100%;
 
   & > * {
     margin-right: ${({ space = 8 }) => space}px;

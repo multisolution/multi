@@ -1,28 +1,19 @@
-import { Column, Row, Align } from "./grid";
-import {
-  CalendarDayBlock,
-  MonthDay,
-  DayIndicatorContainer,
-  WeekDay,
-  HourContainer,
-  RoomIndicator
-} from "./calendar-styles";
-import { Meeting, MeetingRoom, Time } from "../lib/models";
-import { useQuery } from "@apollo/react-hooks";
+import {Column, Row} from "./grid";
+import {Calendar as CalendarModel, CalendarTime} from "../lib/models";
+import {useQuery} from "@apollo/react-hooks";
 import gql from "graphql-tag";
-import React, {FunctionComponent, useState} from "react";
-import { Room } from "./global-style";
-import { css } from "styled-components";
+import React, {FunctionComponent, MouseEvent} from "react";
+import Whoops from "./whoops";
+import Loading from "./loading";
+import {sameDate, weekDays} from "../lib/misc";
+import styled, {css} from "styled-components";
 
 type CalendarProps = {
-  onCellClick: (times: Time[]) => void;
-}
+  onTimeGroupClick: (date: Date, time: string) => void;
+};
 
-const Calendar: FunctionComponent<CalendarProps> = ({onCellClick}) => {
-  const [roomCheck, setRoomCheck] = useState();
-
-  let calendarKey: any;
-  const getCalendar = useQuery(
+const Calendar: FunctionComponent<CalendarProps> = ({onTimeGroupClick: timeGroupClickDelegate}) => {
+    const calendarQuery = useQuery<{ calendar: CalendarModel[] }>(
     gql`
       query calendar {
         calendar {
@@ -33,6 +24,7 @@ const Calendar: FunctionComponent<CalendarProps> = ({onCellClick}) => {
               id
               room {
                 id
+                color
               }
             }
           }
@@ -40,132 +32,135 @@ const Calendar: FunctionComponent<CalendarProps> = ({onCellClick}) => {
       }
     `
   );
-  const getRooms = useQuery(
-    gql`
-      query meetingRooms {
-        meetingRooms {
-          id
-          color
-        }
-      }
-    `
-  );
-  if (getCalendar.data) {
-    calendarKey = getCalendar.data.calendar.reduce(
-      (acc: { [date: string]: Meeting[] }, date: { date: string; meetings: Meeting[] }) => {
-        acc[date.date] = date.meetings;
-        return acc;
-      },
-      {}
-    );
+
+  if (calendarQuery.error || (calendarQuery.data === undefined && !calendarQuery.loading)) {
+    console.error("Error querying calendar", calendarQuery.error);
+    return <Whoops/>;
   }
 
-  const calendarSize = 7;
-  const daysNames = ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SAB"];
-  const dates = Array.from({ length: calendarSize }).map((_, index: number) => {
-    var currentDay = new Date();
-    if (index > 0) {
-      currentDay.setDate(currentDay.getDate() + index);
-    }
+  if (calendarQuery.loading || calendarQuery.data === undefined) {
+    return <Loading/>;
+  }
 
-    return {
-      date: currentDay
-    };
-  });
+  const today = new Date();
+
+  function onTimeGroupClick(date: Date, time: CalendarTime) {
+    timeGroupClickDelegate(date, time.hour);
+  }
 
   return (
     <Row space={0}>
-      {renderHours()}
-      {renderRows()}
+      <YAxis/>
+      {calendarQuery.data.calendar.map(calendar => {
+        const date = new Date(`${calendar.date} 00:00:00`);
+
+        return (
+          <CalendarDate>
+            <WeekDayLabel>{weekDays[date.getDay()]}</WeekDayLabel>
+            <DateLabel current={sameDate(date, today)}>{date.getDate()}</DateLabel>
+
+            {calendar.times.map(timeGroup => {
+              function onClick(event: MouseEvent<HTMLDivElement>) {
+                event.preventDefault();
+                onTimeGroupClick(date, timeGroup[0]);
+              }
+
+              return (
+                <TimeGroup onClick={onClick}>
+                  {timeGroup.map(time => (
+                    <Time>
+                      {time.meetings.map(meeting => (
+                        <CalendarMeeting color={meeting.room.color}/>
+                      ))}
+                    </Time>
+                  ))}
+                </TimeGroup>
+              );
+            })}
+          </CalendarDate>
+        );
+      })}
     </Row>
   );
-
-  function renderHours() {
-    return (
-      <Column
-        decoration={css`
-          margin-top: 53px;
-        `}
-      >
-        {Array.from({ length: 24 }).map((_, index: number) => (
-          <HourContainer key={index * Math.random() * 1000}>{index + ":00"}</HourContainer>
-        ))}
-      </Column>
-    );
-  }
-
-  function renderRows() {
-    if (!getCalendar.data || !getRooms.data) {
-      return;
-    }
-
-    return Array.from({ length: getCalendar.data.calendar.length }).map((_, index: number) => {
-      const cellDate = new Date();
-      cellDate.setDate(cellDate.getDate() + index);
-      cellDate.setSeconds(0);
-      cellDate.setMilliseconds(0);
-      cellDate.setUTCHours(index, 0, 0);
-
-      return (
-        <Column
-          decoration={css`
-            width: 100%;
-            border-right: 1px solid lightgray;
-            &:last-child {
-              border-right: none;
-            }
-          `}
-          key={index}
-          mainAxis={Align.Center}
-        >
-          <DayIndicatorContainer>
-            <WeekDay>{daysNames[cellDate.getDay()]}</WeekDay>
-            <MonthDay current={new Date().toString() == cellDate.toString()}>{cellDate.getDate()}</MonthDay>
-          </DayIndicatorContainer>
-          {renderColumns(cellDate, index)}
-        </Column>
-      );
-    });
-  }
-
-  function renderColumns(cellDate: Date, rowIndex: number) {
-    if (!getCalendar.data) {
-      return;
-    }
-
-    return (
-      <CalendarDayBlock>
-        {getCalendar.data.calendar[rowIndex].times.map((block: Array<Time>, index: number) => (
-          <div style={{ width: "100%" }} onClick={() => onCellClick(block)}>
-            {intervalCell(block)}
-          </div>
-        ))}
-      </CalendarDayBlock>
-    );
-  }
-
-  function intervalCell(time: Array<Time>) {
-    return (
-      <div style={{ width: "100%", borderTop: "1px solid lightgray" }}>
-        {time.map((t, i) => (
-          <Row>
-            {getRooms.data.meetingRooms.map((room: MeetingRoom, index: number) => renderRoom(room, index, t.meetings))}
-          </Row>
-        ))}
-      </div>
-    );
-  }
-
-  function renderRoom(room: MeetingRoom, index: number, allMeetings: Array<Meeting>) {
-    const hasMeeting = allMeetings.filter(m => {
-      return m.room.id == room.id;
-    });
-
-    return (
-      <Row>
-        <RoomIndicator occuped={hasMeeting.length > 0}></RoomIndicator>
-      </Row>
-    );
-  }
 };
+
+const YAxis: FunctionComponent = () => {
+  return (
+    <Column
+      space={13}
+      decoration={css`
+        margin-top: 53px;
+      `}
+    >
+      {Array.from({length: 24}).map((_, index: number) => (
+        <YAxisLabel key={`hour-${index}`}>{index + ":00"}</YAxisLabel>
+      ))}
+    </Column>
+  );
+};
+
+const YAxisLabel = styled.div`
+  color:${props => props.theme.colors["dark"]}
+  display:flex;
+  align-items:flex-start;
+  justify-content:flex-end ;
+  font-size: 16px;  
+`;
+
+const calendarBorder = "1px solid #f1f1f1";
+
+const CalendarDate = styled.div`
+  color: #000;
+  display:flex
+  flex:1;
+  align-items:center;
+  width:100%;
+  flex-direction:column;
+  text-transform: uppercase;
+  font-weight: bold;
+  border-right: ${calendarBorder};
+  
+  &:last-child {
+    border-right: none;
+  }
+`;
+
+const WeekDayLabel = styled.div`
+  color:${props => props.theme.colors["dark"]} 
+  font-size: 20px;
+  text-indent: -2.5px;
+  margin: 0 0 5px 0;
+`;
+
+const DateLabel = styled.div<{ current: boolean }>`
+  background-color: ${props => (props.current ? props.theme.colors["primary"] : "#fff")}
+  border-radius: 50%;
+  color:${props => (props.current ? "#fff" : props.theme.colors["dark"])}
+  display:flex;
+  font-weight:bold;
+  align-items:center ;
+  justify-content:center ;
+  font-size: 25px;    
+`;
+
+const TimeGroup = styled.div`
+  width: 100%;
+  border-top: ${calendarBorder};
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${props => props.theme.colors.primary};
+  }
+`;
+
+const Time = styled.div`
+  height: 8px;
+  display: flex;
+`;
+
+const CalendarMeeting = styled.div<{ color: string }>`
+  background: ${props => props.color};
+  flex: 1;
+`;
+
 export default Calendar;

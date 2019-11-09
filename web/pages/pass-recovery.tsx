@@ -1,10 +1,8 @@
 import {NextPage} from "next";
 import React, {useRef, useState} from "react";
-import Button from "../components/button";
-import {Container, Section} from "../components/global-style";
-import Layout from "../components/layout";
+import Button, {ButtonSkin} from "../components/button";
 import {Column} from "../components/grid";
-import {Input, Form} from "../components/form";
+import {Form, Input} from "../components/form";
 import redirect from "../lib/redirect";
 import styled from "styled-components"
 import {FaLongArrowAltLeft} from 'react-icons/fa/'
@@ -31,7 +29,7 @@ const PassRecovery: NextPage = () => {
     margin: 0 10px;
 
   }
-`
+`;
 // onClick={() => redirect(null, "/signin")}
   return (
     <>
@@ -48,15 +46,17 @@ const PassRecovery: NextPage = () => {
                     <Input type="text" placeholder="Email de cadastro" ref={email} />
 
                     <div style={{position: "relative", display: "flex" }}>
-                    <Button 
-                      style={{width: "55px", position: "absolute", bottom: "0px"}} colorText="dark" skin="transparent"
-                      onClick={() => { 
-                       setSended(false)
+                    <Button
+                      style={{width: "55px", position: "absolute", bottom: "0px"}} colorText="dark"
+                      skin={ButtonSkin.Text}
+                      onClick={() => {
+                        setSended(false);
                        redirect(null, "/signin")}} >
                     <FaLongArrowAltLeft style={{fontSize: "22px", color: "#bad531", width: "20px"}}></FaLongArrowAltLeft>
                     </Button>
 
-                    <Button style={{width: "100%"}} colorText="dark" skin="transparent" onClick={sendRecoveryEmail}>
+                      <Button style={{width: "100%"}} colorText="dark" skin={ButtonSkin.Text}
+                              onClick={sendRecoveryEmail}>
                       Recuperar senha
                     </Button>
                     </div>
@@ -70,12 +70,12 @@ const PassRecovery: NextPage = () => {
                         <img src="/logo.png" />             
                   </div>
                   <b style={{ paddingTop: "10px", textAlign: "center" }}>Uma nova senha foi gerada e enviada para o email {email.current ? email.current.value : ""}</b>
-                  <Button colorText="dark" skin="transparent" onClick={() => {
-                    setSended(false)
+                  <Button colorText="dark" skin={ButtonSkin.Text} onClick={() => {
+                    setSended(false);
                     redirect(null, "/signin")}} >
                     Voltar para login
                   </Button>
-                  {/* <Button colorText="dark" skin="transparent" onClick={() => redirect(null, "/signin")}>
+                  {/* <Button colorText="dark" skin=ButtonSkin.Text onClick={() => redirect(null, "/signin")}>
                     Voltar para login
                   </Button> */}
                 </div>
