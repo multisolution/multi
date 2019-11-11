@@ -1,7 +1,7 @@
-import {NextPage} from "next";
+import {NextPage, NextPageContext} from "next";
 import React, {useState} from "react";
 import Layout from "../components/layout";
-import {withApollo} from "../lib/apollo";
+import {WithApollo, withApollo} from "../lib/apollo";
 import Calendar from "../components/calendar";
 import Modal from "../components/modal";
 import NewMeetingForm, {NewMeetingRoomFormProps} from "../components/new-meeting-form";
@@ -10,6 +10,8 @@ import {useQuery} from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import Whoops from "../components/whoops";
 import Loading from "../components/loading";
+import checkLoggedIn from "../lib/check-logged-in";
+import redirect from "../lib/redirect";
 
 const MeetingRooms: NextPage = () => {
   const [modal, setModal] = useState(false);
@@ -17,13 +19,13 @@ const MeetingRooms: NextPage = () => {
 
     const roomsQuery = useQuery<{ meetingRooms: MeetingRoom[] }>(
       gql`
-        query Rooms {
-          meetingRooms {
-            id
-            roomNumber
-            description
+          query Rooms {
+              meetingRooms {
+                  id
+                  roomNumber
+                  description
+              }
           }
-        }
       `
     );
 
@@ -40,7 +42,7 @@ const MeetingRooms: NextPage = () => {
     setMeetingFormProps({
       ...meetingFormProps,
       initialDate,
-      initialTime,
+      initialTime
     });
 
     setModal(true);
@@ -55,14 +57,20 @@ const MeetingRooms: NextPage = () => {
     <Layout>
       <Calendar onTimeGroupClick={onTimeGroupClick}/>
       <Modal isOpen={modal} onClose={() => setModal(false)}>
-        <NewMeetingForm
-          {...meetingFormProps}
-          rooms={roomsQuery.data.meetingRooms}
-          onSubmit={onNewMeetingSubmit}
-        />
+        <NewMeetingForm {...meetingFormProps} rooms={roomsQuery.data.meetingRooms} onSubmit={onNewMeetingSubmit}/>
       </Modal>
     </Layout>
   );
+};
+
+MeetingRooms.getInitialProps = async (context: NextPageContext & WithApollo) => {
+  const user = await checkLoggedIn(context.apolloClient);
+
+  if (!user) {
+    redirect(context, "/signin");
+  }
+
+  return {user};
 };
 
 export default withApollo(MeetingRooms);

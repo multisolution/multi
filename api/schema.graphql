@@ -53,6 +53,7 @@ type Query {
 
 type Mutation {
     signIn(email: String!, password: String!): String!
+    signOut: Boolean!
     createUser(input: UserInput!): User
     createMeeting(input: MeetingInput!): Meeting
     createMeetingRoom(input: MeetingRoomInput!): MeetingRoom

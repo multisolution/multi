@@ -1,12 +1,14 @@
-import { NextPage } from "next";
-import React, { useState, useEffect } from "react";
-import { withApollo } from "../lib/apollo";
-import { useQuery, useMutation } from "@apollo/react-hooks";
+import {NextPage, NextPageContext} from "next";
+import React from "react";
+import {WithApollo, withApollo} from "../lib/apollo";
+import {useMutation, useQuery} from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import Layout from "../components/layout";
-import { Section, Container, UserListElement } from "../components/global-style";
-import { User } from "../lib/models";
-import { Column } from "../components/grid";
+import {Container, Section, UserListElement} from "../components/global-style";
+import {User} from "../lib/models";
+import {Column} from "../components/grid";
+import checkLoggedIn from "../lib/check-logged-in";
+import redirect from "../lib/redirect";
 
 const ListUsers: NextPage = () => {
   const getUsers = useQuery(
@@ -67,6 +69,16 @@ const ListUsers: NextPage = () => {
       </Layout>
     </>
   );
+};
+
+ListUsers.getInitialProps = async (context: NextPageContext & WithApollo) => {
+  const user = await checkLoggedIn(context.apolloClient);
+
+  if (!user) {
+    redirect(context, "/signin");
+  }
+
+  return {user};
 };
 
 export default withApollo(ListUsers);
