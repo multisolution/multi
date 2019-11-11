@@ -1,15 +1,16 @@
 import {useApolloClient, useMutation} from "@apollo/react-hooks";
-import {NextPage} from "next";
+import {NextPage, NextPageContext} from "next";
 import React, {FormEvent, useState} from "react";
 import Button, {ButtonSkin} from "../components/button";
 import gql from "graphql-tag";
 import cookie from "cookie";
 import redirect from "../lib/redirect";
-import {withApollo} from "../lib/apollo";
+import {WithApollo, withApollo} from "../lib/apollo";
 import {Column} from "../components/grid";
 import {Form, Input} from "../components/form";
 import styled from "styled-components";
 import PasswordRecovery from "../components/password-recovery";
+import checkLoggedIn from "../lib/check-logged-in";
 
 const SignInPage = styled.div`
   background: url(/assets/img/signin_bg.jpg) no-repeat center;
@@ -149,6 +150,16 @@ const SignIn: NextPage = () => {
       )}
     </SignInPage>
   );
+};
+
+SignIn.getInitialProps = async (context: NextPageContext & WithApollo) => {
+  const user = await checkLoggedIn(context.apolloClient);
+
+  if (user) {
+    redirect(context, '/meeting-rooms');
+  }
+
+  return {};
 };
 
 export default withApollo(SignIn);

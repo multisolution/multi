@@ -9,6 +9,7 @@ use Multi\InMemoryMessages;
 use Multi\Meeting\Edit;
 use Multi\Meeting\Meeting;
 use Multi\MeetingRoom\MeetingRoom;
+use Multi\User\User;
 use PHPUnit\Framework\TestCase;
 
 class EditTest extends TestCase
@@ -23,6 +24,7 @@ class EditTest extends TestCase
         $context = new Context();
         $context->messages = new InMemoryMessages();
         $context->db = new InMemoryDb();
+        $context->user = new User();
 
         $meetingRoom = new MeetingRoom();
         $meetingRoom->roomNumber = 1;
@@ -37,6 +39,7 @@ class EditTest extends TestCase
         $meeting->room = $meetingRoom;
         $meeting->startsAt = $initialStartsAt;
         $meeting->endsAt = $initialEndsAt;
+        $meeting->host = $context->user;
         $context->db->insertMeeting($meeting);
 
         $args = [

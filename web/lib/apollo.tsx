@@ -11,6 +11,8 @@ import fetch from "isomorphic-unfetch";
 
 let apolloClient: ApolloClient<NormalizedCacheObject> | null = null;
 
+type GetToken = () => string | null;
+
 export type WithApollo = {
   apolloClient: ApolloClient<NormalizedCacheObject>;
   apolloState: any;
@@ -18,7 +20,7 @@ export type WithApollo = {
 
 export function withApollo<PageProps>(PageComponent: NextPage, {ssr = true}: { ssr?: boolean } = {}) {
   const WithApollo = ({apolloClient, apolloState, ...pageProps}: WithApollo & PageProps) => {
-    const client = apolloClient || initApolloClient(apolloState);
+    const client = apolloClient || initApolloClient(apolloState, getTokenFromDocument());
     return (
       <ApolloProvider client={client}>
         <PageComponent {...pageProps} />
@@ -39,7 +41,7 @@ export function withApollo<PageProps>(PageComponent: NextPage, {ssr = true}: { s
   if (ssr || PageComponent.getInitialProps) {
     WithApollo.getInitialProps = async (context: NextPageContext & WithApollo) => {
       const {AppTree} = context;
-      const apolloClient = (context.apolloClient = initApolloClient({}));
+      const apolloClient = (context.apolloClient = initApolloClient({}, getTokenFromContext(context)));
 
       const pageProps = PageComponent.getInitialProps ? await PageComponent.getInitialProps(context) : {};
 
@@ -79,19 +81,19 @@ export function withApollo<PageProps>(PageComponent: NextPage, {ssr = true}: { s
   return WithApollo;
 }
 
-function initApolloClient(initialState: any): ApolloClient<NormalizedCacheObject> {
+function initApolloClient(initialState: any, getToken: GetToken): ApolloClient<NormalizedCacheObject> {
   if (typeof window === "undefined") {
-    return createApolloClient(initialState);
+    return createApolloClient(initialState, getToken);
   }
 
   if (apolloClient === null) {
-    apolloClient = createApolloClient(initialState);
+    apolloClient = createApolloClient(initialState, getToken);
   }
 
   return apolloClient;
 }
 
-function createApolloClient(initialState: any): ApolloClient<NormalizedCacheObject> {
+function createApolloClient(initialState: any, getToken: GetToken): ApolloClient<NormalizedCacheObject> {
   const fetchOptions = {};
 
   const http = new HttpLink({
@@ -118,14 +120,22 @@ function createApolloClient(initialState: any): ApolloClient<NormalizedCacheObje
   });
 }
 
-function getToken(context?: NextPageContext): string | null {
-  if (context && context.req) {
-    return cookie.parse(context.req.headers.cookie || "").token || null;
-  }
+const getTokenFromContext = (context: NextPageContext): GetToken => {
+  return () => {
+    if (context && context.req) {
+      return cookie.parse(context.req.headers.cookie || "").token || null;
+    }
 
-  if (typeof window !== "undefined") {
-    return cookie.parse(window.document.cookie).token || null;
-  }
+    return null;
+  };
+};
 
-  return null;
-}
+const getTokenFromDocument = (): GetToken => {
+  return () => {
+    if (typeof window !== "undefined") {
+      return cookie.parse(window.document.cookie).token || null;
+    }
+
+    return null;
+  };
+};
