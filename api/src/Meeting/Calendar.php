@@ -9,6 +9,7 @@ use DatePeriod;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
+use GraphQL\Error\UserError;
 use Multi\Context;
 use Multi\Resolver;
 use function Siler\array_get;
@@ -19,6 +20,10 @@ class Calendar implements Resolver
 
     public function __invoke($root, array $args, Context $context)
     {
+        if ($context->user === null) {
+            throw new UserError($context->messages->get('unauthenticated'));
+        }
+
         $now = new DateTimeImmutable();
         $from = array_get($args, 'from', $now);
         $to = array_get($args, 'to', $now->modify(self::DEFAULT_INTERVAL));
