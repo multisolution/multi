@@ -1,5 +1,5 @@
 import { Column, Row } from "./grid";
-import { Calendar as CalendarModel, CalendarTime } from "../lib/models";
+import { Calendar as CalendarModel, CalendarTime, MeetingRoom } from "../lib/models";
 import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import React, { FunctionComponent, MouseEvent, useEffect, useLayoutEffect } from "react";
@@ -7,12 +7,14 @@ import Whoops from "./whoops";
 import Loading from "./loading";
 import { sameDate, weekDays } from "../lib/misc";
 import styled, { css } from "styled-components";
+import Room from "./room";
 
 type CalendarProps = {
+  rooms: MeetingRoom[];
   onTimeGroupClick: (date: Date, time: string) => void;
 };
 
-const Calendar: FunctionComponent<CalendarProps> = ({ onTimeGroupClick: timeGroupClickDelegate }) => {
+const Calendar: FunctionComponent<CalendarProps> = ({ rooms: roomsData, onTimeGroupClick: timeGroupClickDelegate }) => {
   const calendarQuery = useQuery<{ calendar: CalendarModel[] }>(
     gql`
       query calendar {

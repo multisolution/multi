@@ -53,7 +53,7 @@ const MeetingRooms: NextPage = () => {
 
   return (
     <Layout>
-      <Calendar onTimeGroupClick={onTimeGroupClick} />
+      <Calendar rooms={roomsQuery.data.meetingRooms} onTimeGroupClick={onTimeGroupClick} />
       <Modal isOpen={modal} onClose={() => setModal(false)}>
         <NewMeetingForm {...meetingFormProps} rooms={roomsQuery.data.meetingRooms} onSubmit={onNewMeetingSubmit} />
       </Modal>
