@@ -12,6 +12,7 @@ import Whoops from "../components/whoops";
 import Loading from "../components/loading";
 import checkLoggedIn from "../lib/check-logged-in";
 import redirect from "../lib/redirect";
+import ListRooms from "../components/list-rooms";
 
 const MeetingRooms: NextPage = () => {
   const [modal, setModal] = useState(false);
@@ -24,6 +25,7 @@ const MeetingRooms: NextPage = () => {
           id
           roomNumber
           description
+          color
         }
       }
     `
@@ -55,6 +57,12 @@ const MeetingRooms: NextPage = () => {
 
   return (
     <Layout>
+      <div
+        key={"list-rooms-parent" + Math.random() * 1000}
+        style={{ display: "flex", justifyContent: "center", paddingBottom: "40px" }}
+      >
+        <ListRooms key={"list-rooms"} rooms={roomsQuery.data.meetingRooms} />
+      </div>
       <Calendar rooms={roomsQuery.data.meetingRooms} onTimeGroupClick={onTimeGroupClick} />
       <Modal isOpen={modal} onClose={() => setModal(false)}>
         <NewMeetingForm {...meetingFormProps} rooms={roomsQuery.data.meetingRooms} onSubmit={onNewMeetingSubmit} />

@@ -68,7 +68,7 @@ const Calendar: FunctionComponent<CalendarProps> = ({ rooms: roomsData, onTimeGr
         const date = new Date(`${calendar.date} 00:00:00`);
 
         return (
-          <CalendarDate>
+          <CalendarDate key={Math.random() * 1000000}>
             <WeekDayLabel>{weekDays[date.getDay()]}</WeekDayLabel>
             <DateLabel current={sameDate(date, today)}>{date.getDate()}</DateLabel>
             {calendar.times.map(timeGroup => {
@@ -78,11 +78,14 @@ const Calendar: FunctionComponent<CalendarProps> = ({ rooms: roomsData, onTimeGr
               }
 
               return (
-                <TimeGroup onClick={onClick}>
+                <TimeGroup key={Math.random() * 1000000} onClick={onClick}>
                   {timeGroup.map(time => (
-                    <Time>
+                    <Time key={"time" + timeGroup.indexOf(time)}>
                       {time.meetings.map(meeting => (
-                        <CalendarMeeting color={meeting.room.color} />
+                        <CalendarMeeting
+                          key={"CalendarMeeting" + time.meetings.indexOf(meeting)}
+                          color={meeting.room.color}
+                        />
                       ))}
                     </Time>
                   ))}

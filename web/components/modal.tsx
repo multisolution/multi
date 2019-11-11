@@ -1,9 +1,9 @@
-import React, {FunctionComponent} from "react";
-import styled, {css} from "styled-components";
+import React, { FunctionComponent } from "react";
+import styled, { css } from "styled-components";
 
 type WrapperProps = {
-  isOpen: boolean
-}
+  isOpen: boolean;
+};
 
 const fullSize = css`
   top: 0;
@@ -15,8 +15,8 @@ const fullSize = css`
 const Wrapper = styled.div<WrapperProps>`
   ${fullSize}
   position: fixed;
-  display: ${({isOpen = false}) => isOpen ? 'flex' : 'none'};
-  opacity: ${({isOpen = false}) => isOpen ? '1' : '0'};
+  display: ${({ isOpen = false }) => (isOpen ? "flex" : "none")};
+  opacity: ${({ isOpen = false }) => (isOpen ? "1" : "0")};
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -29,9 +29,9 @@ const Overlay = styled.div`
 `;
 
 const Container = styled.div`
-  padding: ${({theme}) => theme.space * 4}px;
+  padding: ${({ theme }) => theme.space * 4}px;
   background: white;
-  border-radius: ${({theme}) => theme.borderRadius}px;
+  border-radius: ${({ theme }) => theme.borderRadius}px;
   display: flex;
   flex-direction: column;
   box-shadow: 0 4px 8px 8px #0000002e;
@@ -49,12 +49,12 @@ const CloseButton = styled.button`
 
 type ModalProps = {
   onClose: () => void;
-}
+};
 
-const Modal: FunctionComponent<ModalProps & WrapperProps> = ({isOpen, children, onClose}) => {
+const Modal: FunctionComponent<ModalProps & WrapperProps> = ({ isOpen, children, onClose }) => {
   return (
     <Wrapper isOpen={isOpen}>
-      <Overlay onClick={_ => onClose()}  />
+      <Overlay onClick={_ => onClose()} />
       <Container>
         <CloseButton onClick={_ => onClose()}>x</CloseButton>
         {children}
