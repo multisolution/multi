@@ -9,6 +9,7 @@ use DatePeriod;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
+use DateTimeZone;
 use GraphQL\Error\UserError;
 use Multi\Context;
 use Multi\Resolver;
@@ -24,9 +25,14 @@ class Calendar implements Resolver
             throw new UserError($context->messages->get('unauthenticated'));
         }
 
-        $now = new DateTimeImmutable();
+        $now = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+
         $from = array_get($args, 'from', $now);
+        $from = new DateTimeImmutable("{$from->format('Y-m-d')} 00:00:00");
+
         $to = array_get($args, 'to', $now->modify(self::DEFAULT_INTERVAL));
+        $to = new DateTimeImmutable("{$to->format('Y-m-d')} 23:59:59");
+
         $meetings = $context->db->meetings($from, $to);
         $period = new DatePeriod($from, new DateInterval('P1D'), $to);
         $calendar = [];
