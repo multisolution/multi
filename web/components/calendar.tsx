@@ -1,19 +1,21 @@
-import {Column, Row} from "./grid";
-import {Calendar as CalendarModel, CalendarTime} from "../lib/models";
-import {useQuery} from "@apollo/react-hooks";
+import { Column, Row } from "./grid";
+import { Calendar as CalendarModel, CalendarTime, MeetingRoom } from "../lib/models";
+import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
-import React, {FunctionComponent, MouseEvent} from "react";
+import React, { FunctionComponent, MouseEvent, useEffect, useLayoutEffect } from "react";
 import Whoops from "./whoops";
 import Loading from "./loading";
-import {sameDate, weekDays} from "../lib/misc";
-import styled, {css} from "styled-components";
+import { sameDate, weekDays } from "../lib/misc";
+import styled, { css } from "styled-components";
+import Room from "./room";
 
 type CalendarProps = {
+  rooms: MeetingRoom[];
   onTimeGroupClick: (date: Date, time: string) => void;
 };
 
-const Calendar: FunctionComponent<CalendarProps> = ({onTimeGroupClick: timeGroupClickDelegate}) => {
-    const calendarQuery = useQuery<{ calendar: CalendarModel[] }>(
+const Calendar: FunctionComponent<CalendarProps> = ({ rooms: roomsData, onTimeGroupClick: timeGroupClickDelegate }) => {
+  const calendarQuery = useQuery<{ calendar: CalendarModel[] }>(
     gql`
       query calendar {
         calendar {
@@ -30,16 +32,26 @@ const Calendar: FunctionComponent<CalendarProps> = ({onTimeGroupClick: timeGroup
           }
         }
       }
-    `
+    `,
+    {
+      fetchPolicy: "no-cache",
+      errorPolicy: "all"
+    }
   );
+
+  useLayoutEffect(() => {
+    return () => {
+      calendarQuery.refetch();
+    };
+  });
 
   if (calendarQuery.error || (calendarQuery.data === undefined && !calendarQuery.loading)) {
     console.error("Error querying calendar", calendarQuery.error);
-    return <Whoops/>;
+    return <Whoops />;
   }
 
   if (calendarQuery.loading || calendarQuery.data === undefined) {
-    return <Loading/>;
+    return <Loading />;
   }
 
   const today = new Date();
@@ -48,9 +60,10 @@ const Calendar: FunctionComponent<CalendarProps> = ({onTimeGroupClick: timeGroup
     timeGroupClickDelegate(date, time.hour);
   }
 
+  // calendarQuery.refetch();
   return (
     <Row space={0}>
-      <YAxis/>
+      <YAxis />
       {calendarQuery.data.calendar.map(calendar => {
         const date = new Date(`${calendar.date} 00:00:00`);
 
@@ -58,7 +71,6 @@ const Calendar: FunctionComponent<CalendarProps> = ({onTimeGroupClick: timeGroup
           <CalendarDate>
             <WeekDayLabel>{weekDays[date.getDay()]}</WeekDayLabel>
             <DateLabel current={sameDate(date, today)}>{date.getDate()}</DateLabel>
-
             {calendar.times.map(timeGroup => {
               function onClick(event: MouseEvent<HTMLDivElement>) {
                 event.preventDefault();
@@ -70,7 +82,7 @@ const Calendar: FunctionComponent<CalendarProps> = ({onTimeGroupClick: timeGroup
                   {timeGroup.map(time => (
                     <Time>
                       {time.meetings.map(meeting => (
-                        <CalendarMeeting color={meeting.room.color}/>
+                        <CalendarMeeting color={meeting.room.color} />
                       ))}
                     </Time>
                   ))}
@@ -89,10 +101,10 @@ const YAxis: FunctionComponent = () => {
     <Column
       space={13}
       decoration={css`
-        margin-top: 53px;
+        margin-top: 73px;
       `}
     >
-      {Array.from({length: 24}).map((_, index: number) => (
+      {Array.from({ length: 24 }).map((_, index: number) => (
         <YAxisLabel key={`hour-${index}`}>{index + ":00"}</YAxisLabel>
       ))}
     </Column>
@@ -135,6 +147,7 @@ const WeekDayLabel = styled.div`
 const DateLabel = styled.div<{ current: boolean }>`
   background-color: ${props => (props.current ? props.theme.colors["primary"] : "#fff")}
   border-radius: 50%;
+  padding:10px;
   color:${props => (props.current ? "#fff" : props.theme.colors["dark"])}
   display:flex;
   font-weight:bold;
