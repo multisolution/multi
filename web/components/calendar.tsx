@@ -1,12 +1,12 @@
-import {Column, Row} from "./grid";
-import {Calendar as CalendarModel, CalendarTime, MeetingRoom} from "../lib/models";
-import {useQuery} from "@apollo/react-hooks";
+import { Column, Row } from "./grid";
+import { Calendar as CalendarModel, CalendarTime, MeetingRoom } from "../lib/models";
+import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
-import React, {FunctionComponent, MouseEvent, useLayoutEffect, useState} from "react";
+import React, { FunctionComponent, MouseEvent, useLayoutEffect, useState } from "react";
 import Whoops from "./whoops";
 import Loading from "./loading";
-import {sameDate, weekDays} from "../lib/misc";
-import styled, {css} from "styled-components";
+import { sameDate, weekDays } from "../lib/misc";
+import styled, { css } from "styled-components";
 
 type CalendarProps = {
   rooms: MeetingRoom[];
@@ -33,7 +33,7 @@ const Calendar: FunctionComponent<CalendarProps> = ({ rooms: roomsData, onTimeGr
           }
         }
       }
-    `,
+    `
   );
 
   useLayoutEffect(() => {
@@ -63,7 +63,7 @@ const Calendar: FunctionComponent<CalendarProps> = ({ rooms: roomsData, onTimeGr
 
   return (
     <Row space={0}>
-      <YAxis highlight={timeGroupHover}/>
+      <YAxis highlight={timeGroupHover} />
       {calendarQuery.data.calendar.map(calendar => {
         const date = new Date(`${calendar.date}`);
 
@@ -82,11 +82,7 @@ const Calendar: FunctionComponent<CalendarProps> = ({ rooms: roomsData, onTimeGr
               }
 
               return (
-<<<<<<< HEAD
-                <TimeGroup key={Math.random() * 1000000} onClick={onClick}>
-=======
                 <TimeGroup onClick={onClick} onMouseOver={onMouseOver}>
->>>>>>> 0a66a80a37d7b28b00d1bac0d9be15a4c42e37c7
                   {timeGroup.map(time => (
                     <Time key={"time" + timeGroup.indexOf(time)}>
                       {time.meetings.map(meeting => (
@@ -107,7 +103,7 @@ const Calendar: FunctionComponent<CalendarProps> = ({ rooms: roomsData, onTimeGr
   );
 };
 
-const YAxis: FunctionComponent<{ highlight: number }> = ({highlight}) => {
+const YAxis: FunctionComponent<{ highlight: number }> = ({ highlight }) => {
   return (
     <Column
       space={13}
@@ -116,9 +112,7 @@ const YAxis: FunctionComponent<{ highlight: number }> = ({highlight}) => {
       `}
     >
       {Array.from({ length: 24 }).map((_, index: number) => (
-        <YAxisLabel
-          key={`hour-${index}`}
-          highlight={index === highlight}>
+        <YAxisLabel key={`hour-${index}`} highlight={index === highlight}>
           {index + ":00"}
         </YAxisLabel>
       ))}
@@ -127,7 +121,7 @@ const YAxis: FunctionComponent<{ highlight: number }> = ({highlight}) => {
 };
 
 const YAxisLabel = styled.div<{ highlight: boolean }>`
-  color:${props => props.highlight ? props.theme.colors.primary : props.theme.colors["dark"]}
+  color:${props => (props.highlight ? props.theme.colors.primary : props.theme.colors["dark"])}
   display:flex;
   align-items:flex-start;
   justify-content:flex-end ;
@@ -176,11 +170,10 @@ const TimeGroup = styled.div`
   border-top: ${calendarBorder};
   cursor: pointer;
 
-  
   &:nth-child(odd) {
     background-color: #f7f7f7;
   }
-  
+
   &:hover {
     background-color: ${props => props.theme.colors.primary};
   }
