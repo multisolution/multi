@@ -69,7 +69,6 @@ const Calendar: FunctionComponent<CalendarProps> = ({ onTimeGroupClick: timeGrou
           <CalendarDate>
             <WeekDayLabel>{weekDays[date.getDay()]}</WeekDayLabel>
             <DateLabel current={sameDate(date, today)}>{date.getDate()}</DateLabel>
-
             {calendar.times.map(timeGroup => {
               function onClick(event: MouseEvent<HTMLDivElement>) {
                 event.preventDefault();
@@ -100,7 +99,7 @@ const YAxis: FunctionComponent = () => {
     <Column
       space={13}
       decoration={css`
-        margin-top: 53px;
+        margin-top: 73px;
       `}
     >
       {Array.from({ length: 24 }).map((_, index: number) => (
@@ -146,6 +145,7 @@ const WeekDayLabel = styled.div`
 const DateLabel = styled.div<{ current: boolean }>`
   background-color: ${props => (props.current ? props.theme.colors["primary"] : "#fff")}
   border-radius: 50%;
+  padding:10px;
   color:${props => (props.current ? "#fff" : props.theme.colors["dark"])}
   display:flex;
   font-weight:bold;
