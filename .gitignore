@@ -1,7 +1,8 @@
 *.cache
 *.log
+.DS_Store
 .env
 .next/
+/package-lock.json
 node_modules/
 vendor/
-/package-lock.json
