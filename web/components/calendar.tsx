@@ -1,13 +1,12 @@
-import { Column, Row } from "./grid";
-import { Calendar as CalendarModel, CalendarTime, MeetingRoom } from "../lib/models";
-import { useQuery } from "@apollo/react-hooks";
+import {Column, Row} from "./grid";
+import {Calendar as CalendarModel, CalendarTime, MeetingRoom} from "../lib/models";
+import {useQuery} from "@apollo/react-hooks";
 import gql from "graphql-tag";
-import React, { FunctionComponent, MouseEvent, useEffect, useLayoutEffect } from "react";
+import React, {FunctionComponent, MouseEvent, useLayoutEffect, useState} from "react";
 import Whoops from "./whoops";
 import Loading from "./loading";
-import { sameDate, weekDays } from "../lib/misc";
-import styled, { css } from "styled-components";
-import Room from "./room";
+import {sameDate, weekDays} from "../lib/misc";
+import styled, {css} from "styled-components";
 
 type CalendarProps = {
   rooms: MeetingRoom[];
@@ -15,6 +14,8 @@ type CalendarProps = {
 };
 
 const Calendar: FunctionComponent<CalendarProps> = ({ rooms: roomsData, onTimeGroupClick: timeGroupClickDelegate }) => {
+  const [timeGroupHover, setTimeGroupHover] = useState(-1);
+
   const calendarQuery = useQuery<{ calendar: CalendarModel[] }>(
     gql`
       query calendar {
@@ -33,10 +34,6 @@ const Calendar: FunctionComponent<CalendarProps> = ({ rooms: roomsData, onTimeGr
         }
       }
     `,
-    {
-      fetchPolicy: "no-cache",
-      errorPolicy: "all"
-    }
   );
 
   useLayoutEffect(() => {
@@ -60,25 +57,32 @@ const Calendar: FunctionComponent<CalendarProps> = ({ rooms: roomsData, onTimeGr
     timeGroupClickDelegate(date, time.hour);
   }
 
-  // calendarQuery.refetch();
+  function onTimeGroupHover(index: number) {
+    setTimeGroupHover(index);
+  }
+
   return (
     <Row space={0}>
-      <YAxis />
+      <YAxis highlight={timeGroupHover}/>
       {calendarQuery.data.calendar.map(calendar => {
-        const date = new Date(`${calendar.date} 00:00:00`);
+        const date = new Date(`${calendar.date}`);
 
         return (
           <CalendarDate>
             <WeekDayLabel>{weekDays[date.getDay()]}</WeekDayLabel>
             <DateLabel current={sameDate(date, today)}>{date.getDate()}</DateLabel>
-            {calendar.times.map(timeGroup => {
+            {calendar.times.map((timeGroup, index) => {
               function onClick(event: MouseEvent<HTMLDivElement>) {
                 event.preventDefault();
                 onTimeGroupClick(date, timeGroup[0]);
               }
 
+              function onMouseOver(_: MouseEvent<HTMLDivElement>) {
+                onTimeGroupHover(index);
+              }
+
               return (
-                <TimeGroup onClick={onClick}>
+                <TimeGroup onClick={onClick} onMouseOver={onMouseOver}>
                   {timeGroup.map(time => (
                     <Time>
                       {time.meetings.map(meeting => (
@@ -96,7 +100,7 @@ const Calendar: FunctionComponent<CalendarProps> = ({ rooms: roomsData, onTimeGr
   );
 };
 
-const YAxis: FunctionComponent = () => {
+const YAxis: FunctionComponent<{ highlight: number }> = ({highlight}) => {
   return (
     <Column
       space={13}
@@ -105,14 +109,18 @@ const YAxis: FunctionComponent = () => {
       `}
     >
       {Array.from({ length: 24 }).map((_, index: number) => (
-        <YAxisLabel key={`hour-${index}`}>{index + ":00"}</YAxisLabel>
+        <YAxisLabel
+          key={`hour-${index}`}
+          highlight={index === highlight}>
+          {index + ":00"}
+        </YAxisLabel>
       ))}
     </Column>
   );
 };
 
-const YAxisLabel = styled.div`
-  color:${props => props.theme.colors["dark"]}
+const YAxisLabel = styled.div<{ highlight: boolean }>`
+  color:${props => props.highlight ? props.theme.colors.primary : props.theme.colors["dark"]}
   display:flex;
   align-items:flex-start;
   justify-content:flex-end ;

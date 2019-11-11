@@ -5,7 +5,7 @@ namespace Multi\Meeting;
 use DateInterval;
 use DatePeriod;
 use DateTime;
-use DateTimeZone;
+use Multi\DateTimeScalar;
 use Multi\Meeting\Status\Parse;
 use Multi\Meeting\Status\Status;
 use Multi\MeetingRoom\MeetingRoom;
@@ -32,13 +32,13 @@ class Meeting
     {
         if (isset($this->starts_at)) {
             if (is_string($this->starts_at)) {
-                $this->startsAt = DateTime::createFromFormat('Y-m-d H:i:s', $this->starts_at, new DateTimeZone('UTC'));
+                $this->startsAt = DateTime::createFromFormat(DateTimeScalar::FORMAT, $this->starts_at);
             }
         }
 
         if (isset($this->ends_at)) {
             if (is_string($this->ends_at)) {
-                $this->endsAt = DateTime::createFromFormat('Y-m-d H:i:s', $this->ends_at, new DateTimeZone('UTC'));
+                $this->endsAt = DateTime::createFromFormat(DateTimeScalar::FORMAT, $this->ends_at);
             }
         }
 

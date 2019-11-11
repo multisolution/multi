@@ -34,8 +34,8 @@ const NewMeetingForm: FunctionComponent<NewMeetingRoomFormProps> = ({rooms, init
 
     const input: MeetingInput = {
       roomId,
-      startsAt: new Date(`${data.get("date")} ${data.get("start_time")}`),
-      endsAt: new Date(`${data.get("date")} ${data.get("end_time")}`)
+      startsAt: `${data.get("date")} ${data.get("start_time")}:00`,
+      endsAt: `${data.get("date")} ${data.get("end_time")}:00`
     };
 
     const result = await createMeeting({
