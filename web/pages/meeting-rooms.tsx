@@ -1,46 +1,46 @@
-import {NextPage} from "next";
-import React, {useState} from "react";
+import { NextPage } from "next";
+import React, { useState } from "react";
 import Layout from "../components/layout";
-import {withApollo} from "../lib/apollo";
+import { withApollo } from "../lib/apollo";
 import Calendar from "../components/calendar";
 import Modal from "../components/modal";
-import NewMeetingForm, {NewMeetingRoomFormProps} from "../components/new-meeting-form";
-import {MeetingRoom} from "../lib/models";
-import {useQuery} from "@apollo/react-hooks";
+import NewMeetingForm, { NewMeetingRoomFormProps } from "../components/new-meeting-form";
+import { MeetingRoom } from "../lib/models";
+import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import Whoops from "../components/whoops";
 import Loading from "../components/loading";
 
 const MeetingRooms: NextPage = () => {
   const [modal, setModal] = useState(false);
-  const [meetingFormProps, setMeetingFormProps] = useState<NewMeetingRoomFormProps>({rooms: []});
+  const [meetingFormProps, setMeetingFormProps] = useState<NewMeetingRoomFormProps>({ rooms: [] });
 
-    const roomsQuery = useQuery<{ meetingRooms: MeetingRoom[] }>(
-      gql`
-        query Rooms {
-          meetingRooms {
-            id
-            roomNumber
-            description
-          }
+  const roomsQuery = useQuery<{ meetingRooms: MeetingRoom[] }>(
+    gql`
+      query Rooms {
+        meetingRooms {
+          id
+          roomNumber
+          description
         }
-      `
-    );
+      }
+    `
+  );
 
   if (roomsQuery.error || (roomsQuery.data === undefined && !roomsQuery.loading)) {
     console.error("Error querying rooms");
-    return <Whoops/>;
+    return <Whoops />;
   }
 
   if (roomsQuery.loading || roomsQuery.data === undefined) {
-    return <Loading/>;
+    return <Loading />;
   }
 
   function onTimeGroupClick(initialDate: Date, initialTime: string) {
     setMeetingFormProps({
       ...meetingFormProps,
       initialDate,
-      initialTime,
+      initialTime
     });
 
     setModal(true);
@@ -53,13 +53,9 @@ const MeetingRooms: NextPage = () => {
 
   return (
     <Layout>
-      <Calendar onTimeGroupClick={onTimeGroupClick}/>
+      <Calendar onTimeGroupClick={onTimeGroupClick} />
       <Modal isOpen={modal} onClose={() => setModal(false)}>
-        <NewMeetingForm
-          {...meetingFormProps}
-          rooms={roomsQuery.data.meetingRooms}
-          onSubmit={onNewMeetingSubmit}
-        />
+        <NewMeetingForm {...meetingFormProps} rooms={roomsQuery.data.meetingRooms} onSubmit={onNewMeetingSubmit} />
       </Modal>
     </Layout>
   );
