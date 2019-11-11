@@ -24,14 +24,9 @@ class Calendar implements Resolver
             throw new UserError($context->messages->get('unauthenticated'));
         }
 
-        $now = new DateTimeImmutable('now');
-
+        $now = new DateTimeImmutable();
         $from = array_get($args, 'from', $now);
-        $from = new DateTimeImmutable("{$from->format('Y-m-d')} 00:00:00");
-
         $to = array_get($args, 'to', $now->modify(self::DEFAULT_INTERVAL));
-        $to = new DateTimeImmutable("{$to->format('Y-m-d')} 23:59:59");
-
         $meetings = $context->db->meetings($from, $to);
         $period = new DatePeriod($from, new DateInterval('P1D'), $to);
         $calendar = [];
@@ -46,7 +41,7 @@ class Calendar implements Resolver
             foreach ($timePeriod as $time) {
                 $times[] = [
                     'hour' => $time->format('H:i'),
-                    'meetings' => array_filter($meetings, function (Meeting $meeting) use ($time): bool {
+                    'meetings' =>  array_filter($meetings, function (Meeting $meeting) use ($time): bool {
                         return (new Between($meeting))($time);
                     }),
                 ];
