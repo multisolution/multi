@@ -9,7 +9,7 @@ import {withApollo} from "../lib/apollo";
 import {Column} from "../components/grid";
 import {Form, Input} from "../components/form";
 import styled from "styled-components";
-import PassRecovery from "./pass-recovery";
+import PasswordRecovery from "../components/password-recovery";
 
 const SignInPage = styled.div`
   background: url(/assets/img/signin_bg.jpg) no-repeat center;
@@ -145,7 +145,7 @@ const SignIn: NextPage = () => {
           {renderError()}
         </FormContainer>
       ) : (
-        <PassRecovery/>
+        <PasswordRecovery/>
       )}
     </SignInPage>
   );
