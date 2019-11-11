@@ -11,6 +11,10 @@ class Edit implements Resolver
 {
     public function __invoke($root, array $args, Context $context)
     {
+        if ($context->user === null) {
+            throw new UserError($context->messages->get('unauthorized'));
+        }
+
         $input = array_get($args, 'input');
         $meetingId = array_get($input, 'id');
         $roomNumber = array_get($input, 'roomNumber');
@@ -20,11 +24,11 @@ class Edit implements Resolver
         $meeting = $context->db->meetingById($meetingId);
 
         if ($meeting === null) {
-            throw new UserError($context->messages->get('meeting_not_found'));
+            throw new UserError($context->messages->get('not_found'));
         }
 
         if ($meeting->host !== $context->user) {
-            throw new UserError($context->messages->get('host_only_edit'));
+            throw new UserError($context->messages->get('unauthorized'));
         }
 
         $meeting->room = $context->db->meetingRoomByNumber($roomNumber);
