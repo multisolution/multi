@@ -38,7 +38,7 @@ const Calendar: FunctionComponent<CalendarProps> = ({ rooms: roomsData, onTimeGr
 
   useLayoutEffect(() => {
     return () => {
-      calendarQuery.refetch();
+      calendarQuery && calendarQuery.refetch();
     };
   });
 
@@ -58,7 +58,7 @@ const Calendar: FunctionComponent<CalendarProps> = ({ rooms: roomsData, onTimeGr
   }
 
   function onTimeGroupHover(index: number) {
-    setTimeGroupHover(index);
+    // setTimeGroupHover(index);
   }
 
   return (
@@ -169,6 +169,11 @@ const TimeGroup = styled.div`
   border-top: ${calendarBorder};
   cursor: pointer;
 
+  
+  &:nth-child(odd) {
+    background-color: #f7f7f7;
+  }
+  
   &:hover {
     background-color: ${props => props.theme.colors.primary};
   }
