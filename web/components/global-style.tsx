@@ -1,4 +1,4 @@
-import styled, { createGlobalStyle, css } from "styled-components";
+import styled, {createGlobalStyle, css} from "styled-components";
 
 export type Theme = {
   borderRadius: number;
@@ -22,7 +22,7 @@ export const roomColorsPallete = {
 };
 
 export const theme: Theme = {
-  borderRadius: 5,
+  borderRadius: 2,
   space: 4,
   colors: {
     primary: "#bad531",
