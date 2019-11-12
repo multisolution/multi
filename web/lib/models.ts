@@ -7,7 +7,8 @@ export type User = {
 export type UserInput = {
   email: string;
   password: string;
-  role: Role;
+  role?: Role;
+  id?: string;
 };
 
 export type UserLoginInput = {

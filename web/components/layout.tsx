@@ -53,7 +53,7 @@ const Layout: FunctionComponent = ({ children }) => {
           <Row mainAxis={Align.Center} crossAxis={Align.End}>
             <span>Usuário/Admin</span>
 
-            <Link href="/meeting-rooms">
+            {/* <Link href="/meeting-rooms">
               <Button skin={ButtonSkin.Text}>Calendario</Button>
             </Link>
 
@@ -61,9 +61,9 @@ const Layout: FunctionComponent = ({ children }) => {
               <Button skin={ButtonSkin.Text}>Cadastrar Usuário</Button>
             </Link>
 
-            <Link href="/index">
+            <Link href="/profile">
               <Button skin={ButtonSkin.Text}>Perfil</Button>
-            </Link>
+            </Link> */}
 
             <Button skin={ButtonSkin.Text} onClick={onSignOutClick}>
               Sair

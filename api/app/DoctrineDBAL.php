@@ -58,6 +58,20 @@ class DoctrineDBAL implements Database
 
     public function updateUser(User $user): bool
     {
+
+
+        $stmt = $this->conn->createQueryBuilder()
+            ->update('users')
+            ->where('id = :id')
+            ->setParameter('id', $user->id);
+        $stmt->set('email', $stmt->createNamedParameter($user->email));
+        $stmt->set('password', $stmt->createNamedParameter($user->password));
+        $result = $stmt->execute();
+        if (is_int($result)) {
+            return $result > 0;
+        }
+        return false;
+
         $stmt = $this->conn
             ->createQueryBuilder()
             ->update('users')
@@ -68,6 +82,7 @@ class DoctrineDBAL implements Database
             ]);
 
         return true;
+
     }
 
     public function userByEmail(string $email): ?User
