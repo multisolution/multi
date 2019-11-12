@@ -26,7 +26,8 @@ class DoctrineDBAL implements Database
 
     public function deleteUser(string $id): bool
     {
-        $stmt = $this->conn->createQueryBuilder()
+        $stmt = $this->conn
+            ->createQueryBuilder()
             ->delete('users')
             ->where('id = ?')
             ->setParameter(0, $id)
@@ -34,11 +35,11 @@ class DoctrineDBAL implements Database
         return $stmt > 0;
     }
 
-
     public function userById(string $id): ?User
     {
         /** @var ResultStatement $stmt */
-        $stmt = $this->conn->createQueryBuilder()
+        $stmt = $this->conn
+            ->createQueryBuilder()
             ->select('*')
             ->from('users')
             ->where('id = ?')
@@ -57,22 +58,22 @@ class DoctrineDBAL implements Database
 
     public function updateUser(User $user): bool
     {
-        $stmt = $this->conn->createQueryBuilder()
+        $stmt = $this->conn
+            ->createQueryBuilder()
             ->update('users')
             ->values([
                 'id' => $user->id,
                 'email' => $user->email,
-                'password' => $user->password,
+                'password' => $user->password
             ]);
-
-
 
         return true;
     }
 
     public function userByEmail(string $email): ?User
     {
-        $stmt = $this->conn->createQueryBuilder()
+        $stmt = $this->conn
+            ->createQueryBuilder()
             ->select('*')
             ->from('users')
             ->where('email = ?')
@@ -92,13 +93,14 @@ class DoctrineDBAL implements Database
     public function insertUser(User $user): bool
     {
         /** @var int $affectedRows */
-        $affectedRows = $this->conn->createQueryBuilder()
+        $affectedRows = $this->conn
+            ->createQueryBuilder()
             ->insert('users')
             ->values([
                 'id' => '?',
                 'email' => '?',
                 'password' => '?',
-                'role' => '?',
+                'role' => '?'
             ])
             ->setParameter(0, $user->id)
             ->setParameter(1, $user->email)
@@ -111,7 +113,8 @@ class DoctrineDBAL implements Database
 
     public function meetingRoomById(string $id): ?MeetingRoom
     {
-        $stmt = $this->conn->createQueryBuilder()
+        $stmt = $this->conn
+            ->createQueryBuilder()
             ->select('*')
             ->from('meeting_rooms')
             ->where('id = ?')
@@ -130,12 +133,13 @@ class DoctrineDBAL implements Database
 
     public function insertMeetingRoom(MeetingRoom $meetingRoom): bool
     {
-        $affectedRows = $this->conn->createQueryBuilder()
+        $affectedRows = $this->conn
+            ->createQueryBuilder()
             ->insert('meeting_rooms')
             ->values([
                 'id' => '?',
                 'room_number' => '?',
-                'description' => '?',
+                'description' => '?'
             ])
             ->setParameter(0, $meetingRoom->id)
             ->setParameter(1, $meetingRoom->roomNumber)
@@ -150,7 +154,8 @@ class DoctrineDBAL implements Database
      */
     public function users(): array
     {
-        $stmt = $this->conn->createQueryBuilder()
+        $stmt = $this->conn
+            ->createQueryBuilder()
             ->select('*')
             ->from('users')
             ->execute();
@@ -164,7 +169,8 @@ class DoctrineDBAL implements Database
      */
     public function meetingRooms(): array
     {
-        $stmt = $this->conn->createQueryBuilder()
+        $stmt = $this->conn
+            ->createQueryBuilder()
             ->select('*')
             ->from('meeting_rooms')
             ->orderBy('room_number')
@@ -176,7 +182,8 @@ class DoctrineDBAL implements Database
 
     public function insertMeeting(Meeting $meeting): bool
     {
-        $affectedRows = $this->conn->createQueryBuilder()
+        $affectedRows = $this->conn
+            ->createQueryBuilder()
             ->insert('meetings')
             ->values([
                 'id' => '?',
@@ -184,7 +191,7 @@ class DoctrineDBAL implements Database
                 'room_id' => '?',
                 'starts_at' => '?',
                 'ends_at' => '?',
-                'status' => '?',
+                'status' => '?'
             ])
             ->setParameter(0, $meeting->id)
             ->setParameter(1, $meeting->host->id)
@@ -203,7 +210,8 @@ class DoctrineDBAL implements Database
      */
     public function meetingsByRoom(MeetingRoom $room): array
     {
-        $stmt = $this->conn->createQueryBuilder()
+        $stmt = $this->conn
+            ->createQueryBuilder()
             ->select('*')
             ->from('meetings')
             ->where('room_id = ?')
@@ -220,7 +228,8 @@ class DoctrineDBAL implements Database
      */
     public function meetingsByHost(User $host): array
     {
-        $stmt = $this->conn->createQueryBuilder()
+        $stmt = $this->conn
+            ->createQueryBuilder()
             ->select('*')
             ->from('meetings')
             ->where('host_id = ?')
@@ -233,7 +242,8 @@ class DoctrineDBAL implements Database
 
     public function meetingRoomByNumber(int $roomNumber): ?MeetingRoom
     {
-        $stmt = $this->conn->createQueryBuilder()
+        $stmt = $this->conn
+            ->createQueryBuilder()
             ->select('*')
             ->from('meeting_rooms')
             ->where('room_number = ?')
@@ -252,7 +262,8 @@ class DoctrineDBAL implements Database
 
     public function meetingById(string $id): ?Meeting
     {
-        $stmt = $this->conn->createQueryBuilder()
+        $stmt = $this->conn
+            ->createQueryBuilder()
             ->select('*')
             ->from('meetings')
             ->where('id = ?')
@@ -271,15 +282,27 @@ class DoctrineDBAL implements Database
 
     public function updateMeeting(?Meeting $meeting): bool
     {
-        $affectedRows = $this->conn->createQueryBuilder()
+        $stmt = $this->conn
+            ->createQueryBuilder()
             ->update('meetings')
-            ->values([
-                'room_id' => $meeting->room->id,
-                'starts_at' => $meeting->startsAt->format('Y-m-d H:i:s'),
-                'ends_at' => $meeting->endsAt->format('Y-m-d H:i:s'),
-            ]);
+            ->where('id = :meeting_id')
+            ->setParameter('meeting_id', $meeting->id);
 
-        return $affectedRows > 0;
+        $stmt->set('starts_at', $stmt->createNamedParameter($meeting->startsAt->format('Y-m-d H:i:s')));
+        $stmt->set('ends_at', $stmt->createNamedParameter($meeting->endsAt->format('Y-m-d H:i:s')));
+        $stmt->set('status', $stmt->createNamedParameter($meeting->status));
+
+        if ($meeting->room !== null) {
+            $stmt->set('room_id', $stmt->createNamedParameter($meeting->room->id));
+        }
+
+        $result = $stmt->execute();
+
+        if (is_int($result)) {
+            return $result > 0;
+        }
+
+        return false;
     }
 
     public function meetingRoomByMeeting(Meeting $meeting): MeetingRoom
@@ -292,7 +315,8 @@ class DoctrineDBAL implements Database
             throw new RuntimeException('Can not figure out meeting room');
         }
 
-        $stmt = $this->conn->createQueryBuilder()
+        $stmt = $this->conn
+            ->createQueryBuilder()
             ->select('*')
             ->from('meeting_rooms')
             ->where('id = ?')
@@ -317,14 +341,12 @@ class DoctrineDBAL implements Database
      */
     public function meetings(DateTimeInterface $from, DateTimeInterface $to): array
     {
-        $stmt = $this->conn->createQueryBuilder()
+        $stmt = $this->conn
+            ->createQueryBuilder()
             ->select('*')
             ->from('meetings')
             ->where('starts_at between ? and ?')
-            ->setParameters([
-                $from->format('Y-m-d H:i:s'),
-                $to->format('Y-m-d H:i:s'),
-            ])
+            ->setParameters([$from->format('Y-m-d H:i:s'), $to->format('Y-m-d H:i:s')])
             ->execute();
 
         $stmt->setFetchMode(FetchMode::CUSTOM_OBJECT, Meeting::class);

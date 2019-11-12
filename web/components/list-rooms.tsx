@@ -1,9 +1,7 @@
-import React, { useState, FunctionComponent } from "react";
-import Layout from "./layout";
-import { Section, ListElement } from "./global-style";
-import { MeetingRoom } from "../lib/models";
-import { Row } from "./grid";
-import Button from "./button";
+import React, {FunctionComponent, useState} from "react";
+import {ListElement} from "./global-style";
+import {MeetingRoom} from "../lib/models";
+import {Row} from "./grid";
 import Modal from "./modal";
 import RoomDetails from "./room-details";
 import styled from "styled-components";
@@ -39,7 +37,7 @@ const ListRooms: FunctionComponent<Props> = ({ rooms: rooms }) => {
   return (
     <>
       <Row key={"rooms"}>{renderRooms()}</Row>
-      <Modal isOpen={modal} onClose={() => setModal(false)}>
+      <Modal title="Sala" isOpen={modal} onClose={() => setModal(false)}>
         <RoomDetails room={currentRoom} />
       </Modal>
     </>

@@ -40,6 +40,7 @@ export type Meeting = {
 };
 
 export type MeetingInput = {
+  title: string;
   roomId: string;
   startsAt: string;
   endsAt: string;

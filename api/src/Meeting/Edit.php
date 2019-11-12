@@ -20,6 +20,7 @@ class Edit implements Resolver
         $roomNumber = array_get($input, 'roomNumber');
         $startsAt = array_get($input, 'startsAt');
         $endsAt = array_get($input, 'endsAt');
+        $title = trim(array_get($input, 'title'));
 
         $meeting = $context->db->meetingById($meetingId);
 
@@ -34,6 +35,7 @@ class Edit implements Resolver
         $meeting->room = $context->db->meetingRoomByNumber($roomNumber);
         $meeting->startsAt = $startsAt;
         $meeting->endsAt = $endsAt;
+        $meeting->title = $title;
 
         if ((new Conflicting())($meeting)) {
             throw new UserError($context->messages->get('meeting_conflicts'));
