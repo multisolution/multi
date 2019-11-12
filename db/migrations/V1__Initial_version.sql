@@ -37,17 +37,17 @@ values ('root', 'multi@multisolution.art.br', '$2y$10$edZ0ukUfvvcmRP/jWzFaveIisv
         'ADMINISTRATOR');
 
 insert into meeting_rooms (id, room_number, description, color)
-values ('room1', 1, 'Room 1 is very cool', '#c0331f');
+values ('room1', 1, 'Room 1 is very cool', '#0E7C7B');
 insert into meeting_rooms (id, room_number, description, color)
-values ('room2', 2, 'Room 2 is very nice', '#AABB99');
+values ('room2', 2, 'Room 2 is very nice', '#984447');
 insert into meeting_rooms (id, room_number, description, color)
-values ('room3', 3, 'Room 3 is very nice', '#fae713');
+values ('room3', 3, 'Room 3 is very nice', '#FFBA08');
 insert into meeting_rooms (id, room_number, description, color)
-values ('room4', 4, 'Room 4 is very nice', '	#afc697');
+values ('room4', 4, 'Room 4 is very nice', '	#3F88C5');
 insert into meeting_rooms (id, room_number, description, color)
-values ('room5', 5, 'Room 4 is very nice', '#eaf0ee');
+values ('room5', 5, 'Room 5 is very nice', '#032B43');
 insert into meeting_rooms (id, room_number, description, color)
-values ('room6', 6, 'Room 5 is very nice', '#373333');
+values ('room6', 6, 'Room 6 is very nice', '#541388');
 
 
 
