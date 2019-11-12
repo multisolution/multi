@@ -1,12 +1,12 @@
-import { Column, Row } from "./grid";
-import { Calendar as CalendarModel, CalendarTime, MeetingRoom } from "../lib/models";
-import { useQuery } from "@apollo/react-hooks";
+import {Column, Row} from "./grid";
+import {Calendar as CalendarModel, CalendarTime, MeetingRoom} from "../lib/models";
+import {useQuery} from "@apollo/react-hooks";
 import gql from "graphql-tag";
-import React, { FunctionComponent, MouseEvent, useLayoutEffect, useState } from "react";
+import React, {FunctionComponent, MouseEvent, useState} from "react";
 import Whoops from "./whoops";
 import Loading from "./loading";
-import { sameDate, weekDays } from "../lib/misc";
-import styled, { css } from "styled-components";
+import {sameDate, weekDays} from "../lib/misc";
+import styled, {css} from "styled-components";
 
 type CalendarProps = {
   rooms: MeetingRoom[];
@@ -36,12 +36,6 @@ const Calendar: FunctionComponent<CalendarProps> = ({ rooms: roomsData, onTimeGr
     `
   );
 
-  useLayoutEffect(() => {
-    return () => {
-      calendarQuery && calendarQuery.refetch();
-    };
-  });
-
   if (calendarQuery.error || (calendarQuery.data === undefined && !calendarQuery.loading)) {
     console.error("Error querying calendar", calendarQuery.error);
     return <Whoops />;
@@ -68,7 +62,7 @@ const Calendar: FunctionComponent<CalendarProps> = ({ rooms: roomsData, onTimeGr
         const date = new Date(`${calendar.date}`);
 
         return (
-          <CalendarDate key={Math.random() * 1000000}>
+          <CalendarDate key={`calendar-date-${calendar.date}`}>
             <WeekDayLabel>{weekDays[date.getDay()]}</WeekDayLabel>
             <DateLabel current={sameDate(date, today)}>{date.getDate()}</DateLabel>
             {calendar.times.map((timeGroup, index) => {
@@ -82,12 +76,12 @@ const Calendar: FunctionComponent<CalendarProps> = ({ rooms: roomsData, onTimeGr
               }
 
               return (
-                <TimeGroup onClick={onClick} onMouseOver={onMouseOver}>
+                <TimeGroup key={`calendar-date-${calendar.date}-${index}`} onClick={onClick} onMouseOver={onMouseOver}>
                   {timeGroup.map(time => (
-                    <Time key={"time" + timeGroup.indexOf(time)}>
-                      {time.meetings.map(meeting => (
+                    <Time key={`calendar-time-${calendar.date}-${index}-${time.hour}`}>
+                      {time.meetings.map((meeting, meetingIndex) => (
                         <CalendarMeeting
-                          key={"CalendarMeeting" + time.meetings.indexOf(meeting)}
+                          key={`calendar-meeting-${calendar.date}-${index}-${time.hour}-${meetingIndex}`}
                           color={meeting.room.color}
                         />
                       ))}

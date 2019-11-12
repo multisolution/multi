@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import { darken } from "polished";
-import React, { ButtonHTMLAttributes, FunctionComponent } from "react";
+import {darken} from "polished";
+import React, {ButtonHTMLAttributes, FunctionComponent} from "react";
 
 export enum ButtonSkin {
   Primary,
@@ -10,7 +10,7 @@ export enum ButtonSkin {
 type StyledButtonProps = {
   skin?: ButtonSkin;
   colorText?: string;
-  loading?: boolean;
+  isLoading?: boolean;
 };
 
 type ButtonSkinProps = {
@@ -45,7 +45,7 @@ const StyledButton = styled.button<StyledButtonProps>`
   border-radius: ${props => props.theme.borderRadius}px;
   text-transform: uppercase;
   font-weight: bold;
-  opacity: ${props => (props.loading ? "0.8" : "1")};
+  opacity: ${props => (props.isLoading ? "0.5" : "1")};
 
   &:focus,
   &:active,
@@ -57,15 +57,15 @@ const StyledButton = styled.button<StyledButtonProps>`
 `;
 
 type ButtonProps = {
-  loading?: boolean;
+  isLoading?: boolean;
 };
 
 type Props = ButtonHTMLAttributes<HTMLButtonElement> & StyledButtonProps & ButtonProps;
 
 const Button: FunctionComponent<Props> = props => {
-  const { loading = false, children } = props;
+  const {isLoading, children} = props;
 
-  return <StyledButton {...props}>{loading ? "Carregando..." : children}</StyledButton>;
+  return <StyledButton {...props}>{isLoading ? "Carregando..." : children}</StyledButton>;
 };
 
 export default Button;
