@@ -31,8 +31,10 @@ const MeetingRooms: NextPage = () => {
     `
   );
 
+
   if (roomsQuery.error || (roomsQuery.data === undefined && !roomsQuery.loading)) {
     console.error("Error querying rooms");
+    console.error(roomsQuery.error);
     return <Whoops />;
   }
 
@@ -71,14 +73,14 @@ const MeetingRooms: NextPage = () => {
   );
 };
 
-MeetingRooms.getInitialProps = async (context: NextPageContext & WithApollo) => {
-  const user = await checkLoggedIn(context.apolloClient);
+// MeetingRooms.getInitialProps = async (context: NextPageContext & WithApollo) => {
+//   const user = await checkLoggedIn(context.apolloClient);
 
-  if (!user) {
-    redirect(context, "/signin");
-  }
+//   if (!user) {
+//     redirect(context, "/signin");
+//   }
 
-  return { user };
-};
+//   return { user };
+// };
 
 export default withApollo(MeetingRooms);

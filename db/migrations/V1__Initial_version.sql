@@ -41,13 +41,13 @@ values ('room1', 1, 'Room 1 is very cool', '#c0331f');
 insert into meeting_rooms (id, room_number, description, color)
 values ('room2', 2, 'Room 2 is very nice', '#AABB99');
 insert into meeting_rooms (id, room_number, description, color)
-values ('room2', 3, 'Room 3 is very nice', '#fae713');
+values ('room3', 3, 'Room 3 is very nice', '#fae713');
 insert into meeting_rooms (id, room_number, description, color)
-values ('room6', 4, 'Room 4 is very nice', '	#afc697');
+values ('room4', 4, 'Room 4 is very nice', '	#afc697');
 insert into meeting_rooms (id, room_number, description, color)
-values ('room2', 5, 'Room 4 is very nice', '#eaf0ee');
+values ('room5', 5, 'Room 4 is very nice', '#eaf0ee');
 insert into meeting_rooms (id, room_number, description, color)
-values ('room2', 6, 'Room 5 is very nice', '#373333');
+values ('room6', 6, 'Room 5 is very nice', '#373333');
 
 
 

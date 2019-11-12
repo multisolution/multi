@@ -12,6 +12,7 @@ class SignIn implements Resolver
 {
     public function __invoke($root, array $args, Context $context)
     {
+        
         $email = array_get($args, 'email');
         $password = array_get($args, 'password');
 
@@ -25,8 +26,10 @@ class SignIn implements Resolver
             throw new UserError('Credenciais inválidas');
         }
 
+        
         $payload = ['userId' => $user->id];
         $token = JWT::encode($payload, $context->appKey);
+
 
         return $token;
     }
