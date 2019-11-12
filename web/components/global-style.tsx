@@ -12,6 +12,15 @@ declare module "styled-components" {
   export interface DefaultTheme extends Theme {}
 }
 
+export const roomColorsPallete = {
+  room1: "#0E7C7B",
+  room2: "#984447",
+  room3: "#FFBA08",
+  room4: "#3F88C5",
+  room5: "#032B43",
+  room6: "#541388"
+};
+
 export const theme: Theme = {
   borderRadius: 5,
   space: 4,
