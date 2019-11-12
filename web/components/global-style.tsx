@@ -1,4 +1,4 @@
-import styled, {createGlobalStyle, css} from "styled-components";
+import styled, { createGlobalStyle, css } from "styled-components";
 
 export type Theme = {
   borderRadius: number;
@@ -21,7 +21,7 @@ export const theme: Theme = {
     transparent: "transparent",
     white: "#ffffff",
     black: "#222222",
-    error: "#f20000",
+    error: "#f20000"
   }
 };
 
@@ -85,7 +85,7 @@ export const Container = styled.div<ContainerProps>`
   background-color: ${props => (props.bgColor ? props.bgColor : "transparent")};
 `;
 
-export const UserListElement = styled.div`
+export const ListElement = styled.div`
   border-radius: ${props => props.theme.borderRadius};
   display: "flex";
   align-items: "flex-start";

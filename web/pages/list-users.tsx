@@ -1,12 +1,12 @@
-import {NextPage, NextPageContext} from "next";
+import { NextPage, NextPageContext } from "next";
 import React from "react";
-import {WithApollo, withApollo} from "../lib/apollo";
-import {useMutation, useQuery} from "@apollo/react-hooks";
+import { WithApollo, withApollo } from "../lib/apollo";
+import { useMutation, useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import Layout from "../components/layout";
-import {Container, Section, UserListElement} from "../components/global-style";
-import {User} from "../lib/models";
-import {Column} from "../components/grid";
+import { Container, Section, ListElement } from "../components/global-style";
+import { User } from "../lib/models";
+import { Column } from "../components/grid";
 import checkLoggedIn from "../lib/check-logged-in";
 import redirect from "../lib/redirect";
 
@@ -47,9 +47,9 @@ const ListUsers: NextPage = () => {
     if (getUsers.data) {
       return getUsers.data.allUsers.map((user: User, index: number) => (
         <div key={index} style={{ display: "flex", margin: "flex-start", alignSelf: "center", flexDirection: "row" }}>
-          <UserListElement>{user.id}</UserListElement>
-          <UserListElement>{user.email}</UserListElement>
-          <UserListElement>{user.role}</UserListElement>
+          <ListElement>{user.id}</ListElement>
+          <ListElement>{user.email}</ListElement>
+          <ListElement>{user.role}</ListElement>
           <button style={{ color: "transparent", border: "none" }} id={user.id} onClick={deleteUserClickHandler}>
             <img style={{ width: "20px" }} src="/delete.svg" />
           </button>
@@ -78,7 +78,7 @@ ListUsers.getInitialProps = async (context: NextPageContext & WithApollo) => {
     redirect(context, "/signin");
   }
 
-  return {user};
+  return { user };
 };
 
 export default withApollo(ListUsers);

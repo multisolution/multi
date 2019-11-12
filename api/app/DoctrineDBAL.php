@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Multi;
 
@@ -22,7 +24,8 @@ class DoctrineDBAL implements Database
         $this->conn = $conn;
     }
 
-    public function deleteUser(string $id):bool{
+    public function deleteUser(string $id): bool
+    {
         $stmt = $this->conn->createQueryBuilder()
             ->delete('users')
             ->where('id = ?')
@@ -50,6 +53,21 @@ class DoctrineDBAL implements Database
         }
 
         return $result;
+    }
+
+    public function updateUser(User $user): bool
+    {
+        $stmt = $this->conn->createQueryBuilder()
+            ->update('users')
+            ->values([
+                'id' => $user->id,
+                'email' => $user->email,
+                'password' => $user->password,
+            ]);
+
+
+
+        return true;
     }
 
     public function userByEmail(string $email): ?User
@@ -149,6 +167,7 @@ class DoctrineDBAL implements Database
         $stmt = $this->conn->createQueryBuilder()
             ->select('*')
             ->from('meeting_rooms')
+            ->orderBy('room_number')
             ->execute();
 
         $stmt->setFetchMode(FetchMode::CUSTOM_OBJECT, MeetingRoom::class);

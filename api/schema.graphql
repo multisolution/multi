@@ -60,12 +60,14 @@ type Mutation {
     cancelMeeting(meetingId: ID!): Boolean
     editMeeting(input: MeetingInput!): Meeting
     deleteUser(userId: ID!): Boolean
+    updateUser(userInput: UserInput!): Boolean
 }
 
 input UserInput {
     email: String!
     password: String!
     role: Role!
+    id: String
 }
 
 input MeetingInput {
