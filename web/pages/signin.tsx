@@ -1,7 +1,7 @@
 import {useApolloClient, useMutation} from "@apollo/react-hooks";
 import {NextPage} from "next";
 import React, {useRef, useState, useEffect} from "react";
-import Button from "../components/button";
+import Button, { ButtonSkin } from "../components/button";
 import gql from "graphql-tag";
 import cookie from "cookie";
 import redirect from "../lib/redirect";
@@ -10,6 +10,7 @@ import {Column} from "../components/grid";
 import {Form, Input} from "../components/form";
 import styled from "styled-components";
 import PassRecovery from "./pass-recovery";
+import FormMsg from "../components/form-msg";
 
 const Signin: NextPage = () => {
   var emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -33,6 +34,7 @@ const Signin: NextPage = () => {
       padding: 0 40px;
       max-width: 600px;
       min-width: 460px;
+      height: auto;
 
 
       @media screen and (max-width: 700px){
@@ -49,14 +51,14 @@ const Signin: NextPage = () => {
 
   return (
     <>
-      <div style={{ backgroundSize: "cover", width: "100%", height: "100%", backgroundImage: "url(/signin_bg.jpg)" }}>
+      <div style={{ backgroundSize: "cover", width: "100%", height: "100%", backgroundImage: "url(/assets/img/signin_bg.jpg)" }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100vh" }}>
 
           {formLogin === true ? 
               <BoxHome>
                 
                 <div style={{ paddingTop: "60px", display: "flex", justifyContent: "center", width: "100%" }}>
-                  <img src="/logo.png" />
+                  <img src="/assets/img/logo.png" />
                 </div>
 
                 <Form name="form">
@@ -67,15 +69,17 @@ const Signin: NextPage = () => {
                     <Input onChange={() => setError("")} type="password" placeholder="Senha" ref={pass} />
                   </div>
                   <div>
-                    <Button skin="primary" onClick={onSignInClick}>
+                    <Button onClick={onSignInClick}>
                       Entrar
                     </Button>
                   </div>
                 </Form>
-                <Button colorText="dark" skin="transparent" onClick={recoveryPass}>
+                <Button colorText="dark" skin={ButtonSkin.Text} onClick={recoveryPass}>
                   Esqueci minha senha
                 </Button>
-                {renderError()}
+                <FormMsg>
+                  {renderError()}
+                </FormMsg>
               </BoxHome>
             :
               <PassRecovery></PassRecovery>

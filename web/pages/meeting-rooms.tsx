@@ -16,7 +16,7 @@ const MeetingRooms: NextPage = () => {
   }
 
   return (
-    <>s
+    <>
       <Layout>
         <Calendar onCellClick={onCellClick} />
         <Modal isOpen={modal} onClose={() => setModal(false)}>
