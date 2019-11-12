@@ -81,11 +81,11 @@ const NewMeetingForm: FunctionComponent<NewMeetingRoomFormProps> = ({onCancel, r
                    required={true}/>
           </Row>
           <Row space={20}>
-            <Row mainAxis={Align.Center} space={20} fill={true}>
+            <Row mainAxis={Align.Center} space={20} fillSpace={true}>
               <MdTimer size={24} color={theme.colors.dark}/>
               <Input type="time" name="start_time" value={initialTime} required={true}/>
             </Row>
-            <Row mainAxis={Align.Center} space={20} fill={true}>
+            <Row mainAxis={Align.Center} space={20} fillSpace={true}>
               <MdTimerOff size={24} color={theme.colors.dark}/>
               <Input type="time" name="end_time" required={true}/>
             </Row>

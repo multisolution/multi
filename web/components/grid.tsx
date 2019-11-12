@@ -11,7 +11,7 @@ type GridProps = {
   mainAxis?: Align;
   crossAxis?: Align;
   decoration?: FlattenInterpolation<ThemeProps<DefaultTheme>>;
-  fill?: boolean;
+  fillSpace?: boolean;
 };
 
 const gridCss = css<GridProps>`
@@ -38,7 +38,7 @@ export const Row = styled.div<GridProps>`
   ${gridCss}
   flex-direction: row;
   
-  ${props => props.fill && `width: 100%;`}
+  ${props => props.fillSpace && `width: 100%;`}
 
   & > * {
     margin-right: ${({space = 8}) => space}px;
