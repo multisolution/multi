@@ -55,6 +55,21 @@ class DoctrineDBAL implements Database
         return $result;
     }
 
+    public function updateUser(User $user): bool
+    {
+        $stmt = $this->conn->createQueryBuilder()
+            ->update('users')
+            ->values([
+                'id' => $user->id,
+                'email' => $user->email,
+                'password' => $user->password,
+            ]);
+
+
+
+        return true;
+    }
+
     public function userByEmail(string $email): ?User
     {
         $stmt = $this->conn->createQueryBuilder()

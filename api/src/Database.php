@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Multi;
 
@@ -30,6 +32,7 @@ interface Database
     public function users(): array;
 
     public function deleteUser(string $id): bool;
+    public function updateUser(User $user): bool;
 
     public function insertMeeting(Meeting $meeting): bool;
 
