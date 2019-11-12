@@ -21,6 +21,7 @@ type MeetingRoom {
 
 type Meeting {
     id: ID!
+    title: String!
     room: MeetingRoom!
     host: User!
     startsAt: DateTime!
@@ -72,6 +73,7 @@ input UserInput {
 
 input MeetingInput {
     id: ID
+    title: String!
     roomId: ID!
     startsAt: DateTime!
     endsAt: DateTime!
