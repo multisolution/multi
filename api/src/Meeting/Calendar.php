@@ -9,6 +9,8 @@ use DatePeriod;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
+use DateTimeZone;
+use GraphQL\Error\UserError;
 use Multi\Context;
 use Multi\Resolver;
 use function Siler\array_get;
@@ -19,9 +21,18 @@ class Calendar implements Resolver
 
     public function __invoke($root, array $args, Context $context)
     {
-        $now = new DateTimeImmutable();
+        if ($context->user === null) {
+            throw new UserError($context->messages->get('unauthenticated'));
+        }
+
+        $now = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+
         $from = array_get($args, 'from', $now);
+        $from = new DateTimeImmutable("{$from->format('Y-m-d')} 00:00:00");
+
         $to = array_get($args, 'to', $now->modify(self::DEFAULT_INTERVAL));
+        $to = new DateTimeImmutable("{$to->format('Y-m-d')} 23:59:59");
+
         $meetings = $context->db->meetings($from, $to);
         $period = new DatePeriod($from, new DateInterval('P1D'), $to);
         $calendar = [];
@@ -42,12 +53,9 @@ class Calendar implements Resolver
                 ];
             }
 
-            $chuncked = array_chunk($times, 4, true);
-
-
             $calendar[] = [
-                'date' => $date->format('d/m'),
-                'times' => $chuncked
+                'date' => $date->format('Y-m-d'),
+                'times' => array_chunk($times, 4, true),
             ];
         }
 

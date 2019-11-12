@@ -41,11 +41,16 @@ export type Meeting = {
 
 export type MeetingInput = {
   roomId: string;
-  startsAt: Date;
-  endsAt: Date;
+  startsAt: string;
+  endsAt: string;
 };
 
-export type Time = {
-  hour: "00:00";
-  meetings: [Meeting];
+export type CalendarTime = {
+  hour: string;
+  meetings: Meeting[];
+};
+
+export type Calendar = {
+  date: string;
+  times: CalendarTime[][];
 };

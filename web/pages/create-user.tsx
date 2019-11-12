@@ -1,15 +1,17 @@
 import {useMutation} from "@apollo/react-hooks";
-import {NextPage} from "next";
+import {NextPage, NextPageContext} from "next";
 import React, {useRef, useState} from "react";
 import Button from "../components/button";
 import {Container, Section} from "../components/global-style";
 import Layout from "../components/layout";
-import {Input, Form} from "../components/form";
+import {Form, Input} from "../components/form";
 import {Column} from "../components/grid";
-import {withApollo} from "../lib/apollo";
+import {WithApollo, withApollo} from "../lib/apollo";
 import gql from "graphql-tag";
 import {Role, User, UserInput} from "../lib/models";
 import TitlePage from "../components/title-page"
+import checkLoggedIn from "../lib/check-logged-in";
+import redirect from "../lib/redirect";
 
 const CreateUser: NextPage = () => {
   var emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -133,6 +135,16 @@ const CreateUser: NextPage = () => {
       console.log(result);
     }
   }
+};
+
+CreateUser.getInitialProps = async (context: NextPageContext & WithApollo) => {
+  const user = await checkLoggedIn(context.apolloClient);
+
+  if (!user) {
+    redirect(context, "/signin");
+  }
+
+  return {user};
 };
 
 export default withApollo(CreateUser);

@@ -1,154 +1,165 @@
 import {useApolloClient, useMutation} from "@apollo/react-hooks";
-import {NextPage} from "next";
-import React, {useRef, useState, useEffect} from "react";
-import Button, { ButtonSkin } from "../components/button";
+import {NextPage, NextPageContext} from "next";
+import React, {FormEvent, useState} from "react";
+import Button, {ButtonSkin} from "../components/button";
 import gql from "graphql-tag";
 import cookie from "cookie";
 import redirect from "../lib/redirect";
-import {withApollo} from "../lib/apollo";
+import {WithApollo, withApollo} from "../lib/apollo";
 import {Column} from "../components/grid";
 import {Form, Input} from "../components/form";
 import styled from "styled-components";
-import PassRecovery from "./pass-recovery";
-import FormMsg from "../components/form-msg";
+import PasswordRecovery from "../components/password-recovery";
+import checkLoggedIn from "../lib/check-logged-in";
 
-const Signin: NextPage = () => {
-  var emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  const email = useRef<HTMLInputElement>(null);
-  const pass = useRef<HTMLInputElement>(null);
-  const [errorMessage, setError] = useState("");
+const SignInPage = styled.div`
+  background: url(/assets/img/signin_bg.jpg) no-repeat center;
+  background-size: cover;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
+
+const FormContainer = styled(Column)`
+  width: 40%;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 10px;
+  padding: ${props => props.theme.space * 8}px ${props => props.theme.space * 12}px;
+  max-width: 600px;
+  min-width: 460px;
+  align-items: center;
+
+  button {
+    width: 100%;
+  }
+
+  @media screen and (max-width: 700px) {
+    width: 100%;
+    min-width: auto;
+    padding: 0 20px;
+    margin: 0 10px;
+  }
+`;
+
+const Error = styled.div`
+  text-align: center;
+  color: ${props => props.theme.colors.error};
+  font-weight: bold;
+`;
+
+const SignIn: NextPage = () => {
+  const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  const [error, setError] = useState("");
   const [formLogin, setFormLogin] = useState(true);
+  const apolloClient = useApolloClient();
 
-  const [sigin] = useMutation(gql`
-    mutation Siginin($email: String!, $password: String!) {
-      signIn(email: $email, password: $password)
-    }
-  `);
-
-  const appoloClient = useApolloClient();
-
-  const BoxHome = styled(Column)`
-      width: 40%;
-      background-color: rgba(255, 255, 255, 0.9);
-      border-radius:  10px;
-      padding: 0 40px;
-      max-width: 600px;
-      min-width: 460px;
-      height: auto;
-
-
-      @media screen and (max-width: 700px){
-        width: 100%;
-        min-width: auto;
-        padding: 0 20px;
-        margin: 0 10px;
-
+    const [signIn, {loading}] = useMutation(gql`
+      mutation SignIn($email: String!, $password: String!) {
+        signIn(email: $email, password: $password)
       }
-
-
-  `
-
-
-  return (
-    <>
-      <div style={{ backgroundSize: "cover", width: "100%", height: "100%", backgroundImage: "url(/assets/img/signin_bg.jpg)" }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100vh" }}>
-
-          {formLogin === true ? 
-              <BoxHome>
-                
-                <div style={{ paddingTop: "60px", display: "flex", justifyContent: "center", width: "100%" }}>
-                  <img src="/assets/img/logo.png" />
-                </div>
-
-                <Form name="form">
-                  <div>
-                    <Input onChange={() => setError("")} type="text" placeholder="Email" ref={email} />
-                  </div>
-                  <div>
-                    <Input onChange={() => setError("")} type="password" placeholder="Senha" ref={pass} />
-                  </div>
-                  <div>
-                    <Button onClick={onSignInClick}>
-                      Entrar
-                    </Button>
-                  </div>
-                </Form>
-                <Button colorText="dark" skin={ButtonSkin.Text} onClick={recoveryPass}>
-                  Esqueci minha senha
-                </Button>
-                <FormMsg>
-                  {renderError()}
-                </FormMsg>
-              </BoxHome>
-            :
-              <PassRecovery></PassRecovery>
-              // <PassRecovery setFormLogin={()=> setFormLogin(true)} ></PassRecovery>
-            }
-        </div>
-      </div>
-
-     
-    </>
-  );
+    `);
 
   function recoveryPass() {
-    // redirect(null, "/pass-recovery");
     setFormLogin(false);
   }
 
   function renderError() {
-    return <div>{errorMessage}</div>;
-  }
-
-  function validatePass() {
-    if (pass.current !== null) {
-      if (pass.current.value.length === 0) {
-        setError("A senha é obrigatória");
-        return false;
-      } else {
-        setError("");
-        return true;
-      }
+    if (error) {
+      return <Error>{error}</Error>;
     }
   }
 
-  function validateEmail() {
-    if (email.current !== null) {
-      if (!emailRegex.test(String(email.current.value).toLocaleLowerCase()) || email.current.value.length === 0) {
-        setError("Email Inválido");
-        return false;
-      } else {
-        setError("");
-        return true;
-      }
+  function validatePassword(password: string | File | null): boolean {
+    if (password === null || password instanceof File || password.trim().length === 0) {
+      setError("Preencha uma senha");
+      return false;
     }
+
+    return true;
   }
 
-  async function onSignInClick(event: React.MouseEvent<HTMLButtonElement>) {
+  function validateEmail(email: string | File | null): boolean {
+    if (email === null || email instanceof File || email.trim().length === 0) {
+      setError("Preencha um e-mail");
+      return false;
+    }
+
+    if (!emailRegex.test(email)) {
+      setError("E-mail inválido");
+      return false;
+    }
+
+    return true;
+  }
+
+  async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (validateEmail() && validatePass()) {
+    const data = new FormData(event.currentTarget);
+    const email = data.get("email");
+    const password = data.get("password");
+
+    if (validateEmail(email) && validatePassword(password)) {
       try {
-        const result = await sigin({
-          variables: {
-            email: email.current !== null ? email.current.value : "",
-            password: pass.current !== null ? pass.current.value : ""
-          }
+        const result = await signIn({
+          variables: {email, password}
         });
+
+        if (result.errors) {
+          return setError(result.errors[0].message);
+        }
 
         if (result.data && result.data.signIn) {
           document.cookie = cookie.serialize("token", result.data.signIn);
-          console.log(document.cookie);
-          await appoloClient.cache.reset();
-          redirect(null, "/create-user");
+          await apolloClient.cache.reset();
+          redirect(null, "/meeting-rooms");
         }
       } catch (error) {
-        // TODO: Handle error
-        console.error(error["message"]);
+        console.error(error);
+        setError(error.message);
       }
     }
   }
+
+  return (
+    <SignInPage>
+      {formLogin ? (
+        <FormContainer>
+          <div>
+            <img src="/assets/img/logo.png" alt="MultisolutiON"/>
+          </div>
+
+          <Form name="form" onSubmit={onSubmit}>
+            <Input onChange={() => setError("")} type="email" placeholder="Email" name="email"/>
+            <Input onChange={() => setError("")} type="password" placeholder="Senha" name="password"/>
+            <Button type="submit" loading={loading}>
+              Entrar
+            </Button>
+          </Form>
+
+          <Button colorText="dark" skin={ButtonSkin.Text} onClick={recoveryPass}>
+            Esqueci minha senha
+          </Button>
+
+          {renderError()}
+        </FormContainer>
+      ) : (
+        <PasswordRecovery/>
+      )}
+    </SignInPage>
+  );
 };
 
-export default withApollo(Signin);
+SignIn.getInitialProps = async (context: NextPageContext & WithApollo) => {
+  const user = await checkLoggedIn(context.apolloClient);
+
+  if (user) {
+    redirect(context, '/meeting-rooms');
+  }
+
+  return {};
+};
+
+export default withApollo(SignIn);
