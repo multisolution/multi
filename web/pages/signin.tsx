@@ -7,7 +7,7 @@ import cookie from "cookie";
 import redirect from "../lib/redirect";
 import {WithApollo, withApollo} from "../lib/apollo";
 import {Column} from "../components/grid";
-import {Form, Input} from "../components/form";
+import {Input} from "../components/form";
 import styled from "styled-components";
 import PasswordRecovery from "../components/password-recovery";
 import checkLoggedIn from "../lib/check-logged-in";
@@ -131,13 +131,15 @@ const SignIn: NextPage = () => {
             <img src="/assets/img/logo.png" alt="MultisolutiON"/>
           </div>
 
-          <Form name="form" onSubmit={onSubmit}>
-            <Input onChange={() => setError("")} type="email" placeholder="Email" name="email"/>
-            <Input onChange={() => setError("")} type="password" placeholder="Senha" name="password"/>
-            <Button type="submit" isLoading={loading}>
-              Entrar
-            </Button>
-          </Form>
+          <form onSubmit={onSubmit} style={{width: '100%'}}>
+            <Column>
+              <Input onChange={() => setError("")} type="email" placeholder="Email" name="email"/>
+              <Input onChange={() => setError("")} type="password" placeholder="Senha" name="password"/>
+              <Button type="submit" isLoading={loading}>
+                Entrar
+              </Button>
+            </Column>
+          </form>
 
           <Button colorText="dark" skin={ButtonSkin.Text} onClick={recoveryPass}>
             Esqueci minha senha
