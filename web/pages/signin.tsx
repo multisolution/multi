@@ -134,7 +134,7 @@ const SignIn: NextPage = () => {
           <Form name="form" onSubmit={onSubmit}>
             <Input onChange={() => setError("")} type="email" placeholder="Email" name="email"/>
             <Input onChange={() => setError("")} type="password" placeholder="Senha" name="password"/>
-            <Button type="submit" loading={loading}>
+            <Button type="submit" isLoading={loading}>
               Entrar
             </Button>
           </Form>

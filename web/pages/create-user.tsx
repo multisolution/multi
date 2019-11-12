@@ -1,15 +1,15 @@
-import {useMutation} from "@apollo/react-hooks";
-import {NextPage, NextPageContext} from "next";
-import React, {useRef, useState} from "react";
+import { useMutation } from "@apollo/react-hooks";
+import { NextPage, NextPageContext } from "next";
+import React, { useRef, useState } from "react";
 import Button from "../components/button";
-import {Container, Section} from "../components/global-style";
+import { Container, Section } from "../components/global-style";
 import Layout from "../components/layout";
-import {Form, Input} from "../components/form";
-import {Column} from "../components/grid";
-import {WithApollo, withApollo} from "../lib/apollo";
+import { Form, Input } from "../components/form";
+import { Column } from "../components/grid";
+import { WithApollo, withApollo } from "../lib/apollo";
 import gql from "graphql-tag";
-import {Role, User, UserInput} from "../lib/models";
-import TitlePage from "../components/title-page"
+import { Role, User, UserInput } from "../lib/models";
+import TitlePage from "../components/title-page";
 import checkLoggedIn from "../lib/check-logged-in";
 import redirect from "../lib/redirect";
 
@@ -38,25 +38,23 @@ const CreateUser: NextPage = () => {
     <>
       <Layout>
         <Section>
-          <Container style={{display: "flex", justifyContent:"center"}}>
-            <Form name="form" style={{padding: "30px 0", maxWidth: "600px"}}>
+          <Container style={{ display: "flex", justifyContent: "center" }}>
+            <Form name="form" style={{ padding: "30px 0", maxWidth: "600px" }}>
               <Column>
-              <TitlePage>Novo usuário</TitlePage>
-                <div style={{width: "100%"}}>
+                <TitlePage>Novo usuário</TitlePage>
+                <div style={{ width: "100%" }}>
                   <Input onChange={validateEmail} type="text" placeholder="Email" ref={email} />
                   <img src={validEmail ? "success_icon.svg" : "error_icon.svg"} />
                 </div>
-                <div style={{width: "100%"}}>
+                <div style={{ width: "100%" }}>
                   <Input onChange={validatePass} type="password" placeholder="Senha" ref={pass} />
                   <img src={validPass ? "success_icon.svg" : "error_icon.svg"} />
                 </div>
-                <div style={{width: "100%"}}>
+                <div style={{ width: "100%" }}>
                   <Input onChange={validatePass} type="password" placeholder="Confirmar senha" ref={confirmpass} />
                   <img src={validPass ? "success_icon.svg" : "error_icon.svg"} />
                 </div>
-                <Button onClick={sendForm}>
-                  Cadastrar
-                </Button>
+                <Button onClick={sendForm}>Cadastrar</Button>
               </Column>
             </Form>
             {renderError()}
@@ -144,7 +142,7 @@ CreateUser.getInitialProps = async (context: NextPageContext & WithApollo) => {
     redirect(context, "/signin");
   }
 
-  return {user};
+  return { user };
 };
 
 export default withApollo(CreateUser);

@@ -1,12 +1,12 @@
-import React, {FunctionComponent, MouseEvent} from "react";
-import {Container} from "./global-style";
+import React, { FunctionComponent, MouseEvent } from "react";
+import { Container } from "./global-style";
 import Header from "./header";
 import styled from "styled-components";
 import Footer from "./footer";
-import {Align, Row} from "./grid";
+import { Align, Row } from "./grid";
 import Link from "next/link";
-import Button, {ButtonSkin} from "./button";
-import {useApolloClient, useMutation} from "@apollo/react-hooks";
+import Button, { ButtonSkin } from "./button";
+import { useApolloClient, useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import redirect from "../lib/redirect";
 import cookie from "cookie";
@@ -29,18 +29,18 @@ const Main = styled.main`
   min-height: calc(100vh - 200px);
 `;
 
-const Layout: FunctionComponent = ({children}) => {
+const Layout: FunctionComponent = ({ children }) => {
   const apolloClient = useApolloClient();
-    const [signOut] = useMutation<{ signOut: boolean }>(gql`
-        mutation SignOut {
-            signOut
-        }
-    `);
+  const [signOut] = useMutation<{ signOut: boolean }>(gql`
+    mutation SignOut {
+      signOut
+    }
+  `);
 
   async function onSignOutClick(event: MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
     signOut().then(result => console.info("Back-end sign out", result.data));
-    document.cookie = cookie.serialize("token", "", {maxAge: -1});
+    document.cookie = cookie.serialize("token", "", { maxAge: -1 });
     await apolloClient.cache.reset();
     redirect(null, "/signin");
   }
@@ -49,11 +49,11 @@ const Layout: FunctionComponent = ({children}) => {
     <>
       <Header>
         <ContainerHeader>
-          <img src="/assets/img/logo.png" alt="MultisolutiON"/>
+          <img src="/assets/img/logo.png" alt="MultisolutiON" />
           <Row mainAxis={Align.Center} crossAxis={Align.End}>
             <span>Usuário/Admin</span>
 
-            <Link href="/meeting-rooms">
+            {/* <Link href="/meeting-rooms">
               <Button skin={ButtonSkin.Text}>Calendario</Button>
             </Link>
 
@@ -61,9 +61,9 @@ const Layout: FunctionComponent = ({children}) => {
               <Button skin={ButtonSkin.Text}>Cadastrar Usuário</Button>
             </Link>
 
-            <Link href="/index">
+            <Link href="/profile">
               <Button skin={ButtonSkin.Text}>Perfil</Button>
-            </Link>
+            </Link> */}
 
             <Button skin={ButtonSkin.Text} onClick={onSignOutClick}>
               Sair
@@ -73,8 +73,6 @@ const Layout: FunctionComponent = ({children}) => {
       </Header>
 
       <Main role="main">{children}</Main>
-
-      <Footer>FOOTER</Footer>
     </>
   );
 };

@@ -7,7 +7,8 @@ export type User = {
 export type UserInput = {
   email: string;
   password: string;
-  role: Role;
+  role?: Role;
+  id?: string;
 };
 
 export type UserLoginInput = {
@@ -40,6 +41,7 @@ export type Meeting = {
 };
 
 export type MeetingInput = {
+  title: string;
   roomId: string;
   startsAt: string;
   endsAt: string;

@@ -21,6 +21,7 @@ type MeetingRoom {
 
 type Meeting {
     id: ID!
+    title: String!
     room: MeetingRoom!
     host: User!
     startsAt: DateTime!
@@ -60,16 +61,19 @@ type Mutation {
     cancelMeeting(meetingId: ID!): Boolean
     editMeeting(input: MeetingInput!): Meeting
     deleteUser(userId: ID!): Boolean
+    updateUser(userInput: UserInput!): Boolean
 }
 
 input UserInput {
     email: String!
     password: String!
     role: Role!
+    id: String
 }
 
 input MeetingInput {
     id: ID
+    title: String!
     roomId: ID!
     startsAt: DateTime!
     endsAt: DateTime!

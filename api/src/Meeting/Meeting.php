@@ -14,6 +14,8 @@ class Meeting
 {
     /** @var string */
     public $id;
+    /** @var string */
+    public $title;
     /** @var User */
     public $host;
     /** @var MeetingRoom */

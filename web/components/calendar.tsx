@@ -2,7 +2,7 @@ import {Column, Row} from "./grid";
 import {Calendar as CalendarModel, CalendarTime, MeetingRoom} from "../lib/models";
 import {useQuery} from "@apollo/react-hooks";
 import gql from "graphql-tag";
-import React, {FunctionComponent, MouseEvent, useLayoutEffect, useState} from "react";
+import React, {FunctionComponent, MouseEvent, useState} from "react";
 import Whoops from "./whoops";
 import Loading from "./loading";
 import {sameDate, weekDays} from "../lib/misc";
@@ -33,14 +33,8 @@ const Calendar: FunctionComponent<CalendarProps> = ({ rooms: roomsData, onTimeGr
           }
         }
       }
-    `,
+    `
   );
-
-  useLayoutEffect(() => {
-    return () => {
-      calendarQuery && calendarQuery.refetch();
-    };
-  });
 
   if (calendarQuery.error || (calendarQuery.data === undefined && !calendarQuery.loading)) {
     console.error("Error querying calendar", calendarQuery.error);
@@ -63,12 +57,12 @@ const Calendar: FunctionComponent<CalendarProps> = ({ rooms: roomsData, onTimeGr
 
   return (
     <Row space={0}>
-      <YAxis highlight={timeGroupHover}/>
+      <YAxis highlight={timeGroupHover} />
       {calendarQuery.data.calendar.map(calendar => {
         const date = new Date(`${calendar.date}`);
 
         return (
-          <CalendarDate>
+          <CalendarDate key={`calendar-date-${calendar.date}`}>
             <WeekDayLabel>{weekDays[date.getDay()]}</WeekDayLabel>
             <DateLabel current={sameDate(date, today)}>{date.getDate()}</DateLabel>
             {calendar.times.map((timeGroup, index) => {
@@ -82,11 +76,14 @@ const Calendar: FunctionComponent<CalendarProps> = ({ rooms: roomsData, onTimeGr
               }
 
               return (
-                <TimeGroup onClick={onClick} onMouseOver={onMouseOver}>
+                <TimeGroup key={`calendar-date-${calendar.date}-${index}`} onClick={onClick} onMouseOver={onMouseOver}>
                   {timeGroup.map(time => (
-                    <Time>
-                      {time.meetings.map(meeting => (
-                        <CalendarMeeting color={meeting.room.color} />
+                    <Time key={`calendar-time-${calendar.date}-${index}-${time.hour}`}>
+                      {time.meetings.map((meeting, meetingIndex) => (
+                        <CalendarMeeting
+                          key={`calendar-meeting-${calendar.date}-${index}-${time.hour}-${meetingIndex}`}
+                          color={meeting.room.color}
+                        />
                       ))}
                     </Time>
                   ))}
@@ -100,7 +97,7 @@ const Calendar: FunctionComponent<CalendarProps> = ({ rooms: roomsData, onTimeGr
   );
 };
 
-const YAxis: FunctionComponent<{ highlight: number }> = ({highlight}) => {
+const YAxis: FunctionComponent<{ highlight: number }> = ({ highlight }) => {
   return (
     <Column
       space={13}
@@ -109,9 +106,7 @@ const YAxis: FunctionComponent<{ highlight: number }> = ({highlight}) => {
       `}
     >
       {Array.from({ length: 24 }).map((_, index: number) => (
-        <YAxisLabel
-          key={`hour-${index}`}
-          highlight={index === highlight}>
+        <YAxisLabel key={`hour-${index}`} highlight={index === highlight}>
           {index + ":00"}
         </YAxisLabel>
       ))}
@@ -120,7 +115,7 @@ const YAxis: FunctionComponent<{ highlight: number }> = ({highlight}) => {
 };
 
 const YAxisLabel = styled.div<{ highlight: boolean }>`
-  color:${props => props.highlight ? props.theme.colors.primary : props.theme.colors["dark"]}
+  color:${props => (props.highlight ? props.theme.colors.primary : props.theme.colors["dark"])}
   display:flex;
   align-items:flex-start;
   justify-content:flex-end ;
@@ -169,11 +164,10 @@ const TimeGroup = styled.div`
   border-top: ${calendarBorder};
   cursor: pointer;
 
-  
   &:nth-child(odd) {
     background-color: #f7f7f7;
   }
-  
+
   &:hover {
     background-color: ${props => props.theme.colors.primary};
   }

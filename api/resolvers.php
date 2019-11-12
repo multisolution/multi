@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Multi;
 
@@ -28,9 +30,9 @@ return [
         'cancelMeeting' => new Meeting\Cancel(),
         'editMeeting' => new Meeting\Edit(),
         'deleteUser' => new User\Delete(),
+        'updateUser' => new User\Update(),
     ],
     'DateTime' => new DateTimeScalar(),
     'MeetingStatus' => new Meeting\Status\EnumType(),
     'Role' => new User\Role\EnumType(),
 ];
-

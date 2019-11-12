@@ -97,7 +97,7 @@ function createApolloClient(initialState: any, getToken: GetToken): ApolloClient
   const fetchOptions = {};
 
   const http = new HttpLink({
-    uri: "http://localhost:8000",
+    uri: "http://localhost:8000/graphql",
     fetch,
     fetchOptions
   });
