@@ -1,5 +1,4 @@
 import React, { FunctionComponent, useState } from "react";
-import { ListElement } from "./global-style";
 import { MeetingRoom } from "../lib/models";
 import { Row, Column } from "./grid";
 import Modal from "./modal";
