@@ -1,8 +1,8 @@
-import React, {FunctionComponent} from "react";
-import styled, {css} from "styled-components";
-import {MdClose} from "react-icons/md";
-import {Align, Row} from "./grid";
-import {animated, useTransition} from "react-spring";
+import React, { FunctionComponent } from "react";
+import styled, { css } from "styled-components";
+import { MdClose } from "react-icons/md";
+import { Align, Row } from "./grid";
+import { animated, useTransition } from "react-spring";
 
 const fullSize = css`
   top: 0;
@@ -27,7 +27,7 @@ const Overlay = styled.div`
 `;
 
 const Container = styled.div`
-  padding: ${({theme}) => theme.space * 10}px;
+  padding: ${({ theme }) => theme.space * 10}px;
   background: white;
   border-radius: ${({ theme }) => theme.borderRadius}px;
   display: flex;
@@ -37,17 +37,12 @@ const Container = styled.div`
   z-index: 1;
   min-width: 40vw;
 
-  @media screen and (max-width: 1100px){
-
+  @media screen and (max-width: 1100px) {
     min-width: 60vw;
-
   }
 
-
-  @media screen and (max-width: 700px){
-
+  @media screen and (max-width: 700px) {
     min-width: 95vw;
-
   }
 `;
 
@@ -76,21 +71,21 @@ type ModalProps = {
   isOpen: boolean;
 };
 
-const Modal: FunctionComponent<ModalProps> = ({title, isOpen, children, onClose}) => {
+const Modal: FunctionComponent<ModalProps> = ({ title, isOpen, children, onClose }) => {
   const transition = useTransition(isOpen, null, {
-    from: {transform: 'translate3d(0,25vh,0)', opacity: 0},
-    enter: {transform: 'translate3d(0,0vh,0)', opacity: 1},
-    leave: {transform: 'translate3d(0,-25vh,0)', opacity: 0},
-    config: {duration: 240},
+    from: { transform: "translate3d(0,25vh,0)", opacity: 0 },
+    enter: { transform: "translate3d(0,0vh,0)", opacity: 1 },
+    leave: { transform: "translate3d(0,-25vh,0)", opacity: 0 },
+    config: { duration: 240 }
   });
 
   return (
     <>
       {transition.map(
-        ({item, key, props}) =>
+        ({ item, key, props }) =>
           item && (
             <Wrapper key={key} style={props}>
-              <Overlay onClick={_ => onClose()}/>
+              <Overlay onClick={_ => onClose()} />
               <Container>
                 <Row
                   mainAxis={Align.Center}
@@ -100,7 +95,7 @@ const Modal: FunctionComponent<ModalProps> = ({title, isOpen, children, onClose}
                 >
                   <Title>{title}</Title>
                   <CloseButton onClick={_ => onClose()}>
-                    <MdClose size={24}/>
+                    <MdClose size={24} />
                   </CloseButton>
                 </Row>
                 {children}

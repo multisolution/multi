@@ -1,16 +1,15 @@
-import {useApolloClient, useMutation} from "@apollo/react-hooks";
-import {NextPage, NextPageContext} from "next";
-import React, {FormEvent, useState} from "react";
-import Button, {ButtonSkin} from "../components/button";
+import { useApolloClient, useMutation } from "@apollo/react-hooks";
+import { NextPage } from "next";
+import React, { FormEvent, useState } from "react";
+import Button, { ButtonSkin } from "../components/button";
 import gql from "graphql-tag";
 import cookie from "cookie";
 import redirect from "../lib/redirect";
-import {WithApollo, withApollo} from "../lib/apollo";
-import {Column} from "../components/grid";
-import {Input} from "../components/form";
+import { withApollo } from "../lib/apollo";
+import { Column } from "../components/grid";
+import { Input } from "../components/form";
 import styled from "styled-components";
 import PasswordRecovery from "../components/password-recovery";
-import checkLoggedIn from "../lib/check-logged-in";
 
 const SignInPage = styled.div`
   background: url(/assets/img/signin_bg.jpg) no-repeat center;
@@ -55,14 +54,11 @@ const SignIn: NextPage = () => {
   const [formLogin, setFormLogin] = useState(true);
   const apolloClient = useApolloClient();
 
-    const [signIn, {loading}] = useMutation(gql`
-      mutation SignIn($email: String!, $password: String!) {
-        signIn(email: $email, password: $password)
-      }
-    `);
-
-
-
+  const [signIn, { loading }] = useMutation(gql`
+    mutation SignIn($email: String!, $password: String!) {
+      signIn(email: $email, password: $password)
+    }
+  `);
 
   function recoveryPass() {
     setFormLogin(false);
@@ -107,7 +103,7 @@ const SignIn: NextPage = () => {
     if (validateEmail(email) && validatePassword(password)) {
       try {
         const result = await signIn({
-          variables: {email, password}
+          variables: { email, password }
         });
 
         if (result.errors) {
@@ -131,13 +127,13 @@ const SignIn: NextPage = () => {
       {formLogin ? (
         <FormContainer>
           <div>
-            <img src="/assets/img/logo.png" alt="MultisolutiON"/>
+            <img src="/assets/img/logo.png" alt="MultisolutiON" />
           </div>
 
-          <form onSubmit={onSubmit} style={{width: '100%'}}>
+          <form onSubmit={onSubmit} style={{ width: "100%" }}>
             <Column>
-              <Input onChange={() => setError("")} type="email" placeholder="Email" name="email"/>
-              <Input onChange={() => setError("")} type="password" placeholder="Senha" name="password"/>
+              <Input onChange={() => setError("")} type="email" placeholder="Email" name="email" />
+              <Input onChange={() => setError("")} type="password" placeholder="Senha" name="password" />
               <Button type="submit" isLoading={loading}>
                 Entrar
               </Button>
@@ -151,20 +147,20 @@ const SignIn: NextPage = () => {
           {renderError()}
         </FormContainer>
       ) : (
-        <PasswordRecovery/>
+        <PasswordRecovery />
       )}
     </SignInPage>
   );
 };
 
-SignIn.getInitialProps = async (context: NextPageContext & WithApollo) => {
-  const user = await checkLoggedIn(context.apolloClient);
+// SignIn.getInitialProps = async (context: NextPageContext & WithApollo) => {
+//   const user = await checkLoggedIn(context.apolloClient);
 
-  if (user) {
-    redirect(context, '/meeting-rooms');
-  }
+//   if (user) {
+//     redirect(context, "/meeting-rooms");
+//   }
 
-  return {};
-};
+//   return {};
+// };
 
 export default withApollo(SignIn);
