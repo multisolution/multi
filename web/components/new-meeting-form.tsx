@@ -7,6 +7,7 @@ import {Input, Select} from "./form";
 import Button, {ButtonSkin} from "./button";
 import {MdEdit, MdRoom, MdTimer, MdTimerOff, MdToday} from "react-icons/md";
 import {ThemeContext} from "styled-components";
+import {timeRange} from "../lib/misc";
 
 export type NewMeetingRoomFormProps = {
   rooms: MeetingRoom[];
@@ -83,11 +84,23 @@ const NewMeetingForm: FunctionComponent<NewMeetingRoomFormProps> = ({onCancel, r
           <Row space={20}>
             <Row mainAxis={Align.Center} space={20} fillSpace={true}>
               <MdTimer size={24} color={theme.colors.dark}/>
-              <Input type="time" name="start_time" value={initialTime} required={true}/>
+              <Select name="start_time" required={true}>
+                {timeRange().map(time =>
+                  <option value={time} selected={time === initialTime}>
+                    {time}
+                  </option>
+                )}
+              </Select>
             </Row>
             <Row mainAxis={Align.Center} space={20} fillSpace={true}>
               <MdTimerOff size={24} color={theme.colors.dark}/>
-              <Input type="time" name="end_time" required={true}/>
+              <Select name="end_time" required={true}>
+                {timeRange().map((time, index, range) =>
+                  <option value={time} selected={range[index - 4] === initialTime}>
+                    {time}
+                  </option>
+                )}
+              </Select>
             </Row>
           </Row>
           <Row crossAxis={Align.End} space={20}>

@@ -51,8 +51,8 @@ const GlobalStyle = createGlobalStyle`
 const blockCss = css`
   width: 100%;
   display: flex;
-  justify-content: center;
-  outline: 1px solid #000;
+  flex-direction: column;
+  align-items: center;
 `;
 
 export const Section = styled.section`
