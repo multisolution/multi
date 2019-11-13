@@ -7,13 +7,14 @@ use Firebase\JWT\SignatureInvalidException;
 use GraphQL\Error\Debug;
 use GraphQL\Error\FormattedError;
 use GraphQL\Error\UserError;
-use Monolog\Handler\StreamHandler;
+use Multi\Http\IcsHandler;
 use Multi\User\User;
 use Sentry\ClientBuilder;
 use Sentry\Monolog\Handler;
 use Sentry\State\Hub;
 use Siler\Dotenv as Env;
 use Siler\Monolog as Log;
+use Siler\Route;
 use Throwable;
 use function Siler\Encoder\Json\decode;
 use function Siler\Functional\Monad\maybe;
@@ -38,9 +39,15 @@ $context->appKey = Env\env('APP_KEY');
 $context->id = new UniqueId();
 $context->messages = new InMemoryMessages();
 
+$icsHandler = new IcsHandler($context);
+
 debug($context->debug ? Debug::INCLUDE_DEBUG_MESSAGE | Debug::INCLUDE_TRACE : 0);
 
-$handler = function () use ($schema, $context) {
+$handler = function () use ($schema, $context, $icsHandler) {
+    if ($result = Route\get('/meetings/{meeting_id}.ics', $icsHandler)) {
+        return;
+    }
+
     try {
         $context->user = maybe(bearer())->bind(function (string $token) use ($context): ?User {
             try {
