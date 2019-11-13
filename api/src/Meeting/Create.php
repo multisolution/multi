@@ -26,11 +26,11 @@ class Create implements Resolver
         $meeting = new Meeting();
         $meeting->id = $context->id->generate();
         $meeting->room = $context->db->meetingRoomById($args['input']['roomId']);
+        $meeting->title = $args['input']['title'];
         $meeting->startsAt = $args['input']['startsAt'];
         $meeting->endsAt = $args['input']['endsAt'];
         $meeting->host = $context->user;
         $meeting->status = new Scheduled();
-        $meeting->title = $args['input']['title'];
 
         // Lazy-load room calendar
         $meeting->room->calendar = $context->db->meetingsByRoom($meeting->room);

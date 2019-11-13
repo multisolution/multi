@@ -58,8 +58,6 @@ class DoctrineDBAL implements Database
 
     public function updateUser(User $user): bool
     {
-
-
         $stmt = $this->conn->createQueryBuilder()
             ->update('users')
             ->where('id = :id')
@@ -67,22 +65,12 @@ class DoctrineDBAL implements Database
         $stmt->set('email', $stmt->createNamedParameter($user->email));
         $stmt->set('password', $stmt->createNamedParameter($user->password));
         $result = $stmt->execute();
+
         if (is_int($result)) {
             return $result > 0;
         }
+
         return false;
-
-        $stmt = $this->conn
-            ->createQueryBuilder()
-            ->update('users')
-            ->values([
-                'id' => $user->id,
-                'email' => $user->email,
-                'password' => $user->password
-            ]);
-
-        return true;
-
     }
 
     public function userByEmail(string $email): ?User
@@ -197,28 +185,25 @@ class DoctrineDBAL implements Database
 
     public function insertMeeting(Meeting $meeting): bool
     {
-        $affectedRows = $this->conn
+        $data = [
+            'id' => $meeting->id,
+            'room_id' => $meeting->room->id,
+            'host_id' => $meeting->host->id,
+            'title' => $meeting->title,
+            'starts_at' => $meeting->startsAt->format('Y-m-d H:i:s'),
+            'ends_at' => $meeting->endsAt->format('Y-m-d H:i:s'),
+            'status' => $meeting->status,
+        ];
+
+        $stmt = $this->conn
             ->createQueryBuilder()
             ->insert('meetings')
-            ->values([
-                'id' => '?',
-                'host_id' => '?',
-                'room_id' => '?',
-                'starts_at' => '?',
-                'ends_at' => '?',
-                'status' => '?'
-            ])
-            ->setParameter(0, $meeting->id)
-            ->setParameter(1, $meeting->host->id)
-            ->setParameter(2, $meeting->room->id)
-            ->setParameter(3, $meeting->startsAt->format('Y-m-d H:i:s'))
-            ->setParameter(4, $meeting->endsAt->format('Y-m-d H:i:s'))
-            ->setParameter(5, $meeting->status)
-            ->execute();
+            ->values(array_fill_keys(array_keys($data), '?'))
+            ->setParameters(array_values($data));
 
-        return $affectedRows > 0;
+        $result = $stmt->execute();
+        return is_int($result) ? $result > 0 : false;
     }
-
     /**
      * @param MeetingRoom $room
      * @return Meeting[]
