@@ -1,12 +1,8 @@
 import React, {FunctionComponent} from "react";
-import styled, {css, keyframes} from "styled-components";
+import styled, {css} from "styled-components";
 import {MdClose} from "react-icons/md";
 import {Align, Row} from "./grid";
-import ReactCSSTransitionGroup from "react-addons-css-transition-group";
-
-type IsOpen = {
-  isOpen: boolean;
-};
+import {animated, useTransition} from "react-spring";
 
 const fullSize = css`
   top: 0;
@@ -15,7 +11,7 @@ const fullSize = css`
   height: 100%;
 `;
 
-const Wrapper = styled.div<IsOpen>`
+const Wrapper = styled(animated.div)`
   ${fullSize};
   position: fixed;
   display: flex;
@@ -29,20 +25,7 @@ const Overlay = styled.div`
   position: absolute;
 `;
 
-const fadeIn = keyframes({
-  from: {
-    opacity: 0,
-    transform: "translateY(100%)",
-    height: 0,
-  },
-  to: {
-    opacity: 1,
-    transform: "translateY(0)",
-    height: "initial",
-  },
-});
-
-const Container = styled.div<IsOpen>`
+const Container = styled.div`
   padding: ${({theme}) => theme.space * 10}px;
   background: white;
   border-radius: ${({ theme }) => theme.borderRadius}px;
@@ -52,7 +35,6 @@ const Container = styled.div<IsOpen>`
     0 11px 15px -7px rgba(0, 0, 0, 0.2);
   z-index: 1;
   min-width: 40vw;
-  animation: 400ms ease-out ${fadeIn};
 `;
 
 const CloseButton = styled.button`
@@ -77,30 +59,42 @@ const Title = styled.h1`
 type ModalProps = {
   title: string;
   onClose: () => void;
+  isOpen: boolean;
 };
 
-const Modal: FunctionComponent<ModalProps & IsOpen> = ({title, isOpen, children, onClose}) => {
-  return (
-    <ReactCSSTransitionGroup transitionName={fadeIn.getName()}>
-      <Wrapper isOpen={isOpen}>
-        <Overlay onClick={_ => onClose()} />
+const Modal: FunctionComponent<ModalProps> = ({title, isOpen, children, onClose}) => {
+  const transition = useTransition(isOpen, null, {
+    from: {transform: 'translate3d(0,25vh,0)', opacity: 0},
+    enter: {transform: 'translate3d(0,0vh,0)', opacity: 1},
+    leave: {transform: 'translate3d(0,-25vh,0)', opacity: 0},
+    config: {duration: 240},
+  });
 
-        <Container isOpen={isOpen}>
-          <Row
-            mainAxis={Align.Center}
-            decoration={css`
-            margin-bottom: ${props => props.theme.space * 2}px;
-          `}
-          >
-            <Title>{title}</Title>
-            <CloseButton onClick={_ => onClose()}>
-              <MdClose size={24}/>
-            </CloseButton>
-          </Row>
-          {children}
-        </Container>
-      </Wrapper>
-    </ReactCSSTransitionGroup>
+  return (
+    <>
+      {transition.map(
+        ({item, key, props}) =>
+          item && (
+            <Wrapper key={key} style={props}>
+              <Overlay onClick={_ => onClose()}/>
+              <Container>
+                <Row
+                  mainAxis={Align.Center}
+                  decoration={css`
+                    margin-bottom: ${props => props.theme.space * 2}px;
+                  `}
+                >
+                  <Title>{title}</Title>
+                  <CloseButton onClick={_ => onClose()}>
+                    <MdClose size={24}/>
+                  </CloseButton>
+                </Row>
+                {children}
+              </Container>
+            </Wrapper>
+          )
+      )}
+    </>
   );
 };
 
