@@ -10,6 +10,7 @@ const checkLoggedIn = async (client: ApolloClient<NormalizedCacheObject>): Promi
         me {
           id
           email
+          role
         }
       }
     `

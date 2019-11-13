@@ -1,42 +1,46 @@
-import {NextPage, NextPageContext} from "next";
-import React, {useState} from "react";
+import { NextPage, NextPageContext } from "next";
+import React, { useState } from "react";
 import Layout from "../components/layout";
-import {WithApollo, withApollo} from "../lib/apollo";
+import { WithApollo, withApollo } from "../lib/apollo";
 import Calendar from "../components/calendar";
 import Modal from "../components/modal";
-import NewMeetingForm, {NewMeetingRoomFormProps} from "../components/new-meeting-form";
-import {Calendar as CalendarModel, MeetingRoom} from "../lib/models";
-import {useQuery} from "@apollo/react-hooks";
+import NewMeetingForm, { NewMeetingRoomFormProps } from "../components/new-meeting-form";
+import { Calendar as CalendarModel, MeetingRoom, Role, User } from "../lib/models";
+import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import Whoops from "../components/whoops";
 import Loading from "../components/loading";
 import checkLoggedIn from "../lib/check-logged-in";
 import redirect from "../lib/redirect";
 import ListRooms from "../components/list-rooms";
-import {Container, Section} from "../components/global-style";
+import { Container, Section } from "../components/global-style";
 
-const MeetingRooms: NextPage = () => {
+type MeetingRoomsProps = {
+  user: User;
+};
+
+const MeetingRooms: NextPage<MeetingRoomsProps> = ({ user }) => {
   const [modal, setModal] = useState(false);
   const [meetingFormProps, setMeetingFormProps] = useState<NewMeetingRoomFormProps>({ rooms: [] });
-    const calendarQuery = useQuery<{ calendar: CalendarModel[] }>(
-      gql`
-        query calendar {
-          calendar {
-            date
-            times {
-              hour
-              meetings {
+  const calendarQuery = useQuery<{ calendar: CalendarModel[] }>(
+    gql`
+      query calendar {
+        calendar {
+          date
+          times {
+            hour
+            meetings {
+              id
+              room {
                 id
-                room {
-                  id
-                  color
-                }
+                color
               }
             }
           }
         }
-      `
-    );
+      }
+    `
+  );
 
   const roomsQuery = useQuery<{ meetingRooms: MeetingRoom[] }>(
     gql`
@@ -51,16 +55,14 @@ const MeetingRooms: NextPage = () => {
     `
   );
 
-
   if (calendarQuery.error || (calendarQuery.data === undefined && !calendarQuery.loading)) {
     console.error("Error querying calendar", calendarQuery.error);
-    return <Whoops/>;
+    return <Whoops />;
   }
 
   if (calendarQuery.loading || calendarQuery.data === undefined) {
-    return <Loading/>;
+    return <Loading />;
   }
-
 
   if (roomsQuery.error || (roomsQuery.data === undefined && !roomsQuery.loading)) {
     console.error("Error querying rooms");
@@ -89,16 +91,13 @@ const MeetingRooms: NextPage = () => {
   }
 
   return (
-    <Layout>
+    <Layout user={user}>
       <Section>
         <Container>
-          <div style={{display: "flex", justifyContent: "center", paddingBottom: "40px"}}>
-            <ListRooms rooms={roomsQuery.data.meetingRooms}/>
+          <div style={{ display: "flex", justifyContent: "center", paddingBottom: "40px" }}>
+            <ListRooms rooms={roomsQuery.data.meetingRooms} />
           </div>
-          <Calendar
-            calendar={calendarQuery.data.calendar}
-            onTimeGroupClick={onTimeGroupClick}
-          />
+          <Calendar calendar={calendarQuery.data.calendar} onTimeGroupClick={onTimeGroupClick} />
         </Container>
       </Section>
       <Modal title="Nova reunião" isOpen={modal} onClose={() => setModal(false)}>
@@ -113,14 +112,21 @@ const MeetingRooms: NextPage = () => {
   );
 };
 
-// MeetingRooms.getInitialProps = async (context: NextPageContext & WithApollo) => {
-//   const user = await checkLoggedIn(context.apolloClient);
+MeetingRooms.getInitialProps = async (context: NextPageContext & WithApollo) => {
+  const user = await checkLoggedIn(context.apolloClient);
 
-//   if (!user) {
-//     redirect(context, "/signin");
-//   }
+  if (!user) {
+    redirect(context, "/signin");
+    return {
+      user: {
+        id: "",
+        email: "",
+        role: Role.ADMINISTRATOR
+      }
+    };
+  }
 
-//   return { user };
-// };
+  return { user };
+};
 
 export default withApollo(MeetingRooms);

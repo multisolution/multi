@@ -20,8 +20,10 @@ const Error = styled.div`
   color: ${props => props.theme.colors.error};
   font-weight: bold;
 `;
-
-const CreateUser: NextPage = () => {
+type CreateUserProps = {
+  user: User;
+};
+const CreateUser: NextPage<CreateUserProps> = ({ user }) => {
   var emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   const email = useRef<HTMLInputElement>(null);
   const pass = useRef<HTMLInputElement>(null);
@@ -116,7 +118,7 @@ const CreateUser: NextPage = () => {
   const form = useRef<HTMLFormElement>(null);
   return (
     <>
-      <Layout>
+      <Layout user={user}>
         <Section>
           <Container style={{ display: "flex", justifyContent: "center" }}>
             <Column>
@@ -290,9 +292,16 @@ CreateUser.getInitialProps = async (context: NextPageContext & WithApollo) => {
 
   if (!user) {
     redirect(context, "/signin");
+    return {
+      user: {
+        id: "",
+        email: "",
+        role: Role.ADMINISTRATOR
+      }
+    };
   }
 
   return { user };
 };
 
-export default withApollo(CreateUser);
+export default withApollo<CreateUserProps>(CreateUser);

@@ -10,6 +10,8 @@ import { useApolloClient, useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import redirect from "../lib/redirect";
 import cookie from "cookie";
+import { User } from "../lib/models";
+import Menu from "./menu";
 
 const ContainerHeader = styled(Container)`
   display: flex;
@@ -28,7 +30,11 @@ const Main = styled.main`
   min-height: calc(100vh - 200px);
 `;
 
-const Layout: FunctionComponent = ({ children }) => {
+type Props = {
+  user: User;
+};
+
+const Layout: FunctionComponent<Props> = ({ children, user }) => {
   const apolloClient = useApolloClient();
   const [signOut] = useMutation<{ signOut: boolean }>(gql`
     mutation SignOut {
@@ -50,21 +56,7 @@ const Layout: FunctionComponent = ({ children }) => {
         <ContainerHeader>
           <img src="/assets/img/logo.png" alt="MultisolutiON" />
           <Row mainAxis={Align.Center} crossAxis={Align.End}>
-            <span>Usuário/Admin</span>
-
-            {/* <Link href="/meeting-rooms">
-              <Button skin={ButtonSkin.Text}>Calendario</Button>
-            </Link>
-            <Link href="/create-user">
-              <Button skin={ButtonSkin.Text}>Cadastrar Usuário</Button>
-            </Link>
-            <Link href="/profile">
-              <Button skin={ButtonSkin.Text}>Perfil</Button>
-            </Link> */}
-
-            <Button skin={ButtonSkin.Text} onClick={onSignOutClick}>
-              Sair
-            </Button>
+            <Menu user={user} />
           </Row>
         </ContainerHeader>
       </Header>

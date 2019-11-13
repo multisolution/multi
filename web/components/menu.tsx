@@ -5,8 +5,8 @@ import { useApolloClient, useMutation, useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import redirect from "../lib/redirect";
 import cookie from "cookie";
-import { Role } from "../lib/models";
-import { withApollo } from "../lib/apollo";
+import { Role, User } from "../lib/models";
+import Button, { ButtonSkin } from "./button";
 
 type MenuItem = {
   label: string;
@@ -14,19 +14,11 @@ type MenuItem = {
   role: Role;
 };
 
-const Menu: FunctionComponent = ({ children }) => {
-  const meQuery = useQuery(
-    gql`
-      query meQuery {
-        me {
-          role
-          email
-          role
-        }
-      }
-    `
-  );
+type MenuProps = {
+  user: User;
+};
 
+const Menu: FunctionComponent<MenuProps> = ({ user }) => {
   const apolloClient = useApolloClient();
   const [signOut] = useMutation<{ signOut: boolean }>(gql`
     mutation SignOut {
@@ -41,7 +33,7 @@ const Menu: FunctionComponent = ({ children }) => {
     },
     {
       label: "Usuários",
-      link: () => redirect(null, "/list-users"),
+      link: () => redirect(null, "/create-user"),
       role: Role.ADMINISTRATOR
     },
     {
@@ -57,7 +49,6 @@ const Menu: FunctionComponent = ({ children }) => {
   ];
 
   async function onSignOutClick(event: MouseEvent<HTMLButtonElement>) {
-    event.preventDefault();
     signOut().then(result => console.info("Back-end sign out", result.data));
     document.cookie = cookie.serialize("token", "", { maxAge: -1 });
     await apolloClient.cache.reset();
@@ -65,17 +56,15 @@ const Menu: FunctionComponent = ({ children }) => {
   }
 
   function renderMenuItem(item: MenuItem) {
-    // const meResult = await meQuery.data;
-    // console.log(meResult);
-    // if (meQuery.data.me.role == Role.COLLABORATOR && item.role == Role.ADMINISTRATOR) {
-    //   return;
-    // } else {
-    //   return (
-    //     <Button onClick={() => item.link} skin={ButtonSkin.Text}>
-    //       {item.label}
-    //     </Button>
-    //   );
-    // }
+    if (user.role == Role.COLLABORATOR && item.role == Role.ADMINISTRATOR) {
+      return;
+    } else {
+      return (
+        <Button key={menu.indexOf(item) + "menu-item"} onClick={() => item.link()} skin={ButtonSkin.Text}>
+          {item.label}
+        </Button>
+      );
+    }
   }
 
   return (
