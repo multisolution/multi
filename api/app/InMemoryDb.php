@@ -173,4 +173,9 @@ class InMemoryDb implements Database
     {
         // TODO: Implement meetings() method.
     }
+
+    public function updateUser(User $user): bool
+    {
+        // TODO: Implement updateUser() method.
+    }
 }

@@ -45,6 +45,7 @@ class EditTest extends TestCase
         $args = [
             'input' => [
                 'id' => 'test',
+                'title' => 'Just testing',
                 'roomNumber' => 2,
                 'startsAt' => $editedStartsAt,
                 'endsAt' => $editedEndsAt,
