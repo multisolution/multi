@@ -9,6 +9,9 @@ use GraphQL\Error\FormattedError;
 use GraphQL\Error\UserError;
 use Monolog\Handler\StreamHandler;
 use Multi\User\User;
+use Sentry\ClientBuilder;
+use Sentry\Monolog\Handler;
+use Sentry\State\Hub;
 use Siler\Dotenv as Env;
 use Siler\Monolog as Log;
 use Throwable;
@@ -22,7 +25,7 @@ require_once "$base_dir/vendor/autoload.php";
 
 $dbs = include "$base_dir/app/dbs.php";
 
-Log\handler(new StreamHandler("$base_dir/app.log"));
+Log\handler(new Handler(new Hub(ClientBuilder::create(['dsn' => Env\env('SENTRY_DSN')])->getClient())));
 
 $type_defs = file_get_contents("$base_dir/schema.graphql");
 $resolvers = require_once "$base_dir/resolvers.php";
@@ -42,7 +45,6 @@ $handler = function () use ($schema, $context) {
         $context->user = maybe(bearer())->bind(function (string $token) use ($context): ?User {
             try {
                 $token = JWT::decode($token, $context->appKey, ['HS256']);
-
             } catch (SignatureInvalidException $exception) {
                 throw new UserError($context->messages->get('invalid_token'));
             }
@@ -52,14 +54,12 @@ $handler = function () use ($schema, $context) {
 
         $result = execute($schema, decode(raw()), [], $context);
     } catch (Throwable $exception) {
-        Log\error($exception->getMessage());
+        Log\error($exception->getMessage(), ['exception' => $exception]);
         $result = FormattedError::createFromException($exception);
     } finally {
-        cors('*', 'authorization,content-type');
+        cors('*', 'authorization, content-type');
         json($result);
     }
 };
 
-$server = http($handler, 8000);
-$server->set(['worker_num' => 1]); // While in dev
-$server->start();
+http($handler, 8000)->start();
