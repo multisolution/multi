@@ -1,10 +1,10 @@
-import {NextPage, NextPageContext} from "next";
-import {ApolloClient} from "apollo-client";
-import {InMemoryCache, NormalizedCacheObject} from "apollo-cache-inmemory";
-import {HttpLink} from "apollo-link-http";
-import {setContext} from "apollo-link-context";
+import { NextPage, NextPageContext } from "next";
+import { ApolloClient } from "apollo-client";
+import { InMemoryCache, NormalizedCacheObject } from "apollo-cache-inmemory";
+import { HttpLink } from "apollo-link-http";
+import { setContext } from "apollo-link-context";
 import cookie from "cookie";
-import {ApolloProvider} from "@apollo/react-common";
+import { ApolloProvider } from "@apollo/react-common";
 import React from "react";
 import Head from "next/head";
 import fetch from "isomorphic-unfetch";
@@ -18,12 +18,12 @@ export type WithApollo = {
   apolloState: any;
 };
 
-export function withApollo<PageProps>(PageComponent: NextPage, {ssr = true}: { ssr?: boolean } = {}) {
-  const WithApollo = ({apolloClient, apolloState, ...pageProps}: WithApollo & PageProps) => {
-    const client = apolloClient || initApolloClient(apolloState, getTokenFromDocument());
+export function withApollo<PageProps>(PageComponent: NextPage<PageProps>, { ssr = true }: { ssr?: boolean } = {}) {
+  const WithApollo = (props: WithApollo & PageProps) => {
+    const client = props.apolloClient || initApolloClient(props.apolloState, getTokenFromDocument());
     return (
       <ApolloProvider client={client}>
-        <PageComponent {...pageProps} />
+        <PageComponent {...props} />
       </ApolloProvider>
     );
   };
@@ -40,7 +40,7 @@ export function withApollo<PageProps>(PageComponent: NextPage, {ssr = true}: { s
 
   if (ssr || PageComponent.getInitialProps) {
     WithApollo.getInitialProps = async (context: NextPageContext & WithApollo) => {
-      const {AppTree} = context;
+      const { AppTree } = context;
       const apolloClient = (context.apolloClient = initApolloClient({}, getTokenFromContext(context)));
 
       const pageProps = PageComponent.getInitialProps ? await PageComponent.getInitialProps(context) : {};
@@ -52,7 +52,7 @@ export function withApollo<PageProps>(PageComponent: NextPage, {ssr = true}: { s
 
         if (ssr) {
           try {
-            const {getDataFromTree} = await import("@apollo/react-ssr");
+            const { getDataFromTree } = await import("@apollo/react-ssr");
             await getDataFromTree(
               <AppTree
                 pageProps={{
@@ -102,7 +102,7 @@ function createApolloClient(initialState: any, getToken: GetToken): ApolloClient
     fetchOptions
   });
 
-  const auth = setContext((request, {headers}) => {
+  const auth = setContext((request, { headers }) => {
     const token = getToken();
 
     return {

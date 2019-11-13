@@ -3,8 +3,6 @@ import React from "react";
 import checkLoggedIn from "../lib/check-logged-in";
 import redirect from "../lib/redirect";
 import { withApollo, WithApollo } from "../lib/apollo";
-import { ApolloProvider, ApolloConsumer } from "@apollo/react-hooks";
-import ApolloClient from "apollo-client";
 
 const Index: NextPage = () => {
   return <div />;

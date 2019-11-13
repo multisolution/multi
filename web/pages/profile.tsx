@@ -1,19 +1,25 @@
-import { NextPage } from "next";
+import { NextPage, NextPageContext } from "next";
 import React, { useState, useRef } from "react";
 import Layout from "../components/layout";
-import { withApollo } from "../lib/apollo";
+import { withApollo, WithApollo } from "../lib/apollo";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import Whoops from "../components/whoops";
 import Loading from "../components/loading";
 import { Column } from "../components/grid";
 import Button from "../components/button";
-import { UserInput } from "../lib/models";
+import { UserInput, Role, User } from "../lib/models";
 import { css } from "styled-components";
 import { Input } from "../components/form";
 import TitlePage from "../components/title-page";
+import checkLoggedIn from "../lib/check-logged-in";
+import redirect from "../lib/redirect";
 
-const Profile: NextPage = () => {
+type ProfileProps = {
+  user: User;
+};
+
+const Profile: NextPage<ProfileProps> = ({ user }) => {
   const pass = useRef<HTMLInputElement>(null);
   const confirmPass = useRef<HTMLInputElement>(null);
   const email = useRef<HTMLInputElement>(null);
@@ -123,7 +129,7 @@ const Profile: NextPage = () => {
   }
 
   return (
-    <Layout>
+    <Layout user={user}>
       <div style={{ paddingTop: "100px", display: "flex", justifyContent: "center" }}>
         <Column
           decoration={css`
@@ -140,6 +146,23 @@ const Profile: NextPage = () => {
       </div>
     </Layout>
   );
+};
+
+Profile.getInitialProps = async (context: NextPageContext & WithApollo) => {
+  const user = await checkLoggedIn(context.apolloClient);
+
+  if (!user) {
+    redirect(context, "/signin");
+    return {
+      user: {
+        id: "",
+        email: "",
+        role: Role.ADMINISTRATOR
+      }
+    };
+  }
+
+  return { user };
 };
 
 export default withApollo(Profile);
