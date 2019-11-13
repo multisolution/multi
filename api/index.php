@@ -7,8 +7,12 @@ use Firebase\JWT\SignatureInvalidException;
 use GraphQL\Error\Debug;
 use GraphQL\Error\FormattedError;
 use GraphQL\Error\UserError;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+use Multi\Event\Dispatcher;
 use Multi\Http\IcsHandler;
 use Multi\User\User;
+use SendGrid;
 use Sentry\ClientBuilder;
 use Sentry\Monolog\Handler;
 use Sentry\State\Hub;
@@ -26,11 +30,15 @@ require_once "$base_dir/vendor/autoload.php";
 
 $dbs = include "$base_dir/app/dbs.php";
 
-Log\handler(new Handler(new Hub(ClientBuilder::create(['dsn' => Env\env('SENTRY_DSN')])->getClient())));
+Log\handler(new Handler(new Hub(ClientBuilder::create(['dsn' => Env\env('SENTRY_DSN')])->getClient()), Logger::WARNING));
+Log\handler(new StreamHandler("$base_dir/app.log"));
 
 $type_defs = file_get_contents("$base_dir/schema.graphql");
 $resolvers = require_once "$base_dir/resolvers.php";
 $schema = schema($type_defs, $resolvers);
+
+$dispatcher = new Dispatcher();
+$dispatcher->add(new SendGridListener(new SendGrid(Env\env('SENDGRID_API_KEY')), Env\env('SENDGRID_API_FROM')));
 
 $context = new Context();
 $context->debug = Env\bool_val('APP_DEBUG', false);
@@ -38,6 +46,7 @@ $context->db = $dbs[Env\env('APP_DB_USE', 'in_memory')](Env\env('APP_DB_URI'));
 $context->appKey = Env\env('APP_KEY');
 $context->id = new UniqueId();
 $context->messages = new InMemoryMessages();
+$context->dispatcher = $dispatcher;
 
 $icsHandler = new IcsHandler($context);
 
