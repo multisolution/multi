@@ -40,6 +40,7 @@ class Create implements Resolver
         }
 
         $context->db->insertMeeting($meeting);
+        $context->dispatch(new Created($meeting));
 
         return $meeting;
     }

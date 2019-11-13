@@ -2,6 +2,8 @@
 
 namespace Multi;
 
+use Multi\Event\Dispatcher;
+use Multi\Event\Event;
 use Multi\User\User;
 
 class Context
@@ -18,4 +20,16 @@ class Context
     public $id;
     /** @var Messages */
     public $messages;
+    /** @var Dispatcher */
+    public $dispatcher;
+
+    /**
+     * Sugar for Dispatcher to avoid repeating $context->dispatcher->dispatch.
+     *
+     * @param Event $event
+     */
+    public function dispatch(Event $event)
+    {
+        $this->dispatcher->dispatch($event);
+    }
 }
