@@ -60,7 +60,6 @@ const CreateUser: NextPage = () => {
             </Column>
           </Container>
         </Section>
-
         <Modal title="Novo usuário" isOpen={modal} onClose={() => setModal(false)}>
         <form name="form" ref={form}  style={{width: "100%"}}>
               <Column>
@@ -191,7 +190,9 @@ const CreateUser: NextPage = () => {
           }
         }
       });
-      console.log(result);
+      if(result.data){
+        
+      }
     }
   }
 };

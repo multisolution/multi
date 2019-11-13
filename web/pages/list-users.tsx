@@ -55,7 +55,7 @@ const ListUsers: NextPage = () => {
           <ListElement>{user.role}</ListElement>
 
           {user.role !== "ADMINISTRATOR" && 
-          <button style={{ color: "transparent", border: "none", marginRight: "20px" }} id={user.id} onClick={deleteUserClickHandler}>
+          <button style={{ color: "transparent", border: "none",     marginRight: "20px" }} id={user.id} onClick={deleteUserClickHandler}>
             <img style={{ width: "20px" }} src="/assets/img/delete.svg" />
           </button>          }
         </div>
