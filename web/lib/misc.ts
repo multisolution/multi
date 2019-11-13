@@ -7,4 +7,8 @@ export const sameDate = (date1: Date, date2: Date): boolean =>
 
 export const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-export const dateFormat = (date: Date): string => `${date.getFullYear()}-${date.getMonth()}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+export const timeRange = (step: number = 15) => Array.from({length: 24}).flatMap(
+  (_, hour) => Array.from({length: 60 / step}).map(
+    (_, minute) => `${hour.toString().padStart(2, '0')}:${(minute * step).toString().padStart(2, '0')}`
+  )
+);

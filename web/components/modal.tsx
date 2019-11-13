@@ -2,10 +2,7 @@ import React, {FunctionComponent} from "react";
 import styled, {css} from "styled-components";
 import {MdClose} from "react-icons/md";
 import {Align, Row} from "./grid";
-
-type WrapperProps = {
-  isOpen: boolean;
-};
+import {animated, useTransition} from "react-spring";
 
 const fullSize = css`
   top: 0;
@@ -14,18 +11,18 @@ const fullSize = css`
   height: 100%;
 `;
 
-const Wrapper = styled.div<WrapperProps>`
-  ${fullSize}
+const Wrapper = styled(animated.div)`
+  ${fullSize};
   position: fixed;
-  display: ${({ isOpen = false }) => (isOpen ? "flex" : "none")};
-  opacity: ${({ isOpen = false }) => (isOpen ? "1" : "0")};
+  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  z-index: 999;
 `;
 
 const Overlay = styled.div`
-  ${fullSize}
+  ${fullSize};
   position: absolute;
 `;
 
@@ -35,7 +32,8 @@ const Container = styled.div`
   border-radius: ${({ theme }) => theme.borderRadius}px;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 24px 38px 3px rgba(0,0,0,0.14), 0 9px 46px 8px rgba(0,0,0,0.12), 0 11px 15px -7px rgba(0,0,0,0.2);
+  box-shadow: 0 24px 38px 3px rgba(0, 0, 0, 0.14), 0 9px 46px 8px rgba(0, 0, 0, 0.12),
+    0 11px 15px -7px rgba(0, 0, 0, 0.2);
   z-index: 1;
   min-width: 40vw;
 
@@ -60,7 +58,7 @@ const CloseButton = styled.button`
   border: none;
   cursor: pointer;
   align-self: flex-end;
-  
+
   &:hover {
     color: ${props => props.theme.colors.primary};
   }
@@ -75,22 +73,42 @@ const Title = styled.h1`
 type ModalProps = {
   title: string;
   onClose: () => void;
+  isOpen: boolean;
 };
 
-const Modal: FunctionComponent<ModalProps & WrapperProps> = ({title, isOpen, children, onClose}) => {
+const Modal: FunctionComponent<ModalProps> = ({title, isOpen, children, onClose}) => {
+  const transition = useTransition(isOpen, null, {
+    from: {transform: 'translate3d(0,25vh,0)', opacity: 0},
+    enter: {transform: 'translate3d(0,0vh,0)', opacity: 1},
+    leave: {transform: 'translate3d(0,-25vh,0)', opacity: 0},
+    config: {duration: 240},
+  });
+
   return (
-    <Wrapper isOpen={isOpen}>
-      <Overlay onClick={_ => onClose()} />
-      <Container>
-        <Row mainAxis={Align.Center} decoration={css`margin-bottom: ${props => props.theme.space * 2}px`}>
-          <Title>{title}</Title>
-          <CloseButton onClick={_ => onClose()}>
-            <MdClose size={24}/>
-          </CloseButton>
-        </Row>
-        {children}
-      </Container>
-    </Wrapper>
+    <>
+      {transition.map(
+        ({item, key, props}) =>
+          item && (
+            <Wrapper key={key} style={props}>
+              <Overlay onClick={_ => onClose()}/>
+              <Container>
+                <Row
+                  mainAxis={Align.Center}
+                  decoration={css`
+                    margin-bottom: ${props => props.theme.space * 2}px;
+                  `}
+                >
+                  <Title>{title}</Title>
+                  <CloseButton onClick={_ => onClose()}>
+                    <MdClose size={24}/>
+                  </CloseButton>
+                </Row>
+                {children}
+              </Container>
+            </Wrapper>
+          )
+      )}
+    </>
   );
 };
 

@@ -1,15 +1,14 @@
-import React, { FunctionComponent, MouseEvent } from "react";
-import { Container } from "./global-style";
+import React, {FunctionComponent, MouseEvent} from "react";
+import {Container} from "./global-style";
 import Header from "./header";
 import styled from "styled-components";
-import Footer from "./footer";
-import { Align, Row } from "./grid";
-import Link from "next/link";
-import Button, { ButtonSkin } from "./button";
-import { useApolloClient, useMutation } from "@apollo/react-hooks";
+import {Align, Row} from "./grid";
+import Button, {ButtonSkin} from "./button";
+import {useApolloClient, useMutation} from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import redirect from "../lib/redirect";
 import cookie from "cookie";
+import Head from "next/head";
 
 const ContainerHeader = styled(Container)`
   display: flex;
@@ -47,6 +46,9 @@ const Layout: FunctionComponent = ({ children }) => {
 
   return (
     <>
+      <Head>
+        <title>MULTI</title>
+      </Head>
       <Header>
         <ContainerHeader>
           <img src="/assets/img/logo.png" alt="MultisolutiON" />

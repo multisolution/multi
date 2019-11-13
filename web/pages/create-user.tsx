@@ -1,21 +1,29 @@
-import { useMutation } from "@apollo/react-hooks";
-import { NextPage, NextPageContext } from "next";
-import React, { useRef, useState } from "react";
+import {useMutation} from "@apollo/react-hooks";
+import {NextPage, NextPageContext} from "next";
+import React, {useRef, useState} from "react";
 import Button from "../components/button";
-import { Container, Section } from "../components/global-style";
+import {Container, Section} from "../components/global-style";
 import Layout from "../components/layout";
+
 import { Input } from "../components/form";
 import { Column } from "../components/grid";
 import { WithApollo, withApollo } from "../lib/apollo";
+
+import {Input} from "../components/form";
+import {Column} from "../components/grid";
+import {WithApollo, withApollo} from "../lib/apollo";
+
 import gql from "graphql-tag";
-import { Role, User, UserInput } from "../lib/models";
+import {Role, User, UserInput} from "../lib/models";
 import TitlePage from "../components/title-page";
 import checkLoggedIn from "../lib/check-logged-in";
 import redirect from "../lib/redirect";
+
 import { margin } from "polished";
 import styled from "styled-components"
 import Modal from "../components/modal";
 import ListUsers from "./list-users";
+import {emailRegex} from "../lib/misc";
 
 
 const Error = styled.div`
@@ -24,8 +32,9 @@ const Error = styled.div`
   font-weight: bold;
 `;
 
+
+
 const CreateUser: NextPage = () => {
-  var emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   const email = useRef<HTMLInputElement>(null);
   const pass = useRef<HTMLInputElement>(null);
   const confirmpass = useRef<HTMLInputElement>(null);
@@ -54,6 +63,7 @@ const CreateUser: NextPage = () => {
       <Layout>
         <Section>
           <Container style={{ display: "flex", justifyContent: "center" }}>
+
             <Column>
               <ListUsers></ListUsers>
               <Button onClick={openModal} >Cadastrar usuário</Button>
@@ -62,6 +72,9 @@ const CreateUser: NextPage = () => {
         </Section>
         <Modal title="Novo usuário" isOpen={modal} onClose={() => setModal(false)}>
         <form name="form" ref={form}  style={{width: "100%"}}>
+
+            <form style={{padding: "30px 0", maxWidth: "600px"}}>
+
               <Column>
                 <div style={{ width: "100%", position: "relative" }}>
                   <Input onChange={validateEmail} type="text" placeholder="Email" ref={email} style={{marginBottom: "5px", paddingRight: "40px"}} />
@@ -80,7 +93,13 @@ const CreateUser: NextPage = () => {
                 {renderSuccess()}
               </Column>
             </form>
+
         </Modal>
+
+            {renderError()}
+          </Container>
+        </Section>
+
       </Layout>
     </>
   );
@@ -191,7 +210,7 @@ const CreateUser: NextPage = () => {
         }
       });
       if(result.data){
-        
+
       }
     }
   }
