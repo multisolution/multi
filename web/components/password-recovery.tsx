@@ -1,7 +1,7 @@
 import React, {FunctionComponent, useRef, useState} from "react";
 import Button, {ButtonSkin} from "../components/button";
 import {Column} from "./grid";
-import {Form, Input} from "./form";
+import {Input} from "./form";
 import redirect from "../lib/redirect";
 import styled from "styled-components";
 import {FaLongArrowAltLeft} from "react-icons/fa/";
@@ -31,7 +31,7 @@ const PasswordRecovery: FunctionComponent = () => {
   return (
     <>
       <FormContainer>
-        <Form
+        <form
           onSubmit={e => {
             e.preventDefault();
             // sendRecoveryEmail();
@@ -99,7 +99,7 @@ const PasswordRecovery: FunctionComponent = () => {
                     Voltar para login
                   </Button> */}
           </div>
-        </Form>
+        </form>
       </FormContainer>
     </>
   );

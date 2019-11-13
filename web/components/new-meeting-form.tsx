@@ -4,18 +4,20 @@ import {Meeting, MeetingInput, MeetingRoom} from "../lib/models";
 import gql from "graphql-tag";
 import {Align, Column, Row} from "./grid";
 import {Input, Select} from "./form";
-import Button from "./button";
+import Button, {ButtonSkin} from "./button";
 import {MdEdit, MdRoom, MdTimer, MdTimerOff, MdToday} from "react-icons/md";
 import {ThemeContext} from "styled-components";
+import {timeRange} from "../lib/misc";
 
 export type NewMeetingRoomFormProps = {
   rooms: MeetingRoom[];
   initialDate?: Date;
   initialTime?: string;
   onSubmit?: (meetingId: string) => void;
+  onCancel?: () => void;
 }
 
-const NewMeetingForm: FunctionComponent<NewMeetingRoomFormProps> = ({rooms, initialDate, initialTime, onSubmit: submitDelegate}) => {
+const NewMeetingForm: FunctionComponent<NewMeetingRoomFormProps> = ({onCancel, rooms, initialDate, initialTime, onSubmit: submitDelegate}) => {
 
   const theme = useContext(ThemeContext);
 
@@ -79,17 +81,36 @@ const NewMeetingForm: FunctionComponent<NewMeetingRoomFormProps> = ({rooms, init
             <Input type="date" name="date" value={initialDate && initialDate.toISOString().split('T')[0]}
                    required={true}/>
           </Row>
-          <Row mainAxis={Align.Center} space={20}>
-            <MdTimer size={24} color={theme.colors.dark}/>
-            <Input type="time" name="start_time" value={initialTime} required={true}/>
+          <Row space={20}>
+            <Row mainAxis={Align.Center} space={20} fillSpace={true}>
+              <MdTimer size={24} color={theme.colors.dark}/>
+              <Select name="start_time" required={true}>
+                {timeRange().map(time =>
+                  <option value={time} selected={time === initialTime}>
+                    {time}
+                  </option>
+                )}
+              </Select>
+            </Row>
+            <Row mainAxis={Align.Center} space={20} fillSpace={true}>
+              <MdTimerOff size={24} color={theme.colors.dark}/>
+              <Select name="end_time" required={true}>
+                {timeRange().map((time, index, range) =>
+                  <option value={time} selected={range[index - 4] === initialTime}>
+                    {time}
+                  </option>
+                )}
+              </Select>
+            </Row>
           </Row>
-          <Row mainAxis={Align.Center} space={20}>
-            <MdTimerOff size={24} color={theme.colors.dark}/>
-            <Input type="time" name="end_time" required={true}/>
+          <Row crossAxis={Align.End} space={20}>
+            <Button type="reset" skin={ButtonSkin.Text} onClick={onCancel}>
+              Cancelar
+            </Button>
+            <Button type="submit" isLoading={loading}>
+              Agendar
+            </Button>
           </Row>
-          <Button type="submit" isLoading={loading}>
-            Agendar
-          </Button>
         </Column>
       </form>
   );

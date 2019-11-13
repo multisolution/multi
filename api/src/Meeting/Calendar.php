@@ -17,7 +17,7 @@ use function Siler\array_get;
 
 class Calendar implements Resolver
 {
-    const DEFAULT_INTERVAL = '+1 week';
+    const DEFAULT_INTERVAL = '+6 days';
 
     public function __invoke($root, array $args, Context $context)
     {

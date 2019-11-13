@@ -1,17 +1,25 @@
-import { useMutation } from "@apollo/react-hooks";
+import { useMutation, useQuery } from "@apollo/react-hooks";
 import { NextPage, NextPageContext } from "next";
 import React, { useRef, useState } from "react";
 import Button from "../components/button";
-import { Container, Section } from "../components/global-style";
+import { Container, Section, ListElement } from "../components/global-style";
 import Layout from "../components/layout";
-import { Form, Input } from "../components/form";
+import { Input } from "../components/form";
 import { Column } from "../components/grid";
 import { WithApollo, withApollo } from "../lib/apollo";
 import gql from "graphql-tag";
 import { Role, User, UserInput } from "../lib/models";
-import TitlePage from "../components/title-page";
 import checkLoggedIn from "../lib/check-logged-in";
 import redirect from "../lib/redirect";
+import styled from "styled-components";
+import Modal from "../components/modal";
+import ListUsers from "../components/list-users";
+
+const Error = styled.div`
+  text-align: center;
+  color: ${props => props.theme.colors.error};
+  font-weight: bold;
+`;
 
 const CreateUser: NextPage = () => {
   var emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -23,7 +31,9 @@ const CreateUser: NextPage = () => {
   const [emailValue, setEmailValue] = useState("");
   const [validPass, setValidPass] = useState(false);
   const [emailErrorMessage, setEmailError] = useState("");
+  const [formSuccessMessage, SetformSuccessMessage] = useState("");
   const [passErrorMessage, setpassError] = useState("");
+  const [modal, setModal] = useState(false);
   const [createUser] = useMutation<{ createUser: User }, { input: UserInput }>(
     gql`
       mutation CreateUser($input: UserInput!) {
@@ -34,44 +44,165 @@ const CreateUser: NextPage = () => {
     `
   );
 
+  const getUsers = useQuery(
+    gql`
+      query AllUsers {
+        allUsers {
+          id
+          email
+          role
+        }
+      }
+    `
+  );
+
+  const [deleteUser] = useMutation(
+    gql`
+      mutation DeleteUser($id: ID!) {
+        deleteUser(userId: $id)
+      }
+    `
+  );
+
+  async function deleteUserClickHandler(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    const result = await deleteUser({
+      variables: {
+        id: event.currentTarget.id
+      }
+    });
+    if (result.data.deleteUser) {
+      getUsers.refetch();
+      //   setUsers(result.data.allUsers);
+    }
+  }
+
+  console.log(getUsers.data);
+
+  function renderTable() {
+    if (getUsers.data) {
+      return getUsers.data.allUsers.map((user: User, index: number) => (
+        <div
+          key={index}
+          style={{
+            display: "flex",
+            margin: "flex-start",
+            alignSelf: "center",
+            flexDirection: "row",
+            borderBottom: "2px solid #bad531",
+            width: "100%",
+            padding: "10px 0px",
+            marginBottom: "0px",
+            justifyContent: "space-between"
+          }}
+        >
+          <ListElement>{user.id}</ListElement>
+          <ListElement>{user.email}</ListElement>
+          <ListElement>{user.role}</ListElement>
+
+          {user.role !== "ADMINISTRATOR" && (
+            <button
+              style={{ color: "transparent", border: "none", marginRight: "20px" }}
+              id={user.id}
+              onClick={deleteUserClickHandler}
+            >
+              <img style={{ width: "20px" }} src="/assets/img/delete.svg" />
+            </button>
+          )}
+        </div>
+      ));
+    }
+  }
+
+  const form = useRef<HTMLFormElement>(null);
   return (
     <>
       <Layout>
         <Section>
           <Container style={{ display: "flex", justifyContent: "center" }}>
-            <Form name="form" style={{ padding: "30px 0", maxWidth: "600px" }}>
-              <Column>
-                <TitlePage>Novo usuário</TitlePage>
-                <div style={{ width: "100%" }}>
-                  <Input onChange={validateEmail} type="text" placeholder="Email" ref={email} />
-                  <img src={validEmail ? "success_icon.svg" : "error_icon.svg"} />
-                </div>
-                <div style={{ width: "100%" }}>
-                  <Input onChange={validatePass} type="password" placeholder="Senha" ref={pass} />
-                  <img src={validPass ? "success_icon.svg" : "error_icon.svg"} />
-                </div>
-                <div style={{ width: "100%" }}>
-                  <Input onChange={validatePass} type="password" placeholder="Confirmar senha" ref={confirmpass} />
-                  <img src={validPass ? "success_icon.svg" : "error_icon.svg"} />
-                </div>
-                <Button onClick={sendForm}>Cadastrar</Button>
-              </Column>
-            </Form>
-            {renderError()}
+            <Column>
+              <Column>{renderTable()}</Column>
+            </Column>
           </Container>
+          <Button onClick={openModal}>Cadastrar usuário</Button>
         </Section>
+        <Modal title="Novo usuário" isOpen={modal} onClose={() => setModal(false)}>
+          <form name="form" ref={form} style={{ width: "100%" }}>
+            <Column>
+              <div style={{ width: "100%", position: "relative" }}>
+                <Input
+                  onChange={validateEmail}
+                  type="text"
+                  placeholder="Email"
+                  ref={email}
+                  style={{ marginBottom: "5px", paddingRight: "40px" }}
+                />
+                <img
+                  src={validEmail ? "assets/img/success_icon.svg" : ""}
+                  style={{ position: "absolute", right: "10px", top: "10px" }}
+                />
+              </div>
+              <div style={{ width: "100%", position: "relative" }}>
+                <Input
+                  onChange={validatePass}
+                  type="password"
+                  placeholder="Senha"
+                  ref={pass}
+                  style={{ marginBottom: "5px", paddingRight: "40px" }}
+                />
+                <img
+                  src={validPass ? "assets/img/success_icon.svg" : ""}
+                  style={{ position: "absolute", right: "10px", top: "10px" }}
+                />
+              </div>
+              <div style={{ width: "100%", position: "relative" }}>
+                <Input
+                  onChange={validatePass}
+                  type="password"
+                  placeholder="Confirmar senha"
+                  ref={confirmpass}
+                  style={{ marginBottom: "5px", paddingRight: "40px" }}
+                />
+                <img
+                  src={validPass ? "assets/img/success_icon.svg" : ""}
+                  style={{ position: "absolute", right: "10px", top: "10px" }}
+                />
+              </div>
+              <Button onClick={sendForm}>Cadastrar</Button>
+              {renderError()}
+              {renderSuccess()}
+            </Column>
+          </form>
+        </Modal>
       </Layout>
     </>
   );
 
+  function openModal() {
+    setModal(true);
+  }
+
+  function renderSuccess() {
+    if (formSuccessMessage) {
+      return (
+        <Error>
+          <br></br>
+          {<b style={{ color: "#bad531", fontSize: "17px" }}>{formSuccessMessage}</b>}
+        </Error>
+      );
+    }
+  }
+
   function renderError() {
-    return (
-      <div>
-        <b>{emailErrorMessage} </b>
-        <br></br>
-        <b>{passErrorMessage}</b>
-      </div>
-    );
+    if (emailErrorMessage || passErrorMessage) {
+      return (
+        <Error>
+          <br></br>
+          {<b>{emailErrorMessage}</b>}
+          {emailErrorMessage && <br />}
+          <b>{passErrorMessage}</b>
+        </Error>
+      );
+    }
   }
 
   function validateEmail() {
@@ -113,6 +244,22 @@ const CreateUser: NextPage = () => {
       }
     }
   }
+
+  function successForm() {
+    SetformSuccessMessage("Usuario cadastrado com sucesso!");
+    setPassValue("");
+    setEmailValue("");
+
+    console.log(form, form.current);
+
+    setTimeout(function() {
+      SetformSuccessMessage("");
+      setModal(false);
+    }, 2500);
+
+    // setTimeout(function(){ alert("Hello"); }, 3000);
+  }
+
   async function sendForm(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
     validatePass();
@@ -120,6 +267,7 @@ const CreateUser: NextPage = () => {
     validateMinimumPassSize();
 
     if (validEmail && validPass) {
+      successForm();
       console.log("Pass");
       const result = await createUser({
         variables: {
@@ -130,7 +278,9 @@ const CreateUser: NextPage = () => {
           }
         }
       });
-      console.log(result);
+      if (result.data) {
+        getUsers.refetch();
+      }
     }
   }
 };

@@ -18,9 +18,8 @@ export const Input = styled.input`
 
 export const Select = styled.select`
   ${formControl}
-`;
-
-
-export const Form = styled.form`
-  width: 100%;
+  
+  option {
+    padding: 8px;
+  }
 `;

@@ -1,4 +1,4 @@
-import styled, { createGlobalStyle, css } from "styled-components";
+import styled, {createGlobalStyle, css} from "styled-components";
 
 export type Theme = {
   borderRadius: number;
@@ -22,7 +22,7 @@ export const roomColorsPallete = {
 };
 
 export const theme: Theme = {
-  borderRadius: 5,
+  borderRadius: 2,
   space: 4,
   colors: {
     primary: "#bad531",
@@ -39,7 +39,7 @@ const GlobalStyle = createGlobalStyle`
 
   * {
     box-sizing: border-box;
-    transition: all 200ms;
+    transition: all 240ms;
     margin: 0; padding: 0;
     font-family: 'PT Sans', sans-serif;
     font-size: 14px;
@@ -51,8 +51,8 @@ const GlobalStyle = createGlobalStyle`
 const blockCss = css`
   width: 100%;
   display: flex;
-  justify-content: center;
-  outline: 1px solid #000;
+  flex-direction: column;
+  align-items: center;
 `;
 
 export const Section = styled.section`
