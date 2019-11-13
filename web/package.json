@@ -35,9 +35,9 @@
     "next": "^9.1.2",
     "polished": "^3.4.2",
     "react": "^16.11.0",
-    "react-addons-css-transition-group": "^15.6.2",
     "react-dom": "^16.11.0",
     "react-icons": "^3.8.0",
+    "react-spring": "^8.0.27",
     "styled-components": "^4.4.1",
     "typescript": "^3.6.4"
   },
