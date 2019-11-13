@@ -4,15 +4,35 @@ import React, {useRef, useState} from "react";
 import Button from "../components/button";
 import {Container, Section} from "../components/global-style";
 import Layout from "../components/layout";
+
+import { Input } from "../components/form";
+import { Column } from "../components/grid";
+import { WithApollo, withApollo } from "../lib/apollo";
+
 import {Input} from "../components/form";
 import {Column} from "../components/grid";
 import {WithApollo, withApollo} from "../lib/apollo";
+
 import gql from "graphql-tag";
 import {Role, User, UserInput} from "../lib/models";
 import TitlePage from "../components/title-page";
 import checkLoggedIn from "../lib/check-logged-in";
 import redirect from "../lib/redirect";
+
+import { margin } from "polished";
+import styled from "styled-components"
+import Modal from "../components/modal";
+import ListUsers from "./list-users";
 import {emailRegex} from "../lib/misc";
+
+
+const Error = styled.div`
+  text-align: center;
+  color: ${props => props.theme.colors.error};
+  font-weight: bold;
+`;
+
+
 
 const CreateUser: NextPage = () => {
   const email = useRef<HTMLInputElement>(null);
@@ -23,6 +43,7 @@ const CreateUser: NextPage = () => {
   const [emailValue, setEmailValue] = useState("");
   const [validPass, setValidPass] = useState(false);
   const [emailErrorMessage, setEmailError] = useState("");
+  const [formSuccessMessage, SetformSuccessMessage] = useState("");
   const [passErrorMessage, setpassError] = useState("");
   const [createUser] = useMutation<{ createUser: User }, { input: UserInput }>(
     gql`
@@ -34,44 +55,82 @@ const CreateUser: NextPage = () => {
     `
   );
 
+  const [modal, setModal] = useState(false);
+  // const [myFormRef, SetmyFormRef] = useState();
+  const form = useRef<HTMLFormElement>(null);
   return (
     <>
       <Layout>
         <Section>
           <Container style={{ display: "flex", justifyContent: "center" }}>
+
+            <Column>
+              <ListUsers></ListUsers>
+              <Button onClick={openModal} >Cadastrar usuário</Button>
+            </Column>
+          </Container>
+        </Section>
+        <Modal title="Novo usuário" isOpen={modal} onClose={() => setModal(false)}>
+        <form name="form" ref={form}  style={{width: "100%"}}>
+
             <form style={{padding: "30px 0", maxWidth: "600px"}}>
+
               <Column>
-                <TitlePage>Novo usuário</TitlePage>
-                <div style={{ width: "100%" }}>
-                  <Input onChange={validateEmail} type="text" placeholder="Email" ref={email} />
-                  <img src={validEmail ? "success_icon.svg" : "error_icon.svg"} />
+                <div style={{ width: "100%", position: "relative" }}>
+                  <Input onChange={validateEmail} type="text" placeholder="Email" ref={email} style={{marginBottom: "5px", paddingRight: "40px"}} />
+                  <img src={validEmail ? "assets/img/success_icon.svg" : ""} style={{ position: "absolute", right: "10px", top: "10px"}} />
                 </div>
-                <div style={{ width: "100%" }}>
-                  <Input onChange={validatePass} type="password" placeholder="Senha" ref={pass} />
-                  <img src={validPass ? "success_icon.svg" : "error_icon.svg"} />
+                <div style={{ width: "100%", position: "relative" }}>
+                  <Input onChange={validatePass} type="password" placeholder="Senha" ref={pass} style={{marginBottom: "5px", paddingRight: "40px"}} />
+                  <img src={validPass ? "assets/img/success_icon.svg" : ""} style={{ position: "absolute", right: "10px", top: "10px"}}/>
                 </div>
-                <div style={{ width: "100%" }}>
-                  <Input onChange={validatePass} type="password" placeholder="Confirmar senha" ref={confirmpass} />
-                  <img src={validPass ? "success_icon.svg" : "error_icon.svg"} />
+                <div style={{ width: "100%", position: "relative" }}>
+                  <Input onChange={validatePass} type="password" placeholder="Confirmar senha" ref={confirmpass} style={{marginBottom: "5px", paddingRight: "40px",}} />
+                  <img src={validPass ? "assets/img/success_icon.svg" : ""} style={{ position: "absolute", right: "10px", top: "10px"}} />
                 </div>
-                <Button onClick={sendForm}>Cadastrar</Button>
+                <Button onClick={sendForm} >Cadastrar</Button>
+                {renderError()}
+                {renderSuccess()}
               </Column>
             </form>
+
+        </Modal>
+
             {renderError()}
           </Container>
         </Section>
+
       </Layout>
     </>
   );
 
-  function renderError() {
-    return (
-      <div>
-        <b>{emailErrorMessage} </b>
+  function openModal(){
+    setModal(true); 
+  }
+
+  function renderSuccess() {
+    if (formSuccessMessage) {
+      return (
+        <Error>
         <br></br>
+        {<b style={{color: "#bad531", fontSize: "17px"}}>{formSuccessMessage}</b>}
+        </Error>
+      )
+    }
+  }
+
+
+  function renderError() {
+    if (emailErrorMessage || passErrorMessage) {
+      return (
+        <Error>
+        <br></br>
+        {<b>{emailErrorMessage}</b>}
+        {emailErrorMessage && <br/>}
         <b>{passErrorMessage}</b>
-      </div>
-    );
+        </Error>
+      )
+    }
   }
 
   function validateEmail() {
@@ -113,6 +172,25 @@ const CreateUser: NextPage = () => {
       }
     }
   }
+
+  function successForm(){
+    SetformSuccessMessage("Usuario cadastrado com sucesso!")
+    setPassValue("")
+    setEmailValue("")
+
+    console.log(form, form.current)
+
+
+    setTimeout( function (){ 
+ 
+        SetformSuccessMessage("") 
+        setModal(false);
+    
+    },  2500)
+
+    // setTimeout(function(){ alert("Hello"); }, 3000);
+  }
+
   async function sendForm(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
     validatePass();
@@ -120,6 +198,7 @@ const CreateUser: NextPage = () => {
     validateMinimumPassSize();
 
     if (validEmail && validPass) {
+      successForm()
       console.log("Pass");
       const result = await createUser({
         variables: {
@@ -130,7 +209,9 @@ const CreateUser: NextPage = () => {
           }
         }
       });
-      console.log(result);
+      if(result.data){
+
+      }
     }
   }
 };

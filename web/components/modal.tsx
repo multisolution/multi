@@ -36,6 +36,19 @@ const Container = styled.div`
     0 11px 15px -7px rgba(0, 0, 0, 0.2);
   z-index: 1;
   min-width: 40vw;
+
+  @media screen and (max-width: 1100px){
+
+    min-width: 60vw;
+
+  }
+
+
+  @media screen and (max-width: 700px){
+
+    min-width: 95vw;
+
+  }
 `;
 
 const CloseButton = styled.button`
