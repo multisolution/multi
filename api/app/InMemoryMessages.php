@@ -14,7 +14,7 @@ class InMemoryMessages implements Messages
             'unauthenticated' => 'There is no token on the request or the token is invalid.',
             'unauthorized' => 'You don\'t have permission for this operation.',
             'invalid_email' => 'Invalid email.',
-            'meeting_conflicts' => 'There is already a meeting at this room and time',
+            'conflicting_meeting' => 'There is already a meeting at this room and time',
         ];
     }
 

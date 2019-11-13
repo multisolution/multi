@@ -1,69 +1,54 @@
-import React, { FunctionComponent, useState } from "react";
-import { MeetingRoom } from "../lib/models";
-import { Row, Column } from "./grid";
+import React, {FunctionComponent, useState} from "react";
+import {MeetingRoom} from "../lib/models";
+import {Column, Row} from "./grid";
 import Modal from "./modal";
 import RoomDetails from "./room-details";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 
 type Props = {
   rooms: MeetingRoom[];
 };
 
-const ListRooms: FunctionComponent<Props> = ({ rooms: rooms }) => {
+const ListRooms: FunctionComponent<Props> = ({rooms}) => {
   const [modal, setModal] = useState(false);
-  const [currentRoom, setCurrentRoom] = useState();
-
-  function renderRooms() {
-    if (rooms) {
-      return rooms.map((room: MeetingRoom, index: number) => (
-        <Column>
-          <RoomButton
-            key={"room-button" + rooms.indexOf(room)}
-            bgcolor={room.color}
-            onClick={() => {
-              console.log(room.color);
-              setCurrentRoom(room);
-              setModal(true);
-            }}
-          ></RoomButton>
-          <div key={index} style={{ display: "flex", margin: "flex-start", alignSelf: "center", flexDirection: "row" }}>
-            <StyledRoomName>Sala {room.roomNumber}</StyledRoomName>
-          </div>
-        </Column>
-      ));
-    }
-  }
+  const [currentRoom, setCurrentRoom] = useState<MeetingRoom>(rooms[0]);
 
   return (
     <>
-      <Row
-        decoration={css`
-          align-item: flex-start;
-        `}
-        key={"rooms"}
-      >
-        {renderRooms()}
+      <Row>
+        {rooms.map(room => (
+          <Column key={`room-${room.id}`}>
+            <RoomButton
+              backgroundColor={room.color}
+              onClick={() => {
+                console.log(room.color);
+                setCurrentRoom(room);
+                setModal(true);
+              }}
+            />
+            <RoomName>Sala {room.roomNumber}</RoomName>
+          </Column>
+        ))}
       </Row>
-      <Modal title="Sala" isOpen={modal} onClose={() => setModal(false)}>
+      <Modal title={`Sala ${currentRoom.roomNumber}`} isOpen={modal} onClose={() => setModal(false)}>
         <RoomDetails room={currentRoom} />
       </Modal>
     </>
   );
 };
 
-export default ListRooms;
 type ButtonProps = {
-  bgcolor: string;
+  backgroundColor: string;
 };
 
-const StyledRoomName = styled.span`
-  color: ${props => props.theme.colors["dark"]};
-  padding: 0 10px 0 10px;
+const RoomName = styled.span`
+  color: ${props => props.theme.colors.dark};
+  padding: 0 ${props => props.theme.space * 2}px;
 `;
 
 const RoomButton = styled.button<ButtonProps>`
   cursor: pointer;
-  background-color: ${props => props.bgcolor};
+  background-color: ${props => props.backgroundColor};
   border: none;
   min-height: 38px;
   min-width: 38px;
@@ -76,3 +61,5 @@ const RoomButton = styled.button<ButtonProps>`
     outline: none;
   }
 `;
+
+export default ListRooms;

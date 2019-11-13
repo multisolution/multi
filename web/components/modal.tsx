@@ -18,6 +18,7 @@ const Wrapper = styled(animated.div)`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  z-index: 999;
 `;
 
 const Overlay = styled.div`

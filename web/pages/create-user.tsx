@@ -1,20 +1,20 @@
-import { useMutation } from "@apollo/react-hooks";
-import { NextPage, NextPageContext } from "next";
-import React, { useRef, useState } from "react";
+import {useMutation} from "@apollo/react-hooks";
+import {NextPage, NextPageContext} from "next";
+import React, {useRef, useState} from "react";
 import Button from "../components/button";
-import { Container, Section } from "../components/global-style";
+import {Container, Section} from "../components/global-style";
 import Layout from "../components/layout";
-import { Form, Input } from "../components/form";
-import { Column } from "../components/grid";
-import { WithApollo, withApollo } from "../lib/apollo";
+import {Input} from "../components/form";
+import {Column} from "../components/grid";
+import {WithApollo, withApollo} from "../lib/apollo";
 import gql from "graphql-tag";
-import { Role, User, UserInput } from "../lib/models";
+import {Role, User, UserInput} from "../lib/models";
 import TitlePage from "../components/title-page";
 import checkLoggedIn from "../lib/check-logged-in";
 import redirect from "../lib/redirect";
+import {emailRegex} from "../lib/misc";
 
 const CreateUser: NextPage = () => {
-  var emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   const email = useRef<HTMLInputElement>(null);
   const pass = useRef<HTMLInputElement>(null);
   const confirmpass = useRef<HTMLInputElement>(null);
@@ -39,7 +39,7 @@ const CreateUser: NextPage = () => {
       <Layout>
         <Section>
           <Container style={{ display: "flex", justifyContent: "center" }}>
-            <Form name="form" style={{ padding: "30px 0", maxWidth: "600px" }}>
+            <form style={{padding: "30px 0", maxWidth: "600px"}}>
               <Column>
                 <TitlePage>Novo usuário</TitlePage>
                 <div style={{ width: "100%" }}>
@@ -56,7 +56,7 @@ const CreateUser: NextPage = () => {
                 </div>
                 <Button onClick={sendForm}>Cadastrar</Button>
               </Column>
-            </Form>
+            </form>
             {renderError()}
           </Container>
         </Section>
