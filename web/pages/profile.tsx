@@ -11,6 +11,7 @@ import Button from "../components/button";
 import { UserInput } from "../lib/models";
 import { css } from "styled-components";
 import { Input } from "../components/form";
+import TitlePage from "../components/title-page";
 
 const Profile: NextPage = () => {
   const pass = useRef<HTMLInputElement>(null);
@@ -129,6 +130,7 @@ const Profile: NextPage = () => {
             width: 40%;
           `}
         >
+          <TitlePage>Atualize seus dados</TitlePage>
           <Input type="text" placeholder={meQuery.data.me.email} ref={email} />
           <Input type="password" placeholder="Nova senha" ref={pass} />
           <Input type="password" placeholder="Confirmar nova senha" ref={confirmPass} />

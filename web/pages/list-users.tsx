@@ -6,9 +6,11 @@ import gql from "graphql-tag";
 import Layout from "../components/layout";
 import { Container, Section, ListElement } from "../components/global-style";
 import { User } from "../lib/models";
-import { Column } from "../components/grid";
+import { Column, Row } from "../components/grid";
 import checkLoggedIn from "../lib/check-logged-in";
 import redirect from "../lib/redirect";
+import TitlePage from "../components/title-page";
+
 
 const ListUsers: NextPage = () => {
   const getUsers = useQuery(
@@ -46,39 +48,41 @@ const ListUsers: NextPage = () => {
   function renderTable() {
     if (getUsers.data) {
       return getUsers.data.allUsers.map((user: User, index: number) => (
-        <div key={index} style={{ display: "flex", margin: "flex-start", alignSelf: "center", flexDirection: "row" }}>
+        <div key={index} style={{ display: "flex", margin: "flex-start", alignSelf: "center", flexDirection: "row", borderBottom: "2px solid #bad531",
+        width: "100%", padding: "10px 0px", marginBottom: "0px", justifyContent: "space-between"}}>
           <ListElement>{user.id}</ListElement>
           <ListElement>{user.email}</ListElement>
           <ListElement>{user.role}</ListElement>
-          <button style={{ color: "transparent", border: "none" }} id={user.id} onClick={deleteUserClickHandler}>
-            <img style={{ width: "20px" }} src="/delete.svg" />
-          </button>
+
+          {user.role !== "ADMINISTRATOR" && 
+          <button style={{ color: "transparent", border: "none", marginRight: "20px" }} id={user.id} onClick={deleteUserClickHandler}>
+            <img style={{ width: "20px" }} src="/assets/img/delete.svg" />
+          </button>          }
         </div>
       ));
     }
   }
-
+  
   return (
     <>
-      <Layout>
-        <Section>
-          <Container>
+
+            <TitlePage style={{borderBottom: "2px solid #bad531"}}>Usuários</TitlePage>
             <Column>{renderTable()}</Column>
-          </Container>
-        </Section>
-      </Layout>
+   
     </>
   );
 };
 
-ListUsers.getInitialProps = async (context: NextPageContext & WithApollo) => {
-  const user = await checkLoggedIn(context.apolloClient);
+export default ListUsers 
 
-  if (!user) {
-    redirect(context, "/signin");
-  }
+// ListUsers.getInitialProps = async (context: NextPageContext & WithApollo) => {
+//   const user = await checkLoggedIn(context.apolloClient);
 
-  return { user };
-};
+//   if (!user) {
+//     redirect(context, "/signin");
+//   }
 
-export default withApollo(ListUsers);
+//   return { user };
+// };
+
+// export default withApollo(ListUsers);
