@@ -14,6 +14,7 @@ import redirect from "../lib/redirect";
 import styled from "styled-components";
 import Modal from "../components/modal";
 import ListUsers from "../components/list-users";
+import AlertMenssage from "../components/alert-menssage";
 
 const Error = styled.div`
   text-align: center;
@@ -33,7 +34,7 @@ const CreateUser: NextPage<CreateUserProps> = ({ user }) => {
   const [emailValue, setEmailValue] = useState("");
   const [validPass, setValidPass] = useState(false);
   const [emailErrorMessage, setEmailError] = useState("");
-  const [formSuccessMessage, SetformSuccessMessage] = useState("");
+  const [formSuccessMessage, SetformSuccessMessage] = useState(false);
   const [passErrorMessage, setpassError] = useState("");
   const [modal, setModal] = useState(false);
   const [createUser] = useMutation<{ createUser: User }, { input: UserInput }>(
@@ -122,10 +123,10 @@ const CreateUser: NextPage<CreateUserProps> = ({ user }) => {
         <Section>
           <Container style={{ display: "flex", justifyContent: "center" }}>
             <Column>
+            <Button onClick={openModal}>Cadastrar usuário</Button>
               <Column>{renderTable()}</Column>
             </Column>
           </Container>
-          <Button onClick={openModal}>Cadastrar usuário</Button>
         </Section>
         <Modal title="Novo usuário" isOpen={modal} onClose={() => setModal(false)}>
           <form name="form" ref={form} style={{ width: "100%" }}>
@@ -171,11 +172,13 @@ const CreateUser: NextPage<CreateUserProps> = ({ user }) => {
               </div>
               <Button onClick={sendForm}>Cadastrar</Button>
               {renderError()}
-              {renderSuccess()}
             </Column>
           </form>
         </Modal>
       </Layout>
+
+
+      {renderMenssage()}
     </>
   );
 
@@ -183,15 +186,12 @@ const CreateUser: NextPage<CreateUserProps> = ({ user }) => {
     setModal(true);
   }
 
-  function renderSuccess() {
-    if (formSuccessMessage) {
+  function renderMenssage() {
+
       return (
-        <Error>
-          <br></br>
-          {<b style={{ color: "#bad531", fontSize: "17px" }}>{formSuccessMessage}</b>}
-        </Error>
+        <AlertMenssage title={"CADASTRADO COM SUCESSO!"} menssage="" typeMenssage="success" isOpen={formSuccessMessage}  />
       );
-    }
+
   }
 
   function renderError() {
@@ -205,6 +205,20 @@ const CreateUser: NextPage<CreateUserProps> = ({ user }) => {
         </Error>
       );
     }
+  }
+
+
+  function successForm() {
+    SetformSuccessMessage(true);
+    setPassValue("");
+    setEmailValue("");
+    setModal(false);
+
+    console.log(form, form.current);
+
+    // setTimeout(function() {
+    //   SetformSuccessMessage(false);
+    // }, 2500);
   }
 
   function validateEmail() {
@@ -245,21 +259,6 @@ const CreateUser: NextPage<CreateUserProps> = ({ user }) => {
         return true;
       }
     }
-  }
-
-  function successForm() {
-    SetformSuccessMessage("Usuario cadastrado com sucesso!");
-    setPassValue("");
-    setEmailValue("");
-
-    console.log(form, form.current);
-
-    setTimeout(function() {
-      SetformSuccessMessage("");
-      setModal(false);
-    }, 2500);
-
-    // setTimeout(function(){ alert("Hello"); }, 3000);
   }
 
   async function sendForm(event: React.MouseEvent<HTMLButtonElement>) {
