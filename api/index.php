@@ -3,10 +3,7 @@
 namespace Multi;
 
 use Firebase\JWT\JWT;
-use Firebase\JWT\SignatureInvalidException;
-use GraphQL\Error\Debug;
-use GraphQL\Error\FormattedError;
-use GraphQL\Error\UserError;
+use GraphQL\Error\{Debug, FormattedError};
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Multi\Event\Dispatcher;
@@ -50,21 +47,16 @@ $context->dispatcher = $dispatcher;
 
 $icsHandler = new IcsHandler($context);
 
-debug($context->debug ? Debug::INCLUDE_DEBUG_MESSAGE | Debug::INCLUDE_TRACE : 0);
+debug($context->debug ? Debug::INCLUDE_DEBUG_MESSAGE : 0);
 
 $handler = function () use ($schema, $context, $icsHandler) {
-    if ($result = Route\get('/meetings/{meeting_id}.ics', $icsHandler)) {
+    if (Route\get('/meetings/{meeting_id}.ics', $icsHandler)) {
         return;
     }
 
     try {
         $context->user = maybe(bearer())->bind(function (string $token) use ($context): ?User {
-            try {
-                $token = JWT::decode($token, $context->appKey, ['HS256']);
-            } catch (SignatureInvalidException $exception) {
-                throw new UserError($context->messages->get('invalid_token'));
-            }
-
+            $token = JWT::decode($token, $context->appKey, ['HS256']);
             return $context->db->userById($token->userId);
         })->return();
 

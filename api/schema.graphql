@@ -44,12 +44,17 @@ type Calendar {
     times: [[CalendarTime]]!
 }
 
+type Invite {
+    from: User!
+}
+
 type Query {
     me: User
     meetingRooms: [MeetingRoom]!
     myMeetings: [Meeting]!
     allUsers: [User]!
     calendar(from: DateTime, to: DateTime): [Calendar]!
+    invite(code: String!): Invite
 }
 
 type Mutation {
@@ -62,13 +67,15 @@ type Mutation {
     editMeeting(input: MeetingInput!): Meeting
     deleteUser(userId: ID!): Boolean
     updateUser(userInput: UserInput!): Boolean
+    createInvite: String!
 }
 
 input UserInput {
     email: String!
     password: String!
-    role: Role!
+    role: Role
     id: String
+    inviteCode: String
 }
 
 input MeetingInput {
