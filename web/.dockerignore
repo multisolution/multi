@@ -1,0 +1,13 @@
+**
+!/.dockerignore
+!/Dockerfile
+!/docker-entrypoint.sh
+
+!/components/**
+!/lib/**
+!/pages/**
+!/public/**
+!/next.config.js
+!/package.json
+!/package-lock.json
+!/tsconfig.json
