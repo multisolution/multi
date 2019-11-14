@@ -4,7 +4,7 @@ namespace Multi;
 
 use Firebase\JWT\JWT;
 use GraphQL\Error\{Debug, FormattedError};
-use Monolog\Handler\StreamHandler;
+use Monolog\Handler\ErrorLogHandler;
 use Monolog\Logger;
 use Multi\Event\Dispatcher;
 use Multi\Http\IcsHandler;
@@ -28,7 +28,7 @@ require_once "$base_dir/vendor/autoload.php";
 $dbs = include "$base_dir/app/dbs.php";
 
 Log\handler(new Handler(new Hub(ClientBuilder::create(['dsn' => Env\env('SENTRY_DSN')])->getClient()), Logger::WARNING));
-Log\handler(new StreamHandler("$base_dir/app.log"));
+Log\handler(new ErrorLogHandler());
 
 $type_defs = file_get_contents("$base_dir/schema.graphql");
 $resolvers = require_once "$base_dir/resolvers.php";

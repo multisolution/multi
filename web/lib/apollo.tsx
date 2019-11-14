@@ -1,10 +1,10 @@
-import { NextPage, NextPageContext } from "next";
-import { ApolloClient } from "apollo-client";
-import { InMemoryCache, NormalizedCacheObject } from "apollo-cache-inmemory";
-import { HttpLink } from "apollo-link-http";
-import { setContext } from "apollo-link-context";
+import {NextPage, NextPageContext} from "next";
+import {ApolloClient} from "apollo-client";
+import {InMemoryCache, NormalizedCacheObject} from "apollo-cache-inmemory";
+import {HttpLink} from "apollo-link-http";
+import {setContext} from "apollo-link-context";
 import cookie from "cookie";
-import { ApolloProvider } from "@apollo/react-common";
+import {ApolloProvider} from "@apollo/react-common";
 import React from "react";
 import Head from "next/head";
 import fetch from "isomorphic-unfetch";
@@ -97,7 +97,7 @@ function createApolloClient(initialState: any, getToken: GetToken): ApolloClient
   const fetchOptions = {};
 
   const http = new HttpLink({
-    uri: "http://localhost:8000/graphql",
+    uri: process.env.API_URL,
     fetch,
     fetchOptions
   });
