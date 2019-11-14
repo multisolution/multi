@@ -9,16 +9,7 @@ export type UserInput = {
   password: string;
   role?: Role;
   id?: string;
-};
-
-export type UserLoginInput = {
-  email: string;
-  password: string;
-};
-
-export type UserLogin = {
-  email: string;
-  password: string;
+  inviteCode?: string;
 };
 
 export enum Role {

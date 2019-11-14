@@ -20,6 +20,7 @@ return [
         'myMeetings' => new Meeting\MyMeetings(),
         'allUsers' => new User\AllUsers(),
         'calendar' => new Meeting\Calendar(),
+        'invite' => new User\Invite\Invitation(),
     ],
     'Mutation' => [
         'signIn' => new User\SignIn(),
@@ -31,6 +32,7 @@ return [
         'editMeeting' => new Meeting\Edit(),
         'deleteUser' => new User\Delete(),
         'updateUser' => new User\Update(),
+        'createInvite' => new User\Invite\Create(),
     ],
     'DateTime' => new DateTimeScalar(),
     'MeetingStatus' => new Meeting\Status\EnumType(),

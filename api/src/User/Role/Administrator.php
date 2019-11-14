@@ -2,15 +2,10 @@
 
 namespace Multi\User\Role;
 
-use Multi\User\Permission\CreateMeetingRoom;
-use Multi\User\Permission\DeleteUser;
-use Multi\User\Permission\CreateUser;
-use Multi\User\Permission\Permission;
+use Multi\User\Permission;
 
 class Administrator implements Role
 {
-
-
     const ADMINISTRATOR = 'ADMINISTRATOR';
 
     /**
@@ -19,10 +14,10 @@ class Administrator implements Role
     public function permissions(): array
     {
         return [
-            new CreateMeetingRoom(),
-            new DeleteUser(),
-            new CreateUser(),
-
+            new Permission\CreateMeetingRoom(),
+            new Permission\DeleteUser(),
+            new Permission\CreateUser(),
+            new Permission\CreateInvite(),
         ];
     }
 
