@@ -112,9 +112,9 @@ Invite.getInitialProps = async (context: NextPageContext & WithApollo) => {
         });
 
       return {inviteCode: Array.isArray(code) ? code[0] : code};
-    } catch (error) {
-      console.error(error);
-      return {error};
+    } catch (inviteError) {
+      console.error(inviteError);
+      return {inviteError};
     }
 };
 
