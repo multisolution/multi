@@ -176,20 +176,12 @@ const CreateUser: NextPage = () => {
       </Layout>
 
 
-      {renderMenssage()}
+      <AlertMenssage title={"CADASTRADO COM SUCESSO!"} menssage="" typeMenssage="success" isOpen={formSuccessMessage}  />
     </>
   );
 
   function openModal() {
     setModal(true);
-  }
-
-  function renderMenssage() {
-
-      return (
-        <AlertMenssage title={"CADASTRADO COM SUCESSO!"} menssage="" typeMenssage="success" isOpen={formSuccessMessage}  />
-      );
-
   }
 
   function renderError() {
@@ -214,9 +206,9 @@ const CreateUser: NextPage = () => {
 
     console.log(form, form.current);
 
-    // setTimeout(function() {
-    //   SetformSuccessMessage(false);
-    // }, 2500);
+    setTimeout(function() {
+      SetformSuccessMessage(false);
+    }, 2500);
   }
 
   function validateEmail() {
