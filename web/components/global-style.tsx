@@ -116,4 +116,15 @@ export const Room = styled.div<RoomProps>`
   margin-left: 150px;
 `;
 
+
+export const TitlePage = styled.h1`
+
+font-size: 30px;
+text-transform: uppercase;
+padding: 10px 0;
+
+`
+
+
+
 export default GlobalStyle;

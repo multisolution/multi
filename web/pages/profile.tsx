@@ -11,9 +11,9 @@ import Button from "../components/button";
 import { UserInput, Role, User } from "../lib/models";
 import { css } from "styled-components";
 import { Input } from "../components/form";
-import TitlePage from "../components/title-page";
 import checkLoggedIn from "../lib/check-logged-in";
 import redirect from "../lib/redirect";
+import { TitlePage } from "../components/global-style";
 
 type ProfileProps = {
   user: User;
