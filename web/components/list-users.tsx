@@ -2,10 +2,9 @@ import { NextPage } from "next";
 import React, { FunctionComponent } from "react";
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
-import { ListElement } from "./global-style";
+import { ListElement, TitlePage } from "./global-style";
 import { User } from "../lib/models";
 import { Column, Row } from "./grid";
-import TitlePage from "./title-page";
 
 const ListUsers: FunctionComponent = () => {
   const [deleteUser] = useMutation(
