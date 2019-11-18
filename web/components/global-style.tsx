@@ -30,7 +30,8 @@ export const theme: Theme = {
     transparent: "transparent",
     white: "#ffffff",
     black: "#222222",
-    error: "#f20000"
+    error: "#f20000",
+    light: "#eeeeee",
   }
 };
 
@@ -123,7 +124,7 @@ font-size: 30px;
 text-transform: uppercase;
 padding: 10px 0;
 
-`
+`;
 
 
 

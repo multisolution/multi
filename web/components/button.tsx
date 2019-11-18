@@ -41,7 +41,7 @@ const StyledButton = styled.button<StyledButtonProps>`
   color: ${({ skin = ButtonSkin.Primary, theme }) => theme.colors[buttonSkins[skin].color]};
   border: none;
   min-height: 48px;
-  padding: 0px ${({ skin = ButtonSkin.Primary, theme }) => `${buttonSkins[skin].padding * theme.space}px`};
+  padding: 0 ${({skin = ButtonSkin.Primary, theme}) => `${buttonSkins[skin].padding * theme.space}px`};
   border-radius: ${props => props.theme.borderRadius}px;
   text-transform: uppercase;
   font-weight: bold;

@@ -1,19 +1,21 @@
-import { NextPage, NextPageContext } from "next";
-import React, { useState } from "react";
+import {NextPage, NextPageContext} from "next";
+import React, {useState} from "react";
 import Layout from "../components/layout";
-import { WithApollo, withApollo } from "../lib/apollo";
+import {WithApollo, withApollo} from "../lib/apollo";
 import Calendar from "../components/calendar";
 import Modal from "../components/modal";
-import NewMeetingForm, { NewMeetingRoomFormProps } from "../components/new-meeting-form";
-import { Calendar as CalendarModel, MeetingRoom, Role, User } from "../lib/models";
-import { useQuery } from "@apollo/react-hooks";
+import NewMeetingForm, {NewMeetingRoomFormProps} from "../components/new-meeting-form";
+import {Calendar as CalendarModel, MeetingRoom, Role, User} from "../lib/models";
+import {useQuery} from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import Whoops from "../components/whoops";
 import Loading from "../components/loading";
 import checkLoggedIn from "../lib/check-logged-in";
 import redirect from "../lib/redirect";
 import ListRooms from "../components/list-rooms";
-import { Container, Section } from "../components/global-style";
+import {Container, Section} from "../components/global-style";
+import moment, {Moment} from "moment";
+import {dateFormat} from "../lib/misc";
 
 type MeetingRoomsProps = {
   user: User;
@@ -22,10 +24,12 @@ type MeetingRoomsProps = {
 const MeetingRooms: NextPage<MeetingRoomsProps> = ({ user }) => {
   const [modal, setModal] = useState(false);
   const [meetingFormProps, setMeetingFormProps] = useState<NewMeetingRoomFormProps>({ rooms: [] });
+  const [startDate, setStartDate] = useState<Moment>(moment());
+
   const calendarQuery = useQuery<{ calendar: CalendarModel[] }>(
     gql`
-      query calendar {
-        calendar {
+        query calendar($from: DateTime, $to: DateTime) {
+            calendar(from: $from, to: $to) {
           date
           times {
             hour
@@ -39,7 +43,12 @@ const MeetingRooms: NextPage<MeetingRoomsProps> = ({ user }) => {
           }
         }
       }
-    `
+    `,
+    {
+      variables: {
+        from: startDate.format(dateFormat)
+      }
+    }
   );
 
   const roomsQuery = useQuery<{ meetingRooms: MeetingRoom[] }>(
@@ -55,23 +64,15 @@ const MeetingRooms: NextPage<MeetingRoomsProps> = ({ user }) => {
     `
   );
 
-  if (calendarQuery.error || (calendarQuery.data === undefined && !calendarQuery.loading)) {
+  if (calendarQuery.error) {
     console.error("Error querying calendar", calendarQuery.error);
     return <Whoops />;
   }
 
-  if (calendarQuery.loading || calendarQuery.data === undefined) {
-    return <Loading />;
-  }
-
-  if (roomsQuery.error || (roomsQuery.data === undefined && !roomsQuery.loading)) {
+  if (roomsQuery.error) {
     console.error("Error querying rooms");
     console.error(roomsQuery.error);
     return <Whoops />;
-  }
-
-  if (roomsQuery.loading || roomsQuery.data === undefined) {
-    return <Loading />;
   }
 
   function onTimeGroupClick(initialDate: Date, initialTime: string) {
@@ -90,20 +91,38 @@ const MeetingRooms: NextPage<MeetingRoomsProps> = ({ user }) => {
     setModal(false);
   }
 
+  function onCalendarPrevClick() {
+    setStartDate(startDate.subtract(1, 'week'));
+    calendarQuery.refetch({from: startDate.format(dateFormat)});
+  }
+
+  function onCalendarNextClick() {
+    setStartDate(startDate.add(1, 'week'));
+    calendarQuery.refetch({from: startDate.format(dateFormat)});
+  }
+
   return (
     <Layout user={user}>
       <Section>
         <Container>
           <div style={{ display: "flex", justifyContent: "center", paddingBottom: "40px" }}>
-            <ListRooms rooms={roomsQuery.data.meetingRooms} />
+            {!roomsQuery.data || roomsQuery.loading ? <Loading/> :
+              <ListRooms rooms={roomsQuery.data.meetingRooms}/>
+            }
           </div>
-          <Calendar calendar={calendarQuery.data.calendar} onTimeGroupClick={onTimeGroupClick} />
+          <Calendar
+            isLoading={calendarQuery.loading}
+            calendar={(calendarQuery.data && calendarQuery.data.calendar) || []}
+            onTimeGroupClick={onTimeGroupClick}
+            onPrevClick={onCalendarPrevClick}
+            onNextClick={onCalendarNextClick}
+          />
         </Container>
       </Section>
       <Modal title="Nova reunião" isOpen={modal} onClose={() => setModal(false)}>
         <NewMeetingForm
           {...meetingFormProps}
-          rooms={roomsQuery.data.meetingRooms}
+          rooms={(roomsQuery.data && roomsQuery.data.meetingRooms) || []}
           onSubmit={onNewMeetingSubmit}
           onCancel={() => setModal(false)}
         />
