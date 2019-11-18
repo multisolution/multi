@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/react-hooks";
 import { NextPage, NextPageContext } from "next";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Section, ListElement } from "../components/global-style";
 import Layout from "../components/layout";
 import { Column, Row } from "../components/grid";
@@ -12,6 +12,7 @@ import redirect from "../lib/redirect";
 import styled from "styled-components";
 import Modal from "../components/modal";
 import Button from "../components/button";
+import Loading from "../components/loading";
 
 type CreateUserProps = {
   user: User;
@@ -21,33 +22,19 @@ const MyMeetings: NextPage<CreateUserProps> = ({ user }) => {
     padding: 5px 50px;
   `;
 
-  const allServices = [
-    {
-      label: "Café",
-      icon: "delete",
-      total: 0
-    },
-    {
-      label: "Água",
-      icon: "delete",
-      total: 0
-    },
-    {
-      label: "Chá",
-      icon: "delete",
-      total: 0
-    },
-    {
-      label: "Pão de queijo",
-      icon: "delete",
-      total: 0
-    }
-  ];
-
-  const [services, setServices] = useState<Array<Service>>(allServices);
-
   const [modal, setModal] = useState(false);
   const [meeting, setMeeting] = useState<Meeting>();
+  const [services, setServices] = useState<Array<Service>>([]);
+  const getServices = useQuery(
+    gql`
+      query Services {
+        services {
+          title
+        }
+      }
+    `
+  );
+
   const getMeetings = useQuery(
     gql`
       query AllUsers {
@@ -66,6 +53,19 @@ const MyMeetings: NextPage<CreateUserProps> = ({ user }) => {
       }
     `
   );
+
+  useEffect(() => {
+    getMeetings.refetch();
+    setServices(
+      getServices.data.services.map((service: any) => {
+        return {
+          label: service.title,
+          icon: "delete",
+          total: 0
+        };
+      })
+    );
+  }, []);
 
   return (
     <>
@@ -112,7 +112,6 @@ const MyMeetings: NextPage<CreateUserProps> = ({ user }) => {
         if (service.total <= 0) {
           return;
         } else {
-          console.log(`${service.total} ${service.label}(s)`);
           clearServices();
         }
       });
@@ -128,9 +127,8 @@ const MyMeetings: NextPage<CreateUserProps> = ({ user }) => {
   }
 
   function renderService() {
-    console.log("renderService");
     return services.map(service => (
-      <Column>
+      <Column key={"services map" + services.indexOf(service)}>
         <Row>
           <label>{service.label}</label>
           <img style={{ width: "20px" }} src="/assets/img/delete.svg" />

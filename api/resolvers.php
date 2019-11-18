@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Multi;
 
 use Multi\Meeting;
+use Multi\Service;
 
 return [
     'Meeting' => [
@@ -17,11 +18,13 @@ return [
     'Query' => [
         'me' => new User\Me(),
         'meetingRooms' => new MeetingRoom\MeetingRooms(),
+        'services' => new Service\Services(),
         'myMeetings' => new Meeting\MyMeetings(),
         'allUsers' => new User\AllUsers(),
         'calendar' => new Meeting\Calendar(),
         'invite' => new User\Invite\Invitation(),
     ],
+
     'Mutation' => [
         'signIn' => new User\SignIn(),
         'signOut' => new User\SignOut(),

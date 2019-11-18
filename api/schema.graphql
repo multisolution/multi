@@ -47,10 +47,15 @@ type Calendar {
 type Invite {
     from: User!
 }
+type Service {
+    id: String!
+    title: String!
+}
 
 type Query {
     me: User
     meetingRooms: [MeetingRoom]!
+    services: [Service]!
     myMeetings: [Meeting]!
     allUsers: [User]!
     calendar(from: DateTime, to: DateTime): [Calendar]!

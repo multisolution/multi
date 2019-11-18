@@ -10,6 +10,7 @@ use Doctrine\DBAL\Driver\ResultStatement;
 use Doctrine\DBAL\FetchMode;
 use DomainException;
 use Multi\Meeting\Meeting;
+use Multi\Service\Service;
 use Multi\MeetingRoom\MeetingRoom;
 use Multi\User\User;
 use RuntimeException;
@@ -167,6 +168,19 @@ class DoctrineDBAL implements Database
         return $stmt->fetchAll() ?? [];
     }
 
+    public function services(): array
+    {
+        $stmt = $this->conn
+            ->createQueryBuilder()
+            ->select('*')
+            ->from('services')
+            ->execute();
+
+
+        $stmt->setFetchMode(FetchMode::CUSTOM_OBJECT, Service::class);
+        return $stmt->fetchAll() ?? [];
+    }
+
     /**
      * @return MeetingRoom[]
      */
@@ -259,6 +273,8 @@ class DoctrineDBAL implements Database
 
         return $result;
     }
+
+
 
     public function meetingById(string $id): ?Meeting
     {

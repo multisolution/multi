@@ -8,6 +8,7 @@ use DateTimeInterface;
 use Multi\Meeting\Meeting;
 use Multi\MeetingRoom\MeetingRoom;
 use Multi\User\User;
+use Multi\Service\Service;
 
 interface Database
 {
@@ -25,6 +26,13 @@ interface Database
      * @return MeetingRoom[]
      */
     public function meetingRooms(): array;
+
+    /**
+     * @return Service[]
+     */
+    public function services(): array;
+
+
 
     /**
      * @return User[]
