@@ -1,21 +1,24 @@
-import {Column, Row} from "./grid";
-import {Calendar as CalendarModel} from "../lib/models";
-import React, {FunctionComponent, MouseEvent} from "react";
-import {sameDate, weekDays} from "../lib/misc";
-import styled, {css} from "styled-components";
-import {lighten} from "polished";
+import { Column, Row } from "./grid";
+import { Calendar as CalendarModel } from "../lib/models";
+import React, { FunctionComponent, MouseEvent, useState } from "react";
+import { sameDate, weekDays } from "../lib/misc";
+import styled, { css } from "styled-components";
+import { lighten } from "polished";
+import Button from "./button";
 
 type CalendarProps = {
   calendar: CalendarModel[];
   onTimeGroupClick: (date: Date, time: string) => void;
 };
 
-const Calendar: FunctionComponent<CalendarProps> = ({calendar, onTimeGroupClick}) => {
+const Calendar: FunctionComponent<CalendarProps> = ({ calendar, onTimeGroupClick }) => {
+  const [currentDay, setCurrentDay] = useState(new Date());
+
   const today = new Date();
 
   return (
     <Row space={0}>
-      <YAxis/>
+      <YAxis />
       {calendar.map(calendar => {
         const date = new Date(`${calendar.date}`);
 
@@ -51,6 +54,10 @@ const Calendar: FunctionComponent<CalendarProps> = ({calendar, onTimeGroupClick}
       })}
     </Row>
   );
+
+  function advanceDay(event: MouseEvent) {
+    console.log(today);
+  }
 };
 
 const YAxis: FunctionComponent = () => {
@@ -63,9 +70,7 @@ const YAxis: FunctionComponent = () => {
       `}
     >
       {Array.from({ length: 24 }).map((_, index: number) => (
-        <YAxisLabel key={`hour-${index}`}>
-          {`${index}:00`}
-        </YAxisLabel>
+        <YAxisLabel key={`hour-${index}`}>{`${index}:00`}</YAxisLabel>
       ))}
     </Column>
   );

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Multi;
 
@@ -16,6 +18,8 @@ class InMemoryDb implements Database
     private $meetingRooms;
     /** @var Meeting[] */
     private $meetings;
+
+
 
     public function __construct()
     {

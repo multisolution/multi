@@ -10,6 +10,7 @@ create table users
     timestamp timestamp not null default current_timestamp
 );
 
+
 create table meeting_rooms
 (
     id          varchar   not null primary key,
@@ -31,6 +32,21 @@ create table meetings
     status    status    not null,
     timestamp timestamp not null default current_timestamp
 );
+
+create table services
+(
+    id        varchar   not null primary key,
+    title     varchar   not null
+);
+create table services_request
+(
+    id        varchar   not null primary key,
+    host_id   varchar   not null references users (id),
+    room_id   varchar   not null references meeting_rooms (id),
+    total     int       not null ,
+    done      boolean   not null default false   
+);
+
 
 insert into users
 values ('root', 'multi@multisolution.art.br', '$2y$10$edZ0ukUfvvcmRP/jWzFaveIisvigFJoM6WvXiC98q.CnsXsYXoO.S',

@@ -47,3 +47,8 @@ export type Calendar = {
   date: string;
   times: CalendarTime[][];
 };
+export type Service = {
+  label: string;
+  icon: string;
+  total: number;
+};
