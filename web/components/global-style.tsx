@@ -125,7 +125,6 @@ padding: 10px 0;
 
 `
 
-export default TitlePage
 
 
 export default GlobalStyle;
