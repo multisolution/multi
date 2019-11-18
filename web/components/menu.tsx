@@ -37,6 +37,11 @@ const Menu: FunctionComponent<MenuProps> = ({ user }) => {
       role: Role.ADMINISTRATOR
     },
     {
+      label: "Minhas reuniões",
+      link: () => redirect(null, "/my-meetings"),
+      role: Role.COLLABORATOR
+    },
+    {
       label: "Perfil",
       link: () => redirect(null, "/profile"),
       role: Role.COLLABORATOR

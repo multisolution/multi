@@ -1,3 +1,4 @@
+
 import {Align, Column, Row} from "./grid";
 import {Calendar as CalendarModel} from "../lib/models";
 import React, {FunctionComponent, MouseEvent} from "react";
@@ -10,6 +11,7 @@ import {PlaceholderLoading} from "./loading";
 import moment from "moment";
 import "moment/locale/pt-br";
 
+
 type CalendarProps = {
   calendar: CalendarModel[];
   onTimeGroupClick: (date: Date, time: string) => void;
@@ -18,6 +20,7 @@ type CalendarProps = {
   isLoading: boolean;
 };
 
+
 const Calendar: FunctionComponent<CalendarProps> = ({
                                                       isLoading,
                                                       calendar,
@@ -25,6 +28,7 @@ const Calendar: FunctionComponent<CalendarProps> = ({
                                                       onPrevClick,
                                                       onNextClick
                                                     }) => {
+
   const today = new Date();
 
   if (calendar.length === 0) {
@@ -32,6 +36,7 @@ const Calendar: FunctionComponent<CalendarProps> = ({
   }
 
   return (
+
     <Column mainAxis={Align.Center}>
       {isLoading ? (
         <PlaceholderLoading height={42} width={128}/>
@@ -82,6 +87,7 @@ const Calendar: FunctionComponent<CalendarProps> = ({
                             />
                           ))}
                         </Time>
+
                       ))}
                     </TimeGroup>
                   );
@@ -100,6 +106,10 @@ const Calendar: FunctionComponent<CalendarProps> = ({
       </Row>
     </Column>
   );
+
+  function advanceDay(event: MouseEvent) {
+    console.log(today);
+  }
 };
 
 const YAxis: FunctionComponent = () => {

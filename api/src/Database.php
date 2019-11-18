@@ -8,6 +8,8 @@ use DateTimeInterface;
 use Multi\Meeting\Meeting;
 use Multi\MeetingRoom\MeetingRoom;
 use Multi\User\User;
+use Multi\Service\Service;
+use Multi\Service\ServiceRequest;
 
 interface Database
 {
@@ -20,11 +22,19 @@ interface Database
     public function meetingRoomById(string $id): ?MeetingRoom;
 
     public function insertMeetingRoom(MeetingRoom $meetingRoom): bool;
+    public function requestService(ServiceRequest $service_request): bool;
 
     /**
      * @return MeetingRoom[]
      */
     public function meetingRooms(): array;
+
+    /**
+     * @return Service[]
+     */
+    public function services(): array;
+
+
 
     /**
      * @return User[]
