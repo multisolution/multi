@@ -1,58 +1,110 @@
-import { Column, Row } from "./grid";
-import { Calendar as CalendarModel } from "../lib/models";
-import React, { FunctionComponent, MouseEvent, useState } from "react";
-import { sameDate, weekDays } from "../lib/misc";
-import styled, { css } from "styled-components";
-import { lighten } from "polished";
-import Button from "./button";
+
+import {Align, Column, Row} from "./grid";
+import {Calendar as CalendarModel} from "../lib/models";
+import React, {FunctionComponent, MouseEvent} from "react";
+import {sameDate, weekDays} from "../lib/misc";
+import styled, {css} from "styled-components";
+import {lighten} from "polished";
+import Button, {ButtonSkin} from "./button";
+import {MdChevronLeft, MdChevronRight} from "react-icons/md";
+import {PlaceholderLoading} from "./loading";
+import moment from "moment";
+import "moment/locale/pt-br";
+
 
 type CalendarProps = {
   calendar: CalendarModel[];
   onTimeGroupClick: (date: Date, time: string) => void;
+  onPrevClick: () => void;
+  onNextClick: () => void;
+  isLoading: boolean;
 };
 
-const Calendar: FunctionComponent<CalendarProps> = ({ calendar, onTimeGroupClick }) => {
-  const [currentDay, setCurrentDay] = useState(new Date());
+
+const Calendar: FunctionComponent<CalendarProps> = ({
+                                                      isLoading,
+                                                      calendar,
+                                                      onTimeGroupClick,
+                                                      onPrevClick,
+                                                      onNextClick
+                                                    }) => {
 
   const today = new Date();
 
+  if (calendar.length === 0) {
+    calendar.fill({date: "0000-00-00", times: []}, 0, 6);
+  }
+
   return (
-    <Row space={0}>
-      <YAxis />
-      {calendar.map(calendar => {
-        const date = new Date(`${calendar.date}`);
 
-        return (
-          <CalendarDate key={`calendar-date-${calendar.date}`}>
-            <Header>
-              <WeekDayLabel>{weekDays[date.getDay()]}</WeekDayLabel>
-              <DateLabel current={sameDate(date, today)}>{date.getDate()}</DateLabel>
-            </Header>
-            {calendar.times.map((timeGroup, index) => {
-              function onClick(event: MouseEvent<HTMLDivElement>) {
-                event.preventDefault();
-                onTimeGroupClick(date, timeGroup[0].hour);
-              }
+    <Column mainAxis={Align.Center}>
+      {isLoading ? (
+        <PlaceholderLoading height={42} width={128}/>
+      ) : (
+        <CalendarTitle>{calendar.length > 0 && moment(calendar[0].date).format("MMMM")}</CalendarTitle>
+      )}
+      <Row space={0} mainAxis={Align.Start} fillSpace={true}>
+        <Column>
+          <Header border={false}>
+            <Button onClick={onPrevClick} skin={ButtonSkin.Text}>
+              <MdChevronLeft size={48}/>
+            </Button>
+          </Header>
+          <YAxis/>
+        </Column>
+        <Row style={{flex: 1}} space={0}>
+          {calendar.map(calendar => {
+            const date = new Date(`${calendar.date} 00:00:00`);
 
-              return (
-                <TimeGroup key={`calendar-date-${calendar.date}-${index}`} onClick={onClick}>
-                  {timeGroup.map(time => (
-                    <Time key={`calendar-time-${calendar.date}-${index}-${time.hour}`}>
-                      {time.meetings.map((meeting, meetingIndex) => (
-                        <CalendarMeeting
-                          key={`calendar-meeting-${calendar.date}-${index}-${time.hour}-${meetingIndex}`}
-                          color={meeting.room.color}
-                        />
+            return (
+              <CalendarDate key={`calendar-date-${calendar.date}`}>
+                <Header>
+                  {isLoading ? (
+                    <PlaceholderLoading height={20} width={32}/>
+                  ) : (
+                    <WeekDayLabel>{weekDays[date.getDay()]}</WeekDayLabel>
+                  )}
+                  {isLoading ? (
+                    <PlaceholderLoading height={42} width={32}/>
+                  ) : (
+                    <DateLabel current={sameDate(date, today)}>{date.getDate()}</DateLabel>
+                  )}
+                </Header>
+                {calendar.times.map((timeGroup, index) => {
+                  function onClick(event: MouseEvent<HTMLDivElement>) {
+                    event.preventDefault();
+                    onTimeGroupClick(date, timeGroup[0].hour);
+                  }
+
+                  return (
+                    <TimeGroup key={`calendar-date-${calendar.date}-${index}`} onClick={onClick}>
+                      {timeGroup.map(time => (
+                        <Time key={`calendar-time-${calendar.date}-${index}-${time.hour}`}>
+                          {time.meetings.map((meeting, meetingIndex) => (
+                            <CalendarMeeting
+                              key={`calendar-meeting-${calendar.date}-${index}-${time.hour}-${meetingIndex}`}
+                              color={meeting.room.color}
+                            />
+                          ))}
+                        </Time>
+
                       ))}
-                    </Time>
-                  ))}
-                </TimeGroup>
-              );
-            })}
-          </CalendarDate>
-        );
-      })}
-    </Row>
+                    </TimeGroup>
+                  );
+                })}
+              </CalendarDate>
+            );
+          })}
+        </Row>
+        <div>
+          <Header border={false}>
+            <Button onClick={onNextClick} skin={ButtonSkin.Text}>
+              <MdChevronRight size={48}/>
+            </Button>
+          </Header>
+        </div>
+      </Row>
+    </Column>
   );
 
   function advanceDay(event: MouseEvent) {
@@ -75,6 +127,12 @@ const YAxis: FunctionComponent = () => {
     </Column>
   );
 };
+
+const CalendarTitle = styled.h1`
+  text-align: center;
+  color: ${props => props.theme.colors.dart};
+  font-size: 32px;
+`;
 
 const YAxisLabel = styled.div`
   color:${props => props.theme.colors.dark}
@@ -102,7 +160,7 @@ const CalendarDate = styled.div`
   }
 `;
 
-const Header = styled.div`
+const Header = styled.div<{ border?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -110,7 +168,7 @@ const Header = styled.div`
   z-index: 1;
   background: white;
   width: 100%;
-  border-bottom: 1px solid ${props => lighten(0.4, props.theme.colors.dark)};
+  border-bottom: 1px solid ${({border = true, theme}) => (border ? lighten(0.4, theme.colors.dark) : "tranparent")};
   padding: 8px;
   position: sticky;
   top: 0;

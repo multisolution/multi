@@ -12,3 +12,5 @@ export const timeRange = (step: number = 15) => Array.from({length: 24}).flatMap
     (_, minute) => `${hour.toString().padStart(2, '0')}:${(minute * step).toString().padStart(2, '0')}`
   )
 );
+
+export const dateFormat = 'YYYY-MM-DD HH:mm:ss';

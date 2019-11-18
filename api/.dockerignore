@@ -1,0 +1,11 @@
+**
+!/.dockerignore
+!/Dockerfile
+
+!/app/**
+!/src/**
+!/composer.json
+!/composer.lock
+!/index.php
+!/resolvers.php
+!/schema.graphql

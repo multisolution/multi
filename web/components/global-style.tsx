@@ -30,7 +30,8 @@ export const theme: Theme = {
     transparent: "transparent",
     white: "#ffffff",
     black: "#222222",
-    error: "#f20000"
+    error: "#f20000",
+    light: "#eeeeee",
   }
 };
 
@@ -115,5 +116,16 @@ export const Room = styled.div<RoomProps>`
   background-color: ${props => props.bgColor};
   margin-left: 150px;
 `;
+
+
+export const TitlePage = styled.h1`
+
+font-size: 30px;
+text-transform: uppercase;
+padding: 10px 0;
+
+`;
+
+
 
 export default GlobalStyle;
