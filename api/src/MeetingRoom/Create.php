@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Multi\MeetingRoom;
 
@@ -19,6 +21,8 @@ class Create implements Resolver
         $room_number = array_get($input, 'roomNumber');
         /** @var string $description */
         $description = array_get($input, 'description');
+
+
 
         if ($context->user === null) {
             throw new UserError($context->messages->get('unauthenticated'));

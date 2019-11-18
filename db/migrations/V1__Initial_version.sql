@@ -40,11 +40,12 @@ create table services
 );
 create table services_request
 (
-    id        varchar   not null primary key,
-    host_id   varchar   not null references users (id),
-    room_id   varchar   not null references meeting_rooms (id),
-    total     int       not null ,
-    done      boolean   not null default false   
+    id           varchar   not null primary key,
+    service_id   varchar   not null references services (id),
+    host_id      varchar   not null references users (id),
+    room_id      varchar   not null references meeting_rooms (id),
+    total        int       not null ,
+    done         boolean   not null default false   
 );
 
 

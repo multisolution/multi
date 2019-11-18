@@ -12,6 +12,13 @@ export type UserInput = {
   inviteCode?: string;
 };
 
+export type InputServiceRequest = {
+  serviceId: string;
+  roomId: string;
+  hostId: string;
+  total: number;
+};
+
 export enum Role {
   ADMINISTRATOR = "ADMINISTRATOR",
   COLLABORATOR = "COLLABORATOR"
@@ -51,4 +58,5 @@ export type Service = {
   label: string;
   icon: string;
   total: number;
+  id: number;
 };

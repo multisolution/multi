@@ -1,18 +1,18 @@
-import { useQuery } from "@apollo/react-hooks";
+import { useQuery, useMutation } from "@apollo/react-hooks";
 import { NextPage, NextPageContext } from "next";
 import React, { useState, useEffect } from "react";
-import { Container, Section, ListElement } from "../components/global-style";
+import { Container, Section } from "../components/global-style";
 import Layout from "../components/layout";
 import { Column, Row } from "../components/grid";
 import { WithApollo, withApollo } from "../lib/apollo";
 import gql from "graphql-tag";
-import { Role, User, Meeting, Service } from "../lib/models";
+import { Role, User, Meeting, Service, InputServiceRequest } from "../lib/models";
 import checkLoggedIn from "../lib/check-logged-in";
 import redirect from "../lib/redirect";
 import styled from "styled-components";
 import Modal from "../components/modal";
 import Button from "../components/button";
-import Loading from "../components/loading";
+import AlertMenssage from "../components/alert-menssage";
 
 type CreateUserProps = {
   user: User;
@@ -24,12 +24,23 @@ const MyMeetings: NextPage<CreateUserProps> = ({ user }) => {
 
   const [modal, setModal] = useState(false);
   const [meeting, setMeeting] = useState<Meeting>();
+  const [serviceRequested, setServiceRequested] = useState(false);
   const [services, setServices] = useState<Array<Service>>([]);
+
+  const [requestService] = useMutation(
+    gql`
+      mutation RequestService($input: [InputServiceRequest]!) {
+        requestService(input: $input)
+      }
+    `
+  );
+
   const getServices = useQuery(
     gql`
       query Services {
         services {
           title
+          id
         }
       }
     `
@@ -59,6 +70,7 @@ const MyMeetings: NextPage<CreateUserProps> = ({ user }) => {
     setServices(
       getServices.data.services.map((service: any) => {
         return {
+          id: service.id,
           label: service.title,
           icon: "delete",
           total: 0
@@ -80,6 +92,7 @@ const MyMeetings: NextPage<CreateUserProps> = ({ user }) => {
           </Container>
         </Section>
       </Layout>
+      {renderMenssage()}
     </>
   );
 
@@ -105,17 +118,45 @@ const MyMeetings: NextPage<CreateUserProps> = ({ user }) => {
     );
   }
 
-  function callServices(event: React.MouseEvent<HTMLElement, MouseEvent>) {
+  async function callServices(event: React.MouseEvent<HTMLElement, MouseEvent>) {
     if (meeting) {
-      console.log("Solicitar pra sala número: " + meeting.room.roomNumber);
-      services.map(service => {
-        if (service.total <= 0) {
-          return;
-        } else {
-          clearServices();
+      const args: Array<InputServiceRequest> = [];
+
+      for (var index in services) {
+        if (services[index].total > 0) {
+          args.push({
+            serviceId: services[index].id.toString(),
+            roomId: meeting.room.id,
+            hostId: user.id,
+            total: services[index].total
+          });
         }
-      });
+      }
+      if (args.length > 0) {
+        console.log(args);
+        const result = await requestService({
+          variables: {
+            input: args
+          }
+        });
+        if (result.data.requestService) {
+          setModal(false);
+          setServiceRequested(true);
+          setTimeout(() => setServiceRequested(false), 1000);
+        }
+      }
     }
+  }
+
+  function renderMenssage() {
+    return (
+      <AlertMenssage
+        title={"Serviço solicitado com sucesso"}
+        menssage=""
+        typeMenssage="success"
+        isOpen={serviceRequested}
+      />
+    );
   }
 
   function clearServices() {
@@ -140,6 +181,7 @@ const MyMeetings: NextPage<CreateUserProps> = ({ user }) => {
               const nservices = [...services];
               if (nservices[services.indexOf(service)].total - 1 >= 0) {
                 nservices[services.indexOf(service)].total--;
+                nservices[services.indexOf(service)].id = service.id;
                 setServices(nservices);
               }
             }}
@@ -151,6 +193,7 @@ const MyMeetings: NextPage<CreateUserProps> = ({ user }) => {
             onClick={async () => {
               const nservices = [...services];
               nservices[services.indexOf(service)].total++;
+              nservices[services.indexOf(service)].id = service.id;
               setServices(nservices);
             }}
           >

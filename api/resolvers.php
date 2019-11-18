@@ -35,6 +35,7 @@ return [
         'editMeeting' => new Meeting\Edit(),
         'deleteUser' => new User\Delete(),
         'updateUser' => new User\Update(),
+        'requestService' => new Service\Request(),
         'createInvite' => new User\Invite\Create(),
     ],
     'DateTime' => new DateTimeScalar(),
