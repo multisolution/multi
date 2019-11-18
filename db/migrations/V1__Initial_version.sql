@@ -64,6 +64,18 @@ insert into meeting_rooms (id, room_number, description, color)
 values ('room5', 5, 'Room 5 is very nice', '#032B43');
 insert into meeting_rooms (id, room_number, description, color)
 values ('room6', 6, 'Room 6 is very nice', '#541388');
+insert into services (id, title)
+values ('service1', 'Café' );
+insert into services (id, title)
+values ('service2', 'Água' );
+insert into services (id, title)
+values ('service3', 'Chá' );
+insert into services (id, title)
+values ('service4', 'Pão de queijo' );
+insert into services (id, title)
+values ('service5', 'Esfiha' );
+insert into services (id, title)
+values ('service6', 'Limpeza' );
 
 
 
