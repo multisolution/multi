@@ -15,6 +15,7 @@ import styled from "styled-components";
 import Modal from "../components/modal";
 import ListUsers from "../components/list-users";
 import AlertMenssage from "../components/alert-menssage";
+import Table from "../components/table"
 
 const Error = styled.div`
   text-align: center;
@@ -67,10 +68,10 @@ const CreateUser: NextPage<CreateUserProps> = ({ user }) => {
     `
   );
 
-  async function deleteUserClickHandler(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+  async function deleteUserClickHandler(user: User) {
     const result = await deleteUser({
       variables: {
-        id: event.currentTarget.id
+        id: user.id
       }
     });
     if (result.data.deleteUser) {
@@ -83,36 +84,40 @@ const CreateUser: NextPage<CreateUserProps> = ({ user }) => {
 
   function renderTable() {
     if (getUsers.data) {
-      return getUsers.data.allUsers.map((user: User, index: number) => (
-        <div
-          key={index}
-          style={{
-            display: "flex",
-            margin: "flex-start",
-            alignSelf: "center",
-            flexDirection: "row",
-            borderBottom: "2px solid #bad531",
-            width: "100%",
-            padding: "10px 0px",
-            marginBottom: "0px",
-            justifyContent: "space-between"
-          }}
-        >
-          <ListElement>{user.id}</ListElement>
-          <ListElement>{user.email}</ListElement>
-          <ListElement>{user.role}</ListElement>
+      return <Table colums={[{label: "ID", key: "id"}, {label: "E-mail", key: "email"}, {label: "Ações", key: "role"} ]}
+                    data={getUsers.data.allUsers}
+                    rightButtonClick={deleteUserClickHandler}
+                    ></Table>
+      // getUsers.data.allUsers.map((user: User, index: number) => (
+      //   <div
+      //     key={index}
+      //     style={{
+      //       display: "flex",
+      //       margin: "flex-start",
+      //       alignSelf: "center",
+      //       flexDirection: "row",
+      //       borderBottom: "2px solid #bad531",
+      //       width: "100%",
+      //       padding: "10px 0px",
+      //       marginBottom: "0px",
+      //       justifyContent: "space-between"
+      //     }}
+      //   >
+      //     <ListElement>{user.id}</ListElement>
+      //     <ListElement>{user.email}</ListElement>
+      //     <ListElement>{user.role}</ListElement>
 
-          {user.role !== "ADMINISTRATOR" && (
-            <button
-              style={{ color: "transparent", border: "none", marginRight: "20px" }}
-              id={user.id}
-              onClick={deleteUserClickHandler}
-            >
-              <img style={{ width: "20px" }} src="/assets/img/delete.svg" />
-            </button>
-          )}
-        </div>
-      ));
+      //     {user.role !== "ADMINISTRATOR" && (
+      //       <button
+      //         style={{ color: "transparent", border: "none", marginRight: "20px" }}
+      //         id={user.id}
+      //         onClick={deleteUserClickHandler}
+      //       >
+      //         <img style={{ width: "20px" }} src="/assets/img/delete.svg" />
+      //       </button>
+      //     )}
+      //   </div>
+      // ));
     }
   }
 
@@ -124,6 +129,8 @@ const CreateUser: NextPage<CreateUserProps> = ({ user }) => {
           <Container style={{ display: "flex", justifyContent: "center" }}>
             <Column>
             <Button onClick={openModal}>Cadastrar usuário</Button>
+
+
               <Column>{renderTable()}</Column>
             </Column>
           </Container>
