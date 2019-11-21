@@ -31,12 +31,12 @@ services:
       - ./api:/app
     ports:
       - "${DOCKER_API_PORT}:8000"
+      - "${DOCKER_SUBSCRIPTIONS_PORT}:8001"
       - "${DOCKER_API_DEBUG_PORT}:9000"
     env_file:
       - ./.env
     depends_on:
       - db
-
 #  web:
 #    container_name: multi_web
 #    image: node:alpine

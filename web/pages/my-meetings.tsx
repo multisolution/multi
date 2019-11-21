@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from "@apollo/react-hooks";
+import { useQuery, useMutation, useSubscription } from "@apollo/react-hooks";
 import { NextPage, NextPageContext } from "next";
 import React, { useState, useEffect } from "react";
 import { Container, Section } from "../components/global-style";
@@ -9,7 +9,7 @@ import gql from "graphql-tag";
 import { Role, User, Meeting, Service, InputServiceRequest } from "../lib/models";
 import checkLoggedIn from "../lib/check-logged-in";
 import redirect from "../lib/redirect";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import Modal from "../components/modal";
 import Button from "../components/button";
 import AlertMenssage from "../components/alert-menssage";
@@ -20,6 +20,9 @@ type CreateUserProps = {
 const MyMeetings: NextPage<CreateUserProps> = ({ user }) => {
   const StyleTh = styled.th`
     padding: 5px 50px;
+  `;
+  const StyledSpan = styled.th`
+    font-size: 15px;
   `;
 
   const [modal, setModal] = useState(false);
@@ -34,6 +37,25 @@ const MyMeetings: NextPage<CreateUserProps> = ({ user }) => {
       }
     `
   );
+  const subscription = useSubscription(
+    gql`
+      subscription ServiceRequest {
+        serviceRequested {
+          service {
+            id
+          }
+        }
+      }
+    `,
+    {
+      onSubscriptionData(options) {
+        console.log("options");
+        console.log(options);
+      }
+    }
+  );
+
+  console.log(subscription.data);
 
   const getServices = useQuery(
     gql`
@@ -67,17 +89,19 @@ const MyMeetings: NextPage<CreateUserProps> = ({ user }) => {
 
   useEffect(() => {
     getMeetings.refetch();
-    setServices(
-      getServices.data.services.map((service: any) => {
-        return {
-          id: service.id,
-          label: service.title,
-          icon: "delete",
-          total: 0
-        };
-      })
-    );
-  }, []);
+    if (getServices.data) {
+      setServices(
+        getServices.data.services.map((service: any) => {
+          return {
+            id: service.id,
+            label: service.title,
+            icon: "delete",
+            total: 0
+          };
+        })
+      );
+    }
+  }, [getServices.data]);
 
   return (
     <>
@@ -99,7 +123,11 @@ const MyMeetings: NextPage<CreateUserProps> = ({ user }) => {
   function renderModal() {
     return (
       <Modal title="Detalhes da reunião" isOpen={modal} onClose={() => setModal(false)}>
-        <Column>
+        <Column
+          decoration={css`
+            width: 50%;
+          `}
+        >
           <span>
             <b>Data: </b>
             {meeting ? new Date(meeting.startsAt).toLocaleDateString() : ""}
@@ -110,8 +138,16 @@ const MyMeetings: NextPage<CreateUserProps> = ({ user }) => {
           <span>
             <b>Hora fim: </b> {meeting ? new Date(meeting.endsAt).toLocaleTimeString() : ""}
           </span>
-          <h1>Solicitar serviços</h1>
-          {renderService()}
+
+          <label style={{ fontSize: "30px" }}> Solicitar serviços </label>
+          <Row
+            decoration={css`
+              flex-wrap: wrap;
+              width: 50%;
+            `}
+          >
+            {renderService()}
+          </Row>
           <Button onClick={callServices}>Solictar</Button>
         </Column>
       </Modal>
@@ -142,7 +178,10 @@ const MyMeetings: NextPage<CreateUserProps> = ({ user }) => {
         if (result.data.requestService) {
           setModal(false);
           setServiceRequested(true);
-          setTimeout(() => setServiceRequested(false), 1000);
+          setTimeout(() => {
+            setServiceRequested(false);
+            clearServices();
+          }, 1000);
         }
       }
     }
@@ -169,12 +208,13 @@ const MyMeetings: NextPage<CreateUserProps> = ({ user }) => {
 
   function renderService() {
     return services.map(service => (
-      <Column key={"services map" + services.indexOf(service)}>
-        <Row>
-          <label>{service.label}</label>
-          <img style={{ width: "20px" }} src="/assets/img/delete.svg" />
-        </Row>
-
+      <Column
+        decoration={css`
+          padding: 10px 30px 10px 0;
+        `}
+        key={"services map" + services.indexOf(service)}
+      >
+        <label>{service.label}</label>
         <Row>
           <Button
             onClick={async () => {
@@ -186,9 +226,10 @@ const MyMeetings: NextPage<CreateUserProps> = ({ user }) => {
               }
             }}
           >
-            <span style={{ fontSize: "30px" }}> - </span>
+            <label style={{ fontSize: "30px" }}> - </label>
           </Button>
-          <span>{services[services.indexOf(service)].total}</span>
+          <label style={{ fontSize: "30px" }}> {services[services.indexOf(service)].total} </label>
+
           <Button
             onClick={async () => {
               const nservices = [...services];

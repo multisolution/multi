@@ -1,9 +1,13 @@
 {
-  "name": "Multi",
-  "schemaPath": "./schema.graphql",
+  "schemaPath": "schema.graphql",
   "extensions": {
     "endpoints": {
-      "dev": "http://localhost:8000"
+      "Multi": {
+        "url": "http://localhost:8000",
+        "subscription": {
+          "url": "ws://localhost:8001"
+        }
+      }
     }
   }
 }
