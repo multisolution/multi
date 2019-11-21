@@ -15,6 +15,10 @@ return [
     'MeetingRoom' => [
         'calendar' => new MeetingRoom\Calendar(),
     ],
+    'Subscription' => [
+        'serviceRequested' => new Service\ServiceRequested(),
+    ],
+
     'Query' => [
         'me' => new User\Me(),
         'meetingRooms' => new MeetingRoom\MeetingRooms(),
