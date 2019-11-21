@@ -30,7 +30,7 @@ class Calendar implements Resolver
         $from = array_get($args, 'from', $now);
         $from = new DateTimeImmutable("{$from->format('Y-m-d')} 00:00:00");
 
-        $to = array_get($args, 'to', $now->modify(self::DEFAULT_INTERVAL));
+        $to = array_get($args, 'to', $from->modify(self::DEFAULT_INTERVAL));
         $to = new DateTimeImmutable("{$to->format('Y-m-d')} 23:59:59");
 
         $meetings = $context->db->meetings($from, $to);

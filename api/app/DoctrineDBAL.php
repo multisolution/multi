@@ -8,8 +8,11 @@ use DateTimeInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\ResultStatement;
 use Doctrine\DBAL\FetchMode;
+use Doctrine\DBAL\ParameterType;
 use DomainException;
 use Multi\Meeting\Meeting;
+use Multi\Service\Service;
+use Multi\Service\ServiceRequest;
 use Multi\MeetingRoom\MeetingRoom;
 use Multi\User\User;
 use RuntimeException;
@@ -22,6 +25,34 @@ class DoctrineDBAL implements Database
     public function __construct(Connection $conn)
     {
         $this->conn = $conn;
+    }
+
+    public function requestService(ServiceRequest $service_request): bool
+    {
+
+        /** @var int $affectedRows */
+        $affectedRows = $this->conn
+            ->createQueryBuilder()
+            ->insert('services_request')
+            ->values([
+                'id' => '?',
+                'service_id' => '?',
+                'host_id' => '?',
+                'room_id' => '?',
+                'total' => '?',
+                'done' => '?'
+
+            ])
+            ->setParameter(0, $service_request->id)
+            ->setParameter(1, $service_request->service_id)
+            ->setParameter(2, $service_request->host_id)
+            ->setParameter(3, $service_request->room_id)
+            ->setParameter(4, $service_request->total)
+            ->setParameter(5, 'false')
+            ->execute();
+
+        return $affectedRows > 0;
+        return true;
     }
 
     public function deleteUser(string $id): bool
@@ -167,6 +198,19 @@ class DoctrineDBAL implements Database
         return $stmt->fetchAll() ?? [];
     }
 
+    public function services(): array
+    {
+        $stmt = $this->conn
+            ->createQueryBuilder()
+            ->select('*')
+            ->from('services')
+            ->execute();
+
+
+        $stmt->setFetchMode(FetchMode::CUSTOM_OBJECT, Service::class);
+        return $stmt->fetchAll() ?? [];
+    }
+
     /**
      * @return MeetingRoom[]
      */
@@ -259,6 +303,8 @@ class DoctrineDBAL implements Database
 
         return $result;
     }
+
+
 
     public function meetingById(string $id): ?Meeting
     {

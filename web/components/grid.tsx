@@ -35,7 +35,7 @@ export const Column = styled.div<GridProps>`
 `;
 
 export const Row = styled.div<GridProps>`
-  ${gridCss}
+  ${gridCss};
   flex-direction: row;
   
   ${props => props.fillSpace && `width: 100%;`}
