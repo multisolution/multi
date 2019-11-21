@@ -5,7 +5,7 @@ import gql from "graphql-tag";
 import { ListElement, TitlePage } from "./global-style";
 import { User } from "../lib/models";
 import { Column, Row } from "./grid";
-
+import Table from "./table"
 const ListUsers: FunctionComponent = () => {
   const [deleteUser] = useMutation(
     gql`
@@ -56,9 +56,12 @@ const ListUsers: FunctionComponent = () => {
             justifyContent: "space-between"
           }}
         >
+
           <ListElement>{user.id}</ListElement>
           <ListElement>{user.email}</ListElement>
           <ListElement>{user.role}</ListElement>
+
+          
 
           {user.role !== "ADMINISTRATOR" && (
             <button
