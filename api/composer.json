@@ -1,50 +1,51 @@
 {
-  "name": "multisolution/multi",
-  "description": "Multi-purpose application for MultisolutiON collaborators.",
-  "type": "project",
-  "require": {
-    "php": ">=7.3",
-    "leocavalcante/siler": "dev-master",
-    "monolog/monolog": "^2.0",
-    "doctrine/dbal": "^2.9",
-    "webonyx/graphql-php": "^0.13.8",
-    "vlucas/phpdotenv": "^3.6",
-    "firebase/php-jwt": "^5.0",
-    "sentry/sentry": "^2.2",
-    "php-http/curl-client": "^2.0",
-      "guzzlehttp/psr7": "^1.6",
-      "sabre/vobject": "^4.2",
-      "cocur/slugify": "^3.2",
-      "sendgrid/sendgrid": "^7.3"
-  },
-  "require-dev": {
-    "phpunit/phpunit": "^8.4",
-    "swoole/ide-helper": "^4.4"
-  },
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "multisolution",
-      "email": "mutisolution.web@gmail.com"
+    "name": "multisolution/multi",
+    "description": "Multi-purpose application for MultisolutiON collaborators.",
+    "type": "project",
+    "require": {
+        "php": ">=7.3",
+        "leocavalcante/siler": "dev-master",
+        "monolog/monolog": "^2.0",
+        "doctrine/dbal": "^2.9",
+        "webonyx/graphql-php": "^0.13.8",
+        "vlucas/phpdotenv": "^3.6",
+        "firebase/php-jwt": "^5.0",
+        "sentry/sentry": "^2.2",
+        "php-http/curl-client": "^2.0",
+        "guzzlehttp/psr7": "^1.6",
+        "sabre/vobject": "^4.2",
+        "cocur/slugify": "^3.2",
+        "sendgrid/sendgrid": "^7.3",
+        "textalk/websocket": "^1.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.4",
+        "swoole/ide-helper": "^4.4"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "multisolution",
+            "email": "mutisolution.web@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "Multi\\": [
+                "src/",
+                "app/"
+            ]
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Multi\\Test\\": [
+                "tests/unit/"
+            ]
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
     }
-  ],
-  "minimum-stability": "stable",
-  "autoload": {
-    "psr-4": {
-      "Multi\\": [
-        "src/",
-        "app/"
-      ]
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Multi\\Test\\": [
-        "tests/unit/"
-      ]
-    }
-  },
-  "scripts": {
-    "test": "phpunit"
-  }
 }

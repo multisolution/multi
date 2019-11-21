@@ -59,6 +59,16 @@ input InputServiceRequest {
     total: Int!
 }
 
+type ServiceRequest {
+    service: Service!
+    room: MeetingRoom!
+    host: User!
+    total: Int!
+}
+type Subscription {
+    serviceRequested: [ServiceRequest]!
+}
+
 type Query {
     me: User
     meetingRooms: [MeetingRoom]!

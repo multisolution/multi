@@ -8,8 +8,7 @@ use GraphQL\Error\UserError;
 use Multi\Context;
 use Multi\Resolver;
 use function Siler\array_get;
-
-
+use function Siler\GraphQL\publish;
 
 
 class Request implements Resolver
@@ -21,7 +20,6 @@ class Request implements Resolver
             throw new UserError($context->messages->get('unauthenticated'));
         }
 
-
         $input = array_get($args, 'input');
         $requests = array_map(function ($input) use ($context): ServiceRequest {
             $service_request = new ServiceRequest();
@@ -32,7 +30,10 @@ class Request implements Resolver
             $service_request->total =  array_get($input, 'total');
             return $service_request;
         }, $input);
+
         array_walk($requests, [$context->db, 'requestService']);
+        publish('serviceRequested');
+        // publish('serviceRequested');
         return $requests;
     }
 }
