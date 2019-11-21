@@ -40,7 +40,7 @@ const Table: FunctionComponent<TableProps> = ({ colums, data, rightButtonClick }
 
   return (
     <>
-    <TitlePage>Lista de usuarios</TitlePage>
+    <TitlePage>Lista de usuários</TitlePage>
       <TableStyle>
           <thead>
           <tr key={Math.random()}>
