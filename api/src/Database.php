@@ -23,6 +23,7 @@ interface Database
 
     public function insertMeetingRoom(MeetingRoom $meetingRoom): bool;
     public function requestService(ServiceRequest $service_request): bool;
+    public function requestedServices(): array;
 
     /**
      * @return MeetingRoom[]
@@ -65,6 +66,8 @@ interface Database
     public function updateMeeting(?Meeting $meeting): bool;
 
     public function meetingRoomByMeeting(Meeting $meeting): MeetingRoom;
+    public function meetingRoomByServiceRequest(ServiceRequest $request): MeetingRoom;
+    public function serviceById(ServiceRequest $service): Service;
 
     /**
      * @param DateTimeInterface $from

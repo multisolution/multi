@@ -1,4 +1,4 @@
-import styled, {createGlobalStyle, css} from "styled-components";
+import styled, { createGlobalStyle, css } from "styled-components";
 
 export type Theme = {
   borderRadius: number;
@@ -31,12 +31,12 @@ export const theme: Theme = {
     white: "#ffffff",
     black: "#222222",
     error: "#f20000",
-    light: "#eeeeee",
+    light: "#eeeeee"
   }
 };
 
 const GlobalStyle = createGlobalStyle`
-  @import url('https://fonts.googleapis.com/css?family=PT+Sans:400,700&display=swap');
+
 
   * {
     box-sizing: border-box;
@@ -117,15 +117,10 @@ export const Room = styled.div<RoomProps>`
   margin-left: 150px;
 `;
 
-
 export const TitlePage = styled.h1`
-
-font-size: 30px;
-text-transform: uppercase;
-padding: 10px 0;
-
+  font-size: 30px;
+  text-transform: uppercase;
+  padding: 10px 0;
 `;
-
-
 
 export default GlobalStyle;

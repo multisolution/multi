@@ -10,6 +10,7 @@ use Doctrine\DBAL\Driver\ResultStatement;
 use Doctrine\DBAL\FetchMode;
 use Doctrine\DBAL\ParameterType;
 use DomainException;
+use GraphQL\Error\UserError;
 use Multi\Meeting\Meeting;
 use Multi\Service\Service;
 use Multi\Service\ServiceRequest;
@@ -160,6 +161,65 @@ class DoctrineDBAL implements Database
 
         if ($result === false) {
             return null;
+        }
+
+        return $result;
+    }
+
+    public function serviceById(ServiceRequest $service): Service
+    {
+        $smtm = $this->conn
+            ->createQueryBuilder()
+            ->select('*')
+            ->from('services')
+            ->where('id=?')
+            ->setParameter(0, $service->service_id)
+            ->execute();
+        $smtm->setFetchMode(FetchMode::CUSTOM_OBJECT, Service::class);
+
+        $result = $smtm->fetch();
+
+        if ($result === false) {
+            throw new UserError('Não encoutrei salas no request de services');
+        }
+
+        return $result;
+    }
+
+    public function meetingRoomByServiceRequest(ServiceRequest $request): MeetingRoom
+    {
+        $stmt = $this->conn
+            ->createQueryBuilder()
+            ->select('*')
+            ->from('meeting_rooms')
+            ->where('id=?')
+            ->setParameter(0, $request->room_id)
+            ->execute();
+
+        $stmt->setFetchMode(FetchMode::CUSTOM_OBJECT, MeetingRoom::class);
+        $result = $stmt->fetch();
+
+        if ($result === false) {
+            throw new UserError('Não encoutrei salas no request');
+        }
+
+        return $result;
+    }
+
+    public function requestedServices(): array
+    {
+        $stmt = $this->conn
+            ->createQueryBuilder()
+            ->select('*')
+            ->from('services_request')
+            ->where('done = ?')
+            ->setParameter(0, 'false')
+            ->execute();
+
+        $stmt->setFetchMode(FetchMode::CUSTOM_OBJECT, ServiceRequest::class);
+        $result = $stmt->fetchAll();
+        if ($result === false) {
+            return [];
         }
 
         return $result;

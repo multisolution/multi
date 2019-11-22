@@ -33,7 +33,6 @@ class Request implements Resolver
 
         array_walk($requests, [$context->db, 'requestService']);
         publish('serviceRequested');
-        // publish('serviceRequested');
         return $requests;
     }
 }

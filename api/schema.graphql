@@ -62,7 +62,7 @@ input InputServiceRequest {
 type ServiceRequest {
     service: Service!
     room: MeetingRoom!
-    host: User!
+    host: User
     total: Int!
 }
 type Subscription {

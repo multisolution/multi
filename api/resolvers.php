@@ -7,11 +7,18 @@ namespace Multi;
 use Multi\Meeting;
 use Multi\Service;
 
+
 return [
     'Meeting' => [
         'room' => new Meeting\Room(),
         'host' => new Meeting\Host(),
     ],
+    'ServiceRequest' => [
+        'room' => new Service\Request\Room(),
+        'service' => new Service\Request\ServiceResolver(),
+        'host' => new Service\Request\Host(),
+    ],
+
     'MeetingRoom' => [
         'calendar' => new MeetingRoom\Calendar(),
     ],

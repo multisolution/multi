@@ -1,16 +1,14 @@
-
-import {Align, Column, Row} from "./grid";
-import {Calendar as CalendarModel} from "../lib/models";
-import React, {FunctionComponent, MouseEvent} from "react";
-import {sameDate, weekDays} from "../lib/misc";
-import styled, {css} from "styled-components";
-import {lighten} from "polished";
-import Button, {ButtonSkin} from "./button";
-import {MdChevronLeft, MdChevronRight} from "react-icons/md";
-import {PlaceholderLoading} from "./loading";
+import { Align, Column, Row } from "./grid";
+import { Calendar as CalendarModel } from "../lib/models";
+import React, { FunctionComponent, MouseEvent } from "react";
+import { sameDate, weekDays } from "../lib/misc";
+import styled, { css } from "styled-components";
+import { lighten } from "polished";
+import Button, { ButtonSkin } from "./button";
+import { MdChevronLeft, MdChevronRight } from "react-icons/md";
+import { PlaceholderLoading } from "./loading";
 import moment from "moment";
 import "moment/locale/pt-br";
-
 
 type CalendarProps = {
   calendar: CalendarModel[];
@@ -20,26 +18,23 @@ type CalendarProps = {
   isLoading: boolean;
 };
 
-
 const Calendar: FunctionComponent<CalendarProps> = ({
-                                                      isLoading,
-                                                      calendar,
-                                                      onTimeGroupClick,
-                                                      onPrevClick,
-                                                      onNextClick
-                                                    }) => {
-
+  isLoading,
+  calendar,
+  onTimeGroupClick,
+  onPrevClick,
+  onNextClick
+}) => {
   const today = new Date();
 
   if (calendar.length === 0) {
-    calendar.fill({date: "0000-00-00", times: []}, 0, 6);
+    calendar.fill({ date: "0000-00-00", times: [] }, 0, 6);
   }
 
   return (
-
     <Column mainAxis={Align.Center}>
       {isLoading ? (
-        <PlaceholderLoading height={42} width={128}/>
+        <PlaceholderLoading height={42} width={128} />
       ) : (
         <CalendarTitle>{calendar.length > 0 && moment(calendar[0].date).format("MMMM")}</CalendarTitle>
       )}
@@ -47,12 +42,12 @@ const Calendar: FunctionComponent<CalendarProps> = ({
         <Column>
           <Header border={false}>
             <Button onClick={onPrevClick} skin={ButtonSkin.Text}>
-              <MdChevronLeft size={48}/>
+              <MdChevronLeft size={48} />
             </Button>
           </Header>
-          <YAxis/>
+          <YAxis />
         </Column>
-        <Row style={{flex: 1}} space={0}>
+        <Row style={{ flex: 1 }} space={0}>
           {calendar.map(calendar => {
             const date = new Date(`${calendar.date} 00:00:00`);
 
@@ -60,12 +55,12 @@ const Calendar: FunctionComponent<CalendarProps> = ({
               <CalendarDate key={`calendar-date-${calendar.date}`}>
                 <Header>
                   {isLoading ? (
-                    <PlaceholderLoading height={20} width={32}/>
+                    <PlaceholderLoading height={20} width={32} />
                   ) : (
                     <WeekDayLabel>{weekDays[date.getDay()]}</WeekDayLabel>
                   )}
                   {isLoading ? (
-                    <PlaceholderLoading height={42} width={32}/>
+                    <PlaceholderLoading height={42} width={32} />
                   ) : (
                     <DateLabel current={sameDate(date, today)}>{date.getDate()}</DateLabel>
                   )}
@@ -87,7 +82,6 @@ const Calendar: FunctionComponent<CalendarProps> = ({
                             />
                           ))}
                         </Time>
-
                       ))}
                     </TimeGroup>
                   );
@@ -99,7 +93,7 @@ const Calendar: FunctionComponent<CalendarProps> = ({
         <div>
           <Header border={false}>
             <Button onClick={onNextClick} skin={ButtonSkin.Text}>
-              <MdChevronRight size={48}/>
+              <MdChevronRight size={48} />
             </Button>
           </Header>
         </div>
@@ -117,7 +111,6 @@ const YAxis: FunctionComponent = () => {
     <Column
       space={13}
       decoration={css`
-        margin-top: 72px;
         margin-left: -56px;
       `}
     >
@@ -168,7 +161,7 @@ const Header = styled.div<{ border?: boolean }>`
   z-index: 1;
   background: white;
   width: 100%;
-  border-bottom: 1px solid ${({border = true, theme}) => (border ? lighten(0.4, theme.colors.dark) : "tranparent")};
+  border-bottom: 1px solid ${({ border = true, theme }) => (border ? lighten(0.4, theme.colors.dark) : "tranparent")};
   padding: 8px;
   position: sticky;
   top: 0;
