@@ -78,4 +78,6 @@ interface Database
      * @return Meeting[]
      */
     public function meetings(DateTimeInterface $from, DateTimeInterface $to): array;
+
+    public function serviceById(string $id): Service;
 }

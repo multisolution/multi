@@ -13,7 +13,7 @@ import checkLoggedIn from "../lib/check-logged-in";
 import redirect from "../lib/redirect";
 import styled from "styled-components";
 import Modal from "../components/modal";
-import AlertMenssage from "../components/alert-menssage";
+import AlertMessage from "../components/alert-message";
 import Table from "../components/table"
 
 const Error = styled.div`
@@ -155,7 +155,7 @@ const CreateUser: NextPage<CreateUserProps> = ({ user }) => {
       </Layout>
 
 
-      <AlertMenssage title={"CADASTRADO COM SUCESSO!"} menssage="" typeMenssage="success" isOpen={formSuccessMessage}  />
+      <AlertMessage title={"CADASTRADO COM SUCESSO!"} message="" messageType="success" isOpen={formSuccessMessage}/>
     </>
   );
 

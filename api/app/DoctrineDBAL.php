@@ -407,10 +407,29 @@ class DoctrineDBAL implements Database
             'room_id' => $serviceRequest->room->id,
             'host_id' => $serviceRequest->host->id,
             'total' => $serviceRequest->total,
-            'done' => false,
+            'done' => "false",
         ];
 
         return $this->insert('service_requests', $data);
+    }
+
+    public function serviceById(string $id): Service
+    {
+        $stmt = $this->conn->createQueryBuilder()
+            ->select('*')
+            ->from('services')
+            ->where('id = ?')
+            ->setParameter(0, $id)
+            ->execute();
+
+        $stmt->setFetchMode(FetchMode::CUSTOM_OBJECT, Service::class);
+        $result = $stmt->fetch();
+
+        if ($result === false) {
+            throw new UserError("Service $id does not exists");
+        }
+
+        return $result;
     }
 
     private function insert(string $tableName, array $data): bool

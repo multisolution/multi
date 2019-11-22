@@ -10,6 +10,8 @@ use DateTimeInterface;
 use DateTimeZone;
 use GraphQL\Error\UserError;
 use Multi\Context;
+use Multi\Meeting\Between;
+use Multi\Meeting\Meeting;
 use Multi\Resolver;
 use function Siler\array_get;
 

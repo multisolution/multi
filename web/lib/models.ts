@@ -12,10 +12,9 @@ export type UserInput = {
   inviteCode?: string;
 };
 
-export type InputServiceRequest = {
+export type ServiceRequestInput = {
   serviceId: string;
   roomId: string;
-  hostId: string;
   total: number;
 };
 
@@ -55,8 +54,14 @@ export type Calendar = {
   times: CalendarTime[][];
 };
 export type Service = {
-  label: string;
+  title: string;
   icon: string;
   total: number;
-  id: number;
+  id: string;
 };
+
+export type ServiceRequest = {
+  room: MeetingRoom;
+  service: Service;
+  total: number;
+}

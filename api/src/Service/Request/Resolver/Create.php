@@ -4,6 +4,7 @@ namespace Multi\Service\Request\Resolver;
 
 use Multi\Context;
 use Multi\Resolver;
+use Multi\Service\Request\Request;
 use function Multi\User\assert_authenticated;
 use function Siler\array_get;
 use function Siler\GraphQL\publish;
@@ -21,7 +22,7 @@ class Create implements Resolver
             $serviceRequest->id = $context->id->generate();
             $serviceRequest->host = $context->user;
             $serviceRequest->room = $context->db->meetingRoomById($input['roomId']);
-            $serviceRequest->service = $context->db->serviceByRequest($input['serviceId']);
+            $serviceRequest->service = $context->db->serviceById($input['serviceId']);
             $serviceRequest->total = $input['total'];
 
             return $serviceRequest;

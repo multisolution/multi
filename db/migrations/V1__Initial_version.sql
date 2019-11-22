@@ -38,7 +38,8 @@ create table services
     id        varchar   not null primary key,
     title     varchar   not null
 );
-create table services_request
+
+create table service_requests
 (
     id           varchar   not null primary key,
     service_id   varchar   not null references services (id),
@@ -65,6 +66,7 @@ insert into meeting_rooms (id, room_number, description, color)
 values ('room5', 5, 'Room 5 is very nice', '#032B43');
 insert into meeting_rooms (id, room_number, description, color)
 values ('room6', 6, 'Room 6 is very nice', '#541388');
+
 insert into services (id, title)
 values ('service1', 'Café' );
 insert into services (id, title)

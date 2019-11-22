@@ -52,10 +52,9 @@ type Service {
     title: String!
 }
 
-input InputServiceRequest {
+input ServiceRequestInput {
     serviceId: String!
     roomId: String!
-    hostId: String!
     total: Int!
 }
 
@@ -82,7 +81,7 @@ type Query {
 type Mutation {
     signIn(email: String!, password: String!): String!
     signOut: Boolean!
-    requestService(inputs: [InputServiceRequest]!): Boolean!
+    requestService(inputs: [ServiceRequestInput]!): Boolean!
     createUser(input: UserInput!): User
     createMeeting(input: MeetingInput!): Meeting
     createMeetingRoom(input: MeetingRoomInput!): MeetingRoom

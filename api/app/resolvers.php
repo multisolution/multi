@@ -47,3 +47,4 @@ return [
     'MeetingStatus' => new Meeting\Status\EnumType(),
     'Role' => new User\Role\EnumType(),
 ];
+
