@@ -1,5 +1,5 @@
 {
-  "schemaPath": "schema.graphql",
+    "schemaPath": "./app/schema.graphql",
   "extensions": {
     "endpoints": {
       "Multi": {

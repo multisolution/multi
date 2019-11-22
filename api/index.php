@@ -27,13 +27,15 @@ use function Siler\Swoole\graphql_subscriptions;
 $base_dir = __DIR__;
 require_once "$base_dir/vendor/autoload.php";
 
+Runtime::enableCoroutine();
 Log\handler(new Handler(new Hub(ClientBuilder::create(['dsn' => Env\env('SENTRY_DSN')])->getClient()), Logger::WARNING));
 Log\handler(new ErrorLogHandler());
 
 $dbs = include "$base_dir/app/dbs.php";
-$type_defs = file_get_contents("$base_dir/schema.graphql");
-$resolvers = require_once "$base_dir/resolvers.php";
+$type_defs = file_get_contents("$base_dir/app/schema.graphql");
+$resolvers = require_once "$base_dir/app/resolvers.php";
 $schema = schema($type_defs, $resolvers);
+$root_value = [];
 
 $dispatcher = new Dispatcher();
 $dispatcher->add(new SendGridListener(new SendGrid(Env\env('SENDGRID_API_KEY')), Env\env('SENDGRID_API_FROM')));
@@ -48,11 +50,10 @@ $context->dispatcher = $dispatcher;
 
 $icsHandler = new IcsHandler($context);
 
-Runtime::enableCoroutine();
-debug($context->debug ? Debug::INCLUDE_DEBUG_MESSAGE : 0);
+debug($context->debug ? Debug::INCLUDE_DEBUG_MESSAGE | Debug::INCLUDE_TRACE : 0);
 subscriptions_at('ws://localhost:8001');
 
-$handler = function () use ($schema, $context, $icsHandler) {
+$handler = function () use ($schema, $root_value, $context, $icsHandler) {
     if (Route\get('/meetings/{meeting_id}.ics', $icsHandler)) {
         return;
     }
@@ -63,7 +64,7 @@ $handler = function () use ($schema, $context, $icsHandler) {
             return $context->db->userById($token->userId);
         })->return();
 
-        $result = raw() ? execute($schema, decode(raw()), [], $context) : null;
+        $result = raw() ? execute($schema, decode(raw()), $root_value, $context) : null;
     } catch (Throwable $exception) {
         Log\error($exception->getMessage(), ['exception' => $exception, 'trace' => $exception->getTrace()]);
         $result = FormattedError::createFromException($exception);
@@ -73,7 +74,7 @@ $handler = function () use ($schema, $context, $icsHandler) {
     }
 };
 
-$manager = subscriptions_manager($schema, [], [], $context);
+$manager = subscriptions_manager($schema, [], $root_value, $context);
 $server = graphql_subscriptions($manager, 8001);
 http_server_port($server, $handler, 8000);
 

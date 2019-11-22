@@ -1,9 +1,6 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Multi\Service;
-
 
 class Service
 {
@@ -11,6 +8,4 @@ class Service
     public $id;
     /** @var string */
     public $title;
-
- 
 }

@@ -2,7 +2,7 @@
 
 namespace Multi\User\Role;
 
-use Multi\User\Permission\Permission;
+use Multi\User\Role\Permission\Permission;
 
 class Collaborator implements Role
 {

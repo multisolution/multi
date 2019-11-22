@@ -7,9 +7,9 @@ namespace Multi;
 use DateTimeInterface;
 use Multi\Meeting\Meeting;
 use Multi\MeetingRoom\MeetingRoom;
-use Multi\User\User;
+use Multi\Service\Request;
 use Multi\Service\Service;
-use Multi\Service\ServiceRequest;
+use Multi\User\User;
 
 interface Database
 {
@@ -22,8 +22,8 @@ interface Database
     public function meetingRoomById(string $id): ?MeetingRoom;
 
     public function insertMeetingRoom(MeetingRoom $meetingRoom): bool;
-    public function requestService(ServiceRequest $service_request): bool;
-    public function requestedServices(): array;
+
+    public function insertServiceRequest(Request $serviceRequest): bool;
 
     /**
      * @return MeetingRoom[]
@@ -36,13 +36,13 @@ interface Database
     public function services(): array;
 
 
-
     /**
      * @return User[]
      */
     public function users(): array;
 
     public function deleteUser(string $id): bool;
+
     public function updateUser(User $user): bool;
 
     public function insertMeeting(Meeting $meeting): bool;
@@ -66,8 +66,10 @@ interface Database
     public function updateMeeting(?Meeting $meeting): bool;
 
     public function meetingRoomByMeeting(Meeting $meeting): MeetingRoom;
-    public function meetingRoomByServiceRequest(ServiceRequest $request): MeetingRoom;
-    public function serviceById(ServiceRequest $service): Service;
+
+    public function meetingRoomByServiceRequest(Request $request): MeetingRoom;
+
+    public function serviceById(Request $service): Service;
 
     /**
      * @param DateTimeInterface $from

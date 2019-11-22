@@ -2,14 +2,14 @@
 
 namespace Multi\User\Role;
 
-use Multi\User\Permission;
+use Multi\User\Role\Permission;
 
 class Administrator implements Role
 {
     const ADMINISTRATOR = 'ADMINISTRATOR';
 
     /**
-     * @return Permission[]
+     * @return Permission\Permission[]
      */
     public function permissions(): array
     {

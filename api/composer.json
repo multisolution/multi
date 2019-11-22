@@ -36,7 +36,10 @@
                 "src/",
                 "app/"
             ]
-        }
+        },
+        "files": [
+            "src/User/functions.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

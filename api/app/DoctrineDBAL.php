@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Multi;
 
@@ -8,13 +6,12 @@ use DateTimeInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\ResultStatement;
 use Doctrine\DBAL\FetchMode;
-use Doctrine\DBAL\ParameterType;
 use DomainException;
 use GraphQL\Error\UserError;
 use Multi\Meeting\Meeting;
-use Multi\Service\Service;
-use Multi\Service\ServiceRequest;
 use Multi\MeetingRoom\MeetingRoom;
+use Multi\Service\Request;
+use Multi\Service\Service;
 use Multi\User\User;
 use RuntimeException;
 
@@ -26,34 +23,6 @@ class DoctrineDBAL implements Database
     public function __construct(Connection $conn)
     {
         $this->conn = $conn;
-    }
-
-    public function requestService(ServiceRequest $service_request): bool
-    {
-
-        /** @var int $affectedRows */
-        $affectedRows = $this->conn
-            ->createQueryBuilder()
-            ->insert('services_request')
-            ->values([
-                'id' => '?',
-                'service_id' => '?',
-                'host_id' => '?',
-                'room_id' => '?',
-                'total' => '?',
-                'done' => '?'
-
-            ])
-            ->setParameter(0, $service_request->id)
-            ->setParameter(1, $service_request->service_id)
-            ->setParameter(2, $service_request->host_id)
-            ->setParameter(3, $service_request->room_id)
-            ->setParameter(4, $service_request->total)
-            ->setParameter(5, 'false')
-            ->execute();
-
-        return $affectedRows > 0;
-        return true;
     }
 
     public function deleteUser(string $id): bool
@@ -166,7 +135,7 @@ class DoctrineDBAL implements Database
         return $result;
     }
 
-    public function serviceById(ServiceRequest $service): Service
+    public function serviceById(Request $service): Service
     {
         $smtm = $this->conn
             ->createQueryBuilder()
@@ -186,7 +155,7 @@ class DoctrineDBAL implements Database
         return $result;
     }
 
-    public function meetingRoomByServiceRequest(ServiceRequest $request): MeetingRoom
+    public function meetingRoomByServiceRequest(Request $request): MeetingRoom
     {
         $stmt = $this->conn
             ->createQueryBuilder()
@@ -206,41 +175,15 @@ class DoctrineDBAL implements Database
         return $result;
     }
 
-    public function requestedServices(): array
-    {
-        $stmt = $this->conn
-            ->createQueryBuilder()
-            ->select('*')
-            ->from('services_request')
-            ->where('done = ?')
-            ->setParameter(0, 'false')
-            ->execute();
-
-        $stmt->setFetchMode(FetchMode::CUSTOM_OBJECT, ServiceRequest::class);
-        $result = $stmt->fetchAll();
-        if ($result === false) {
-            return [];
-        }
-
-        return $result;
-    }
-
     public function insertMeetingRoom(MeetingRoom $meetingRoom): bool
     {
-        $affectedRows = $this->conn
-            ->createQueryBuilder()
-            ->insert('meeting_rooms')
-            ->values([
-                'id' => '?',
-                'room_number' => '?',
-                'description' => '?'
-            ])
-            ->setParameter(0, $meetingRoom->id)
-            ->setParameter(1, $meetingRoom->roomNumber)
-            ->setParameter(2, $meetingRoom->description)
-            ->execute();
+        $data = [
+            'id' => $meetingRoom->id,
+            'room_number' => $meetingRoom->roomNumber,
+            'description' => $meetingRoom->description,
+        ];
 
-        return $affectedRows > 0;
+        return $this->insert('meeting_rooms', $data);
     }
 
     /**
@@ -299,15 +242,9 @@ class DoctrineDBAL implements Database
             'status' => $meeting->status,
         ];
 
-        $stmt = $this->conn
-            ->createQueryBuilder()
-            ->insert('meetings')
-            ->values(array_fill_keys(array_keys($data), '?'))
-            ->setParameters(array_values($data));
-
-        $result = $stmt->execute();
-        return is_int($result) ? $result > 0 : false;
+        return $this->insert('meetings', $data);
     }
+
     /**
      * @param MeetingRoom $room
      * @return Meeting[]
@@ -363,7 +300,6 @@ class DoctrineDBAL implements Database
 
         return $result;
     }
-
 
 
     public function meetingById(string $id): ?Meeting
@@ -457,5 +393,32 @@ class DoctrineDBAL implements Database
 
         $stmt->setFetchMode(FetchMode::CUSTOM_OBJECT, Meeting::class);
         return $stmt->fetchAll();
+    }
+
+    public function insertServiceRequest(Request $serviceRequest): bool
+    {
+        $data = [
+            'id' => $serviceRequest->id,
+            'service_id' => $serviceRequest->service->id,
+            'room_id' => $serviceRequest->room->id,
+            'host_id' => $serviceRequest->host->id,
+            'total' => $serviceRequest->total,
+            'done' => false,
+        ];
+
+        return $this->insert('service_requests', $data);
+    }
+
+    private function insert(string $tableName, array $data): bool
+    {
+        $stmt = $this->conn
+            ->createQueryBuilder()
+            ->insert($tableName)
+            ->values(array_fill_keys(array_keys($data), '?'))
+            ->setParameters(array_values($data));
+
+        $result = $stmt->execute();
+
+        return is_int($result) ? $result > 0 : false;
     }
 }
