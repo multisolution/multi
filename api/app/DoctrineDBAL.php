@@ -10,7 +10,7 @@ use DomainException;
 use GraphQL\Error\UserError;
 use Multi\Meeting\Meeting;
 use Multi\MeetingRoom\MeetingRoom;
-use Multi\Service\Request;
+use Multi\Service\Request\Request;
 use Multi\Service\Service;
 use Multi\User\User;
 use RuntimeException;
@@ -135,21 +135,25 @@ class DoctrineDBAL implements Database
         return $result;
     }
 
-    public function serviceById(Request $service): Service
+    public function serviceByRequest(Request $request): Service
     {
-        $smtm = $this->conn
+        if (!isset($request->service_id)) {
+            throw new UserError('Could not find a service by request');
+        }
+
+        $stmt = $this->conn
             ->createQueryBuilder()
             ->select('*')
             ->from('services')
-            ->where('id=?')
-            ->setParameter(0, $service->service_id)
+            ->where('id = ?')
+            ->setParameter(0, $request->service_id)
             ->execute();
-        $smtm->setFetchMode(FetchMode::CUSTOM_OBJECT, Service::class);
 
-        $result = $smtm->fetch();
+        $stmt->setFetchMode(FetchMode::CUSTOM_OBJECT, Service::class);
+        $result = $stmt->fetch();
 
         if ($result === false) {
-            throw new UserError('Não encoutrei salas no request de services');
+            throw new UserError('Could not find a service by request');
         }
 
         return $result;

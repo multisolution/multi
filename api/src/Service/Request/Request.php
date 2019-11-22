@@ -1,8 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Multi\Service;
+namespace Multi\Service\Request;
 
 use Multi\MeetingRoom\MeetingRoom;
+use Multi\Service\Service;
 use Multi\User\User;
 
 class Request

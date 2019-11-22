@@ -7,7 +7,7 @@ namespace Multi;
 use DateTimeInterface;
 use Multi\Meeting\Meeting;
 use Multi\MeetingRoom\MeetingRoom;
-use Multi\Service\Request;
+use Multi\Service\Request\Request;
 use Multi\Service\Service;
 use Multi\User\User;
 
@@ -69,7 +69,7 @@ interface Database
 
     public function meetingRoomByServiceRequest(Request $request): MeetingRoom;
 
-    public function serviceById(Request $service): Service;
+    public function serviceByRequest(Request $request): Service;
 
     /**
      * @param DateTimeInterface $from

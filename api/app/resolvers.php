@@ -10,9 +10,9 @@ return [
         'room' => new Meeting\Resolver\Room(),
         'host' => new Meeting\Resolver\Host(),
     ],
-    'Request' => [
+    'Service' => [
         'room' => new Service\Request\Resolver\Room(),
-        'service' => new Service\Request\Resolver\Request(),
+        'service' => new Service\Request\Resolver\Service(),
         'host' => new Service\Request\Resolver\Host(),
     ],
     'MeetingRoom' => [
