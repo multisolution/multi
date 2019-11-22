@@ -4,6 +4,7 @@ namespace Multi\Test\Meeting;
 
 use GraphQL\Error\UserError;
 use Multi\Context;
+use Multi\Database;
 use Multi\InMemoryDb;
 use Multi\InMemoryMessages;
 use Multi\Meeting\Cancel;
@@ -17,7 +18,8 @@ class CancelTest extends TestCase
     public function testCancelMeetingNotFound()
     {
         $context = new Context();
-        $context->db = new InMemoryDb();
+        $context->db = $this->createMock(Database::class);
+        $context->db->method('meetingById')->willReturn(null);
         $context->messages = new InMemoryMessages();
         $context->user = new User();
 
@@ -30,16 +32,15 @@ class CancelTest extends TestCase
 
     public function testCancelNotByTheHost()
     {
-        $context = new Context();
-        $context->db = new InMemoryDb();
-        $context->messages = new InMemoryMessages();
-        $context->user = new User();
-
         $meeting = new Meeting();
         $meeting->id = 'test';
         $meeting->host = new User();
 
-        $context->db->insertMeeting($meeting);
+        $context = new Context();
+        $context->db = $this->createMock(Database::class);
+        $context->db->method('meetingById')->willReturn($meeting);
+        $context->messages = new InMemoryMessages();
+        $context->user = new User();
 
         $this->expectException(UserError::class);
         $this->expectExceptionMessage($context->messages->get('unauthorized'));
@@ -52,15 +53,14 @@ class CancelTest extends TestCase
     {
         $user = new User();
 
-        $context = new Context();
-        $context->db = new InMemoryDb();
-        $context->user = $user;
-
         $meeting = new Meeting();
         $meeting->id = 'test';
         $meeting->host = $user;
 
-        $context->db->insertMeeting($meeting);
+        $context = new Context();
+        $context->db = $this->createMock(Database::class);
+        $context->db->method('meetingById')->willReturn($meeting);
+        $context->user = $user;
 
         $cancel = new Cancel();
         $cancel(null, ['meetingId' => 'test'], $context);

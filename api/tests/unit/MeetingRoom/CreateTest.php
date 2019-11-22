@@ -4,6 +4,7 @@ namespace Multi\Test\MeetingRoom;
 
 use GraphQL\Error\UserError;
 use Multi\Context;
+use Multi\Database;
 use Multi\IDGenerator;
 use Multi\InMemoryDb;
 use Multi\InMemoryMessages;
@@ -48,7 +49,7 @@ class CreateTest extends TestCase
         $context->messages = new InMemoryMessages();
         $context->user = new User();
         $context->user->role = new Administrator();
-        $context->db = new InMemoryDb();
+        $context->db = $this->createMock(Database::class);
         $context->id = new class implements IDGenerator
         {
             public function generate(): string
@@ -65,6 +66,11 @@ class CreateTest extends TestCase
             ]
         ], $context);
 
+
+        $meetingRoom = new MeetingRoom();
+        $meetingRoom->id = $context->id->generate();
+
+        $context->db->method('meetingRoomById')->willReturn($meetingRoom);
         $this->assertInstanceOf(MeetingRoom::class, $context->db->meetingRoomById('test'));
     }
 }

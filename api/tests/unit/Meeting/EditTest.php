@@ -4,6 +4,7 @@ namespace Multi\Test\Meeting;
 
 use DateTime;
 use Multi\Context;
+use Multi\Database;
 use Multi\InMemoryDb;
 use Multi\InMemoryMessages;
 use Multi\Meeting\Edit;
@@ -23,7 +24,7 @@ class EditTest extends TestCase
 
         $context = new Context();
         $context->messages = new InMemoryMessages();
-        $context->db = new InMemoryDb();
+        $context->db = $this->createMock(Database::class);
         $context->user = new User();
 
         $meetingRoom = new MeetingRoom();
@@ -32,7 +33,7 @@ class EditTest extends TestCase
         $meetingRoom2 = new MeetingRoom();
         $meetingRoom2->roomNumber = 2;
         $meetingRoom2->calendar = [];
-        $context->db->insertMeetingRoom($meetingRoom2);
+        $context->db->method('meetingRoomByNumber')->willReturn($meetingRoom2);
 
         $meeting = new Meeting();
         $meeting->id = 'test';
@@ -40,7 +41,7 @@ class EditTest extends TestCase
         $meeting->startsAt = $initialStartsAt;
         $meeting->endsAt = $initialEndsAt;
         $meeting->host = $context->user;
-        $context->db->insertMeeting($meeting);
+        $context->db->method('meetingById')->willReturn($meeting);
 
         $args = [
             'input' => [
