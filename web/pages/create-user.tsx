@@ -1,19 +1,18 @@
-import { useMutation, useQuery } from "@apollo/react-hooks";
-import { NextPage, NextPageContext } from "next";
-import React, { useRef, useState } from "react";
+import {useMutation, useQuery} from "@apollo/react-hooks";
+import {NextPage, NextPageContext} from "next";
+import React, {useRef, useState} from "react";
 import Button from "../components/button";
-import { Container, Section, ListElement } from "../components/global-style";
+import {Container, Section} from "../components/global-style";
 import Layout from "../components/layout";
-import { Input } from "../components/form";
-import { Column } from "../components/grid";
-import { WithApollo, withApollo } from "../lib/apollo";
+import {Input} from "../components/form";
+import {Column} from "../components/grid";
+import {WithApollo, withApollo} from "../lib/apollo";
 import gql from "graphql-tag";
-import { Role, User, UserInput } from "../lib/models";
+import {Role, User, UserInput} from "../lib/models";
 import checkLoggedIn from "../lib/check-logged-in";
 import redirect from "../lib/redirect";
 import styled from "styled-components";
 import Modal from "../components/modal";
-import ListUsers from "../components/list-users";
 import AlertMenssage from "../components/alert-menssage";
 import Table from "../components/table"
 
@@ -84,7 +83,7 @@ const CreateUser: NextPage<CreateUserProps> = ({ user }) => {
 
   function renderTable() {
     if (getUsers.data) {
-      return <Table colums={[{label: "ID", key: "id"}, {label: "E-mail", key: "email"}, {label: "Ações", key: "role"} ]}
+      return <Table columns={[{label: "ID", key: "id"}, {label: "E-mail", key: "email"}, {label: "Ações", key: "role"}]}
                     data={getUsers.data.allUsers}
                     rightButtonClick={deleteUserClickHandler}
                     >
