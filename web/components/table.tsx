@@ -2,12 +2,6 @@ import React, {FunctionComponent} from "react";
 import styled from "styled-components";
 import {TitlePage} from "./global-style";
 
-const Title = styled.h1`
-  flex: 1;
-  font-size: 1.8rem;
-  color: ${props => props.theme.colors.dark};
-`;
-
 type TableProps = {
   columns: { label: string; key: string }[];
   data: any[];
