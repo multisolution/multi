@@ -6,7 +6,7 @@ import Layout from "../components/layout";
 import {Column, Row} from "../components/grid";
 import {WithApollo, withApollo} from "../lib/apollo";
 import gql from "graphql-tag";
-import {Meeting, Service, ServiceRequestInput} from "../lib/models";
+import {Meeting, Service, ServiceOrderInput, ServiceRequestInput} from "../lib/models";
 import {withUser, WithUser} from "../lib/check-logged-in";
 import styled, {css} from "styled-components";
 import Modal from "../components/modal";
@@ -22,11 +22,13 @@ const StyleTh = styled.th`
 const MyMeetings: NextPage<WithUser> = ({user}) => {
   const [meeting, setMeeting] = useState<Meeting | null>(null);
 
-  const [requestService, {data: requestServiceData}] = useMutation<{ requestService: boolean },
-    { inputs: ServiceRequestInput[] }>(
+  const [placeOrder, {data: placeOrderData}] = useMutation<{ placeOrder: boolean },
+    { input: ServiceOrderInput }>(
     gql`
-        mutation RequestService($inputs: [ServiceRequestInput]!) {
-            requestService(inputs: $inputs)
+        mutation PlaceOrder($input: ServiceOrderInput!) {
+            placeOrder(input: $input) {
+                id
+            }
         }
     `
   );
@@ -61,14 +63,14 @@ const MyMeetings: NextPage<WithUser> = ({user}) => {
     `
   );
 
-  async function submitRequestService(inputs: ServiceRequestInput[]) {
-    const result = await requestService({
+  async function submitRequestService(input: ServiceOrderInput) {
+    const result = await placeOrder({
       variables: {
-        inputs
+        input
       }
     });
 
-    if (result.data && result.data.requestService) {
+    if (result.data && result.data.placeOrder) {
       setMeeting(null);
     }
   }
@@ -92,7 +94,7 @@ const MyMeetings: NextPage<WithUser> = ({user}) => {
       <AlertMessage
         title="Serviço solicitado com sucesso"
         messageType="success"
-        isOpen={requestServiceData && requestServiceData.requestService}
+        isOpen={placeOrderData && placeOrderData.placeOrder}
       />
     </Layout>
   );
@@ -101,7 +103,7 @@ const MyMeetings: NextPage<WithUser> = ({user}) => {
 type ModalDelegateProps = {
   meeting: Meeting | null;
   onClose: () => void;
-  onSubmit: (inputs: ServiceRequestInput[]) => void;
+  onSubmit: (input: ServiceOrderInput) => void;
   services: Service[];
 };
 
@@ -114,17 +116,22 @@ const ModalDelegate: FC<ModalDelegateProps> = ({onSubmit: submitDelegate, meetin
     }
 
     const data = new FormData(event.currentTarget);
-    const inputs = Array.from(data)
+
+    const requests = Array.from(data)
       .map<ServiceRequestInput>(keyValue => {
         return {
           serviceId: keyValue[0],
           total: parseInt(keyValue[1].valueOf().toString()),
-          roomId: meeting.room.id
         };
       })
       .filter(input => input.total > 0);
 
-    submitDelegate(inputs);
+    const input: ServiceOrderInput = {
+      meetingId: meeting.id,
+      requests
+    };
+
+    submitDelegate(input);
   }
 
   return (

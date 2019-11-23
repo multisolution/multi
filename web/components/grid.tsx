@@ -48,3 +48,7 @@ export const Row = styled.div<GridProps>`
     }
   }
 `;
+
+export const Expanded = styled.div`
+  flex: 1;
+`;

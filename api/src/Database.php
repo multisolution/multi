@@ -7,6 +7,7 @@ namespace Multi;
 use DateTimeInterface;
 use Multi\Meeting\Meeting;
 use Multi\MeetingRoom\MeetingRoom;
+use Multi\Service\Order\Order;
 use Multi\Service\Request\Request;
 use Multi\Service\Service;
 use Multi\User\User;
@@ -80,4 +81,30 @@ interface Database
     public function meetings(DateTimeInterface $from, DateTimeInterface $to): array;
 
     public function serviceById(string $id): Service;
+
+    /**
+     * @param Request $request
+     * @return Order[]
+     */
+    public function serviceOrdersByRequest(Request $request): array;
+
+    public function serviceByOrder(Order $order): Service;
+
+    public function meetingByServiceOrder(Order $order): Meeting;
+
+    public function insertServiceOrder(Order $order);
+
+    /**
+     * @param Request[] $requests
+     * @return mixed
+     */
+    public function insertServiceRequests(array $requests);
+
+    /**
+     * @param Order $order
+     * @return Request[]
+     */
+    public function serviceRequestsByOrder(Order $order): array;
+
+    public function orderById(string $id): Order;
 }

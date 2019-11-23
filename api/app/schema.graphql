@@ -1,14 +1,19 @@
 scalar DateTime
 
+enum Role {
+    ADMINISTRATOR
+    COLLABORATOR
+}
+
+enum MeetingStatus {
+    SCHEDULED
+    CANCELLED
+}
+
 type User {
     id: ID!
     email: String!
     role: Role!
-}
-
-enum Role {
-    ADMINISTRATOR
-    COLLABORATOR
 }
 
 type MeetingRoom {
@@ -29,11 +34,6 @@ type Meeting {
     status: MeetingStatus!
 }
 
-enum MeetingStatus {
-    SCHEDULED
-    CANCELLED
-}
-
 type CalendarTime {
     hour: String!
     meetings: [Meeting]!
@@ -47,25 +47,28 @@ type Calendar {
 type Invite {
     from: User!
 }
+
 type Service {
-    id: String!
+    id: ID!
     title: String!
 }
 
-input ServiceRequestInput {
-    serviceId: String!
-    roomId: String!
-    total: Int!
+type ServiceOrder {
+    id: ID!
+    meeting: Meeting!
+    fulfilled: Boolean!
+    requests: [ServiceRequest]!
 }
 
 type ServiceRequest {
+    id: ID!
+    order: ServiceOrder!
     service: Service!
-    room: MeetingRoom!
-    host: User
     total: Int!
 }
+
 type Subscription {
-    serviceRequested: [ServiceRequest]!
+    serviceOrdered: ServiceOrder!
 }
 
 type Query {
@@ -81,7 +84,6 @@ type Query {
 type Mutation {
     signIn(email: String!, password: String!): String!
     signOut: Boolean!
-    requestService(inputs: [ServiceRequestInput]!): Boolean!
     createUser(input: UserInput!): User
     createMeeting(input: MeetingInput!): Meeting
     createMeetingRoom(input: MeetingRoomInput!): MeetingRoom
@@ -90,6 +92,7 @@ type Mutation {
     deleteUser(userId: ID!): Boolean
     updateUser(userInput: UserInput!): Boolean
     createInvite: String!
+    placeOrder(input: ServiceOrderInput): ServiceOrder!
 }
 
 input UserInput {
@@ -111,4 +114,14 @@ input MeetingInput {
 input MeetingRoomInput {
     roomNumber: Int!
     description: String
+}
+
+input ServiceOrderInput {
+    meetingId: ID!
+    requests: [ServiceRequestInput]
+}
+
+input ServiceRequestInput {
+    serviceId: ID!
+    total: Int!
 }

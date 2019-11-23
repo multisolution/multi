@@ -10,6 +10,7 @@ use DomainException;
 use GraphQL\Error\UserError;
 use Multi\Meeting\Meeting;
 use Multi\MeetingRoom\MeetingRoom;
+use Multi\Service\Order\Order;
 use Multi\Service\Request\Request;
 use Multi\Service\Service;
 use Multi\User\User;
@@ -444,4 +445,131 @@ class DoctrineDBAL implements Database
 
         return is_int($result) ? $result > 0 : false;
     }
+
+    /**
+     * @param Request $request
+     * @return Order[]
+     */
+    public function serviceOrdersByRequest(Request $request): array
+    {
+        $stmt = $this->conn->createQueryBuilder()
+            ->select('*')
+            ->from('service_orders')
+            ->where('request_id = ?')
+            ->setParameter(0, $request->id)
+            ->execute();
+
+        $stmt->setFetchMode(FetchMode::CUSTOM_OBJECT, Order::class);
+
+        return $stmt->fetchAll();
+    }
+
+    public function serviceByOrder(Order $order): Service
+    {
+        if (!isset($order->service_id)) {
+            throw new UserError('Can not relate service on order');
+        }
+
+        $stmt = $this->conn->createQueryBuilder()
+            ->select('*')
+            ->from('services')
+            ->where('id = ?')
+            ->setParameter(0, $order->service_id)
+            ->execute();
+
+        $stmt->setFetchMode(FetchMode::CUSTOM_OBJECT, Service::class);
+        $result = $stmt->fetch();
+
+        if ($result === false) {
+            throw new UserError('Could not find service on order');
+        }
+
+        return $result;
+    }
+
+    public function meetingByServiceOrder(Order $order): Meeting
+    {
+        if (!isset($order->meeting_id)) {
+            throw new UserError('Can not relate meeting on service order');
+        }
+
+        $stmt = $this->conn->createQueryBuilder()
+            ->select('*')
+            ->from('meetings')
+            ->where('id = ?')
+            ->setParameter(0, $order->meeting_id)
+            ->execute();
+
+        $stmt->setFetchMode(FetchMode::CUSTOM_OBJECT, Meeting::class);
+
+        $result = $stmt->fetch();
+
+        if ($result === false) {
+            throw new UserError('Could not relate meeting in service order');
+        }
+
+        return $result;
+    }
+
+    public function insertServiceOrder(Order $order)
+    {
+        $data = [
+            'id' => $order->id,
+            'user_id' => $order->user->id,
+            'meeting_id' => $order->meeting->id,
+            'fulfilled' => $order->fulfilled ? 'true' : 'false', // Why PgSQL needs booleans to be strings?
+        ];
+
+        return $this->insert('service_orders', $data);
+    }
+
+    /**
+     * @param Request[] $requests
+     */
+    public function insertServiceRequests(array $requests)
+    {
+        foreach ($requests as $request) {
+            $data = [
+                'id' => $request->id,
+                'order_id' => $request->order->id,
+                'service_id' => $request->service->id,
+                'total' => $request->total,
+            ];
+
+            $this->insert('service_requests', $data);
+        }
+    }
+
+    /**
+     * @param Order $order
+     * @return Request[]
+     */
+    public function serviceRequestsByOrder(Order $order): array
+    {
+        $stmt = $this->conn->createQueryBuilder()
+            ->select('*')
+            ->from('service_requests')
+            ->where('order_id = ?')
+            ->setParameter(0, $order->id)
+            ->execute();
+
+        $stmt->setFetchMode(FetchMode::CUSTOM_OBJECT, Request::class);
+
+        return $stmt->fetchAll();
+    }
+
+    public function orderById(string $id): Order
+    {
+        $stmt = $this->conn->createQueryBuilder()
+            ->select('*')
+            ->from('service_orders')
+            ->where('id = ?')
+            ->setParameter(0, $id)
+            ->execute();
+
+        $stmt->setFetchMode(FetchMode::CUSTOM_OBJECT, Order::class);
+
+        return $stmt->fetch();
+    }
 }
+

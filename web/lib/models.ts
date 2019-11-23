@@ -12,12 +12,6 @@ export type UserInput = {
   inviteCode?: string;
 };
 
-export type ServiceRequestInput = {
-  serviceId: string;
-  roomId: string;
-  total: number;
-};
-
 export enum Role {
   ADMINISTRATOR = "ADMINISTRATOR",
   COLLABORATOR = "COLLABORATOR"
@@ -53,6 +47,7 @@ export type Calendar = {
   date: string;
   times: CalendarTime[][];
 };
+
 export type Service = {
   title: string;
   icon: string;
@@ -60,8 +55,26 @@ export type Service = {
   id: string;
 };
 
+export type ServiceOrder = {
+  id: string;
+  meeting: Meeting;
+  fulfilled: boolean;
+  requests: ServiceRequest[];
+};
+
 export type ServiceRequest = {
-  room: MeetingRoom;
+  id: string;
+  order: ServiceOrder;
   service: Service;
   total: number;
-}
+};
+
+export type ServiceOrderInput = {
+  meetingId: string;
+  requests: ServiceRequestInput[];
+};
+
+export type ServiceRequestInput = {
+  serviceId: string;
+  total: number;
+};

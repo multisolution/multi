@@ -2,22 +2,17 @@
 
 namespace Multi\Service\Request;
 
-use Multi\MeetingRoom\MeetingRoom;
+use Multi\Service\Order\Order;
 use Multi\Service\Service;
-use Multi\User\User;
 
 class Request
 {
     /** @var string */
     public $id;
+    /** @var Order */
+    public $order;
     /** @var Service */
     public $service;
-    /** @var MeetingRoom */
-    public $room;
-    /** @var User */
-    public $host;
     /** @var int */
     public $total;
-    /** @var bool */
-    public $done;
 }

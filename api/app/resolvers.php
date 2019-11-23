@@ -10,16 +10,18 @@ return [
         'room' => new Meeting\Resolver\Room(),
         'host' => new Meeting\Resolver\Host(),
     ],
-    'Service' => [
-        'room' => new Service\Request\Resolver\Room(),
+    'ServiceOrder' => [
+        'meeting' => new Service\Order\Resolver\Meeting(),
+        'requests' => new Service\Order\Resolver\Requests(),
+    ],
+    'ServiceRequest' => [
         'service' => new Service\Request\Resolver\Service(),
-        'host' => new Service\Request\Resolver\Host(),
     ],
     'MeetingRoom' => [
         'calendar' => new MeetingRoom\Resolver\Calendar(),
     ],
     'Subscription' => [
-        'serviceRequested' => new Service\Request\Resolver\Requested(),
+        'serviceOrdered' => new Service\Order\Resolver\Ordered(),
     ],
     'Query' => [
         'me' => new User\Resolver\Me(),
@@ -40,11 +42,10 @@ return [
         'editMeeting' => new Meeting\Resolver\Edit(),
         'deleteUser' => new User\Resolver\Delete(),
         'updateUser' => new User\Resolver\Update(),
-        'requestService' => new Service\Request\Resolver\Create(),
         'createInvite' => new User\Invite\Resolver\Create(),
+        'placeOrder' => new Service\Order\Resolver\Place(),
     ],
     'DateTime' => new DateTimeScalar(),
     'MeetingStatus' => new Meeting\Status\EnumType(),
     'Role' => new User\Role\EnumType(),
 ];
-
