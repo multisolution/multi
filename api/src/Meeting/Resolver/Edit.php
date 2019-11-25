@@ -4,6 +4,7 @@ namespace Multi\Meeting\Resolver;
 
 use GraphQL\Error\UserError;
 use Multi\Context;
+use Multi\Meeting\Conflicting;
 use Multi\Resolver;
 use function Siler\array_get;
 

@@ -6,9 +6,8 @@ use GraphQL\Error\UserError;
 use Multi\Context;
 use Multi\Database;
 use Multi\IDGenerator;
-use Multi\InMemoryDb;
 use Multi\InMemoryMessages;
-use Multi\MeetingRoom\Create;
+use Multi\MeetingRoom\Resolver\Create;
 use Multi\MeetingRoom\MeetingRoom;
 use Multi\User\Role\Administrator;
 use Multi\User\Role\Collaborator;
@@ -23,7 +22,7 @@ class CreateTest extends TestCase
         $context->messages = new InMemoryMessages();
 
         $this->expectException(UserError::class);
-        $this->expectExceptionMessage($context->messages->get('unauthenticated'));
+        $this->expectExceptionMessage($context->messages->get('Unauthenticated'));
 
         $create = new Create();
         $create(null, [], $context);
@@ -37,7 +36,7 @@ class CreateTest extends TestCase
         $context->user->role = new Collaborator();
 
         $this->expectException(UserError::class);
-        $this->expectExceptionMessage($context->messages->get('unauthorized'));
+        $this->expectExceptionMessage($context->messages->get('Unauthorized'));
 
         $create = new Create();
         $create(null, [], $context);
