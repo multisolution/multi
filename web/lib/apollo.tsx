@@ -121,7 +121,7 @@ function createApolloClient(initialState: any, getToken: GetToken): ApolloClient
 
   if (typeof window !== "undefined") {
     const wsLink = new WebSocketLink({
-      uri: process.env.WS_URL || 'ws://localhost:8001',
+      uri: process.env.SUBSCRIPTIONS_URL || 'ws://localhost:8001',
       options: {
         reconnect: true,
       },

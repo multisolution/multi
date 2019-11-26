@@ -34,7 +34,9 @@ jobs:
     - name: Docker build and push  
       working-directory: ./web
       run: |
-        docker build . -t registry.multisolution.art.br/multi:web
+        docker build . -t registry.multisolution.art.br/multi:web \
+          --build-arg API_URL=${{ secrets.MULTI_API_URL }} \
+          --build-arg SUBSCRIPTIONS_URL=${{ secrets.MULTI_SUBSCRIPTIONS_URL }}
         docker push registry.multisolution.art.br/multi:web
         
     - name: Deploy
