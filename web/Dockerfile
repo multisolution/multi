@@ -1,4 +1,5 @@
 FROM node
 COPY . /app
 WORKDIR /app
-ENTRYPOINT [ "./docker-entrypoint.sh" ]
+ENV NODE_ENV=production
+ENTRYPOINT [ "sh", "./docker-entrypoint.sh" ]
