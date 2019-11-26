@@ -41,3 +41,4 @@ jobs:
         key: ${{ secrets.MULTI_KEY }}
         port: ${{ secrets.MULTI_PORT }}
         script: cd multi && docker-compose pull api && docker-compose up -d api
+        command_timeout: 3m
