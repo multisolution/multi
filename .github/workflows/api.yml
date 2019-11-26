@@ -21,11 +21,12 @@ jobs:
       run: composer test
       working-directory: ./api
 
-    - name: Docker build and push
-      uses: Azure/docker-login@v1
+    - uses: Azure/docker-login@v1
       with:
         username: ${{ secrets.DOCKER_REGISTRY_USER }}
         password: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
+    
+    - name: Docker build and push  
       working-directory: ./api
       run: |
         docker build . -t registry.multisolution.art.br/multi:api
