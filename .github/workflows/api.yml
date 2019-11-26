@@ -23,6 +23,7 @@ jobs:
 
     - uses: Azure/docker-login@v1
       with:
+        login-server: registry.multisolution.art.br
         username: ${{ secrets.DOCKER_REGISTRY_USER }}
         password: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
     
