@@ -36,3 +36,12 @@ jobs:
       run: |
         docker build . -t registry.multisolution.art.br/multi:web
         docker push registry.multisolution.art.br/multi:web
+        
+    - name: Deploy
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.MULTI_HOST }}
+        username: ${{ secrets.MULTI_USER }}
+        key: ${{ secrets.MULTI_KEY }}
+        port: ${{ secrets.MULTI_PORT }}
+        script: cd multi && docker-compose pull web && docker-compose up -d web
