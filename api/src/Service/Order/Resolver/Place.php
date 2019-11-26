@@ -1,10 +1,12 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Multi\Service\Order\Resolver;
 
 use Multi\Context;
 use Multi\Resolver;
-use Multi\Service\Order\Order;
+use Multi\Service\Order;
 use Multi\Service\Request\Request;
 use function Multi\User\assert_authenticated;
 use function Siler\array_get;

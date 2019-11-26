@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Multi;
 
@@ -10,7 +12,7 @@ use DomainException;
 use GraphQL\Error\UserError;
 use Multi\Meeting\Meeting;
 use Multi\MeetingRoom\MeetingRoom;
-use Multi\Service\Order\Order;
+use Multi\Service\Order;
 use Multi\Service\Request\Request;
 use Multi\Service\Service;
 use Multi\User\User;
@@ -160,6 +162,20 @@ class DoctrineDBAL implements Database
         return $result;
     }
 
+    public function orders(): array
+    {
+        $stmt = $this->conn
+            ->createQueryBuilder()
+            ->select('*')
+            ->from('service_orders')
+            ->where('timestamp >= now() - interval \'24 hours\'')
+            ->orderBy("timestamp", 'DESC')
+            ->execute();
+
+        $stmt->setFetchMode(FetchMode::CUSTOM_OBJECT, Order::class);
+        return $stmt->fetchAll() ?? [];
+    }
+
     public function meetingRoomByServiceRequest(Request $request): MeetingRoom
     {
         $stmt = $this->conn
@@ -178,6 +194,26 @@ class DoctrineDBAL implements Database
         }
 
         return $result;
+    }
+
+
+    public function deliveryOrderById(String $orderId): bool
+    {
+        $stmt = $this->conn
+            ->createQueryBuilder()
+            ->update('service_orders')
+            ->where('id = ?')
+            ->setParameter(0, $orderId);
+
+        $stmt->set('fulfilled', "true");
+
+        $result = $stmt->execute();
+
+        if (is_int($result)) {
+            return $result > 0;
+        }
+
+        return false;
     }
 
     public function insertMeetingRoom(MeetingRoom $meetingRoom): bool
@@ -572,4 +608,3 @@ class DoctrineDBAL implements Database
         return $stmt->fetch();
     }
 }
-

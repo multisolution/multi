@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Multi;
 
@@ -27,6 +29,7 @@ return [
         'me' => new User\Resolver\Me(),
         'meetingRooms' => new MeetingRoom\Resolver\MeetingRooms(),
         'services' => new Service\Resolver\Services(),
+        'orders' => new Service\Order\Resolver\Orders(),
         'myMeetings' => new Meeting\Resolver\MyMeetings(),
         'allUsers' => new User\Resolver\Users(),
         'calendar' => new Meeting\Resolver\Calendar(),
@@ -43,6 +46,7 @@ return [
         'deleteUser' => new User\Resolver\Delete(),
         'updateUser' => new User\Resolver\Update(),
         'createInvite' => new User\Invite\Resolver\Create(),
+        'delivered' => new Service\Order\Resolver\Delivered(),
         'placeOrder' => new Service\Order\Resolver\Place(),
     ],
     'DateTime' => new DateTimeScalar(),

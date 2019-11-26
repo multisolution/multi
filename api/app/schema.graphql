@@ -58,6 +58,7 @@ type ServiceOrder {
     meeting: Meeting!
     fulfilled: Boolean!
     requests: [ServiceRequest]!
+    timestamp: DateTime!
 }
 
 type ServiceRequest {
@@ -76,6 +77,7 @@ type Query {
     meetingRooms: [MeetingRoom]!
     services: [Service]!
     myMeetings: [Meeting]!
+    orders: [ServiceOrder]!
     allUsers: [User]!
     calendar(from: DateTime, to: DateTime): [Calendar]!
     invite(code: String!): Invite
@@ -92,6 +94,7 @@ type Mutation {
     deleteUser(userId: ID!): Boolean
     updateUser(userInput: UserInput!): Boolean
     createInvite: String!
+    delivered(orderId: String): Boolean
     placeOrder(input: ServiceOrderInput): ServiceOrder!
 }
 

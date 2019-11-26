@@ -7,10 +7,11 @@ namespace Multi;
 use DateTimeInterface;
 use Multi\Meeting\Meeting;
 use Multi\MeetingRoom\MeetingRoom;
-use Multi\Service\Order\Order;
+use Multi\Service\Order;
 use Multi\Service\Request\Request;
 use Multi\Service\Service;
 use Multi\User\User;
+
 
 interface Database
 {
@@ -67,10 +68,12 @@ interface Database
     public function updateMeeting(?Meeting $meeting): bool;
 
     public function meetingRoomByMeeting(Meeting $meeting): MeetingRoom;
+    public function orders(): array;
 
     public function meetingRoomByServiceRequest(Request $request): MeetingRoom;
 
     public function serviceByRequest(Request $request): Service;
+    public function deliveryOrderById(String $orderId): bool;
 
     /**
      * @param DateTimeInterface $from

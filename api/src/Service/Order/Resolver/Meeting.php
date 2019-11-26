@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Multi\Service\Order\Resolver;
 
@@ -9,8 +11,6 @@ class Meeting implements Resolver
 {
     public function __invoke($root, array $args, Context $context): \Multi\Meeting\Meeting
     {
-        var_dump($root);
-
         return $context->db->meetingByServiceOrder($root);
     }
 }
