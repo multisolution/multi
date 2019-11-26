@@ -45,3 +45,4 @@ jobs:
         key: ${{ secrets.MULTI_KEY }}
         port: ${{ secrets.MULTI_PORT }}
         script: cd multi && docker-compose pull web && docker-compose up -d web
+        command_timeout: 3m
