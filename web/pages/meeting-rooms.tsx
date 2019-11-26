@@ -75,10 +75,10 @@ const MeetingRooms: NextPage<MeetingRoomsProps> = ({ user }) => {
     return <Whoops />;
   }
 
-  function onTimeGroupClick(initialDate: Date, initialTime: string) {
+  function onTimeGroupClick(initialDate: Moment, initialTime: string) {
     setMeetingFormProps({
       ...meetingFormProps,
-      initialDate,
+      initialDate: initialDate.toDate(),
       initialTime
     });
 
