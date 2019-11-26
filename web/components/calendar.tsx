@@ -1,18 +1,18 @@
-import { Align, Column, Row } from "./grid";
-import { Calendar as CalendarModel } from "../lib/models";
-import React, { FunctionComponent, MouseEvent } from "react";
-import { sameDate, weekDays } from "../lib/misc";
-import styled, { css } from "styled-components";
-import { lighten } from "polished";
-import Button, { ButtonSkin } from "./button";
-import { MdChevronLeft, MdChevronRight } from "react-icons/md";
-import { PlaceholderLoading } from "./loading";
-import moment from "moment";
+import {Align, Column, Row} from "./grid";
+import {Calendar as CalendarModel} from "../lib/models";
+import React, {FunctionComponent, MouseEvent} from "react";
+import {weekDays} from "../lib/misc";
+import styled, {css} from "styled-components";
+import {lighten} from "polished";
+import Button, {ButtonSkin} from "./button";
+import {MdChevronLeft, MdChevronRight} from "react-icons/md";
+import {PlaceholderLoading} from "./loading";
+import moment, {Moment} from "moment";
 import "moment/locale/pt-br";
 
 type CalendarProps = {
   calendar: CalendarModel[];
-  onTimeGroupClick: (date: Date, time: string) => void;
+  onTimeGroupClick: (date: Moment, time: string) => void;
   onPrevClick: () => void;
   onNextClick: () => void;
   isLoading: boolean;
@@ -25,7 +25,7 @@ const Calendar: FunctionComponent<CalendarProps> = ({
   onPrevClick,
   onNextClick
 }) => {
-  const today = new Date();
+  const now = moment();
 
   if (calendar.length === 0) {
     calendar.fill({ date: "0000-00-00", times: [] }, 0, 6);
@@ -49,7 +49,8 @@ const Calendar: FunctionComponent<CalendarProps> = ({
         </Column>
         <Row style={{ flex: 1 }} space={0}>
           {calendar.map(calendar => {
-            const date = new Date(`${calendar.date} 00:00:00`);
+            const date = moment(`${calendar.date} 00:00:00`);
+            const weekDay = parseInt(date.format('d'));
 
             return (
               <CalendarDate key={`calendar-date-${calendar.date}`}>
@@ -57,12 +58,12 @@ const Calendar: FunctionComponent<CalendarProps> = ({
                   {isLoading ? (
                     <PlaceholderLoading height={20} width={32} />
                   ) : (
-                    <WeekDayLabel>{weekDays[date.getDay()]}</WeekDayLabel>
+                    <WeekDayLabel>{weekDays[weekDay]}</WeekDayLabel>
                   )}
                   {isLoading ? (
                     <PlaceholderLoading height={42} width={32} />
                   ) : (
-                    <DateLabel current={sameDate(date, today)}>{date.getDate()}</DateLabel>
+                    <DateLabel current={date.isSame(now, 'day')}>{date.format('DD')}</DateLabel>
                   )}
                 </Header>
                 {calendar.times.map((timeGroup, index) => {
@@ -100,10 +101,6 @@ const Calendar: FunctionComponent<CalendarProps> = ({
       </Row>
     </Column>
   );
-
-  function advanceDay(event: MouseEvent) {
-    console.log(today);
-  }
 };
 
 const YAxis: FunctionComponent = () => {
