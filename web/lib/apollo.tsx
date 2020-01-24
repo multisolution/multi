@@ -101,7 +101,7 @@ function createApolloClient(initialState: any, getToken: GetToken): ApolloClient
   const fetchOptions = {};
 
   const http = new HttpLink({
-    uri: process.env.API_URL || 'http://localhost:8000',
+    uri: process.env.API_URL || 'http://localhost:8000/graphql',
     fetch,
     fetchOptions
   });
