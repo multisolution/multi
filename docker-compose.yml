@@ -36,7 +36,7 @@ services:
       - "${DOCKER_API_DEBUG_PORT}:9000"
     env_file:
       - ./.env
-    link:
+    links:
       - db
 #  web:
 #    container_name: multi_web
