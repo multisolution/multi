@@ -74,6 +74,7 @@ $handler = function () use ($schema, $root_value, $context, $icsHandler) {
 
 $manager = subscriptions_manager($schema, [], $root_value, $context);
 $server = graphql_subscriptions($manager, 8001);
+
 http_server_port($server, $handler, 8000);
 
 $server->start();
