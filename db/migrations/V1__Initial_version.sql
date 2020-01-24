@@ -13,11 +13,10 @@ create table users
 create table meeting_rooms
 (
     id          varchar   not null primary key,
-    room_number int       not null,
+    room_number int       not null unique,
     description text,
     color       varchar   not null,
-    timestamp   timestamp not null default current_timestamp,
-    unique (room_number)
+    timestamp   timestamp not null default current_timestamp
 );
 
 create table meetings
@@ -76,6 +75,3 @@ values ('service1', 'Café'),
        ('service4', 'Pão de queijo'),
        ('service5', 'Esfiha'),
        ('service6', 'Limpeza');
-
-
-
