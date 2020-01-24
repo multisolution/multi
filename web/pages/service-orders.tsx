@@ -1,18 +1,18 @@
-import { NextPage, NextPageContext } from "next";
-import { WithApollo, withApollo } from "../lib/apollo";
+import {NextPage, NextPageContext} from "next";
+import {WithApollo, withApollo} from "../lib/apollo";
 import Layout from "../components/layout";
-import { withUser, WithUser } from "../lib/check-logged-in";
-import { Container, Section, TitlePage } from "../components/global-style";
-import React, { FC, useState } from "react";
-import { useSubscription, useMutation, useQuery } from "@apollo/react-hooks";
+import {withUser, WithUser} from "../lib/check-logged-in";
+import {Container, Section, TitlePage} from "../components/global-style";
+import React, {FC, useState} from "react";
+import {useMutation, useQuery, useSubscription} from "@apollo/react-hooks";
 import gql from "graphql-tag";
-import { ServiceOrder } from "../lib/models";
-import { Align, Column, Expanded, Row } from "../components/grid";
-import styled, { css } from "styled-components";
-import { Checkbox } from "../components/form";
+import {ServiceOrder} from "../lib/models";
+import {Align, Column, Expanded, Row} from "../components/grid";
+import styled, {css} from "styled-components";
+import {Checkbox} from "../components/form";
 import Loading from "../components/loading";
 
-const ServiceOrders: NextPage<WithUser> = ({ user }) => {
+const ServiceOrders: NextPage<WithUser> = ({user}) => {
   const [orders, setOrders] = useState<ServiceOrder[]>([]);
 
   const dayOrders = useQuery(
@@ -83,7 +83,7 @@ const StyledTile = styled.div<{ roomColor: string }>`
   padding: ${props => props.theme.space * 4}px;
 
   .room-name {
-    font-size: 24px;
+    font-size: 42px;
     font-weight: bold;
     color: #333;
   }
