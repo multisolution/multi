@@ -104,6 +104,7 @@ const Tile: FC<{ order: ServiceOrder; callBack: () => void }> = ({ order, callBa
         input: order.id
       }
     });
+
     if (result.data.delivered) {
       callBack();
     }
@@ -122,8 +123,8 @@ const Tile: FC<{ order: ServiceOrder; callBack: () => void }> = ({ order, callBa
           <table>
             {order.requests.map(request => (
               <tr>
-                <td style={{ fontSize: "40px", fontWeight: "bold" }}>{request.total} X</td>
-                <img src={`/assets/img/services/${request.service.id}.png`} />
+                <td style={{fontSize: "40px", fontWeight: "bold"}}>{request.total} X</td>
+                <img src={`/assets/img/services/${request.service.id}.png`} alt={request.service.title}/>
               </tr>
             ))}
           </table>

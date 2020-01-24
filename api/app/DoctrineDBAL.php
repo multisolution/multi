@@ -169,6 +169,7 @@ class DoctrineDBAL implements Database
             ->select('*')
             ->from('service_orders')
             ->where('timestamp >= now() - interval \'24 hours\'')
+            ->andWhere('fulfilled = False')
             ->orderBy("timestamp", 'DESC')
             ->execute();
 
