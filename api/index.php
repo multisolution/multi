@@ -8,23 +8,24 @@ use Monolog\Handler\ErrorLogHandler;
 use Multi\Event\Dispatcher;
 use Multi\Http\IcsHandler;
 use Multi\User\User;
-use Siler\Dotenv as Env;
 use Siler\Monolog as Log;
 use Siler\Route;
 use Swoole\Runtime;
 use Throwable;
 use function Siler\Encoder\Json\decode;
+use function Siler\Env\{env_bool, env_var};
 use function Siler\Functional\lazy;
 use function Siler\Functional\Monad\maybe;
 use function Siler\GraphQL\{debug, execute, schema, subscriptions_at, subscriptions_manager};
 use function Siler\Swoole\{bearer, cors, http_server_port, json, raw};
 use function Siler\Swoole\graphql_subscriptions;
+use const Siler\Swoole\cors;
 
 $base_dir = __DIR__;
 require_once "$base_dir/vendor/autoload.php";
 
 Runtime::enableCoroutine();
-//Log\handler(new Handler(new Hub(ClientBuilder::create(['dsn' => Env\env('SENTRY_DSN')])->getClient()), Logger::WARNING));
+//Log\handler(new Handler(new Hub(ClientBuilder::create(['dsn' => env_var('SENTRY_DSN')])->getClient()), Logger::WARNING));
 Log\handler(new ErrorLogHandler());
 
 $dbs = include "$base_dir/app/dbs.php";
@@ -34,12 +35,12 @@ $schema = schema($type_defs, $resolvers);
 $root_value = [];
 
 $dispatcher = new Dispatcher();
-//$dispatcher->add(new SendGridListener(new SendGrid(Env\env('SENDGRID_API_KEY')), Env\env('SENDGRID_API_FROM')));
+//$dispatcher->add(new SendGridListener(new SendGrid(env_var('SENDGRID_API_KEY')), env_var('SENDGRID_API_FROM')));
 
 $context = new Context();
-$context->debug = Env\bool_val('APP_DEBUG', false);
-$context->db = $dbs[Env\env('APP_DB_USE', 'in_memory')](Env\env('APP_DB_URI'));
-$context->appKey = Env\env('APP_KEY');
+$context->debug = env_bool('APP_DEBUG', false);
+$context->db = $dbs[env_var('APP_DB_USE', 'in_memory')](env_var('APP_DB_URI'));
+$context->appKey = env_var('APP_KEY');
 $context->id = new UniqueId();
 $context->messages = new InMemoryMessages();
 $context->dispatcher = $dispatcher;
