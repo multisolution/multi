@@ -5,14 +5,9 @@ namespace Multi;
 use Firebase\JWT\JWT;
 use GraphQL\Error\{Debug, FormattedError};
 use Monolog\Handler\ErrorLogHandler;
-use Monolog\Logger;
 use Multi\Event\Dispatcher;
 use Multi\Http\IcsHandler;
 use Multi\User\User;
-use SendGrid;
-use Sentry\ClientBuilder;
-use Sentry\Monolog\Handler;
-use Sentry\State\Hub;
 use Siler\Dotenv as Env;
 use Siler\Monolog as Log;
 use Siler\Route;
@@ -29,7 +24,7 @@ $base_dir = __DIR__;
 require_once "$base_dir/vendor/autoload.php";
 
 Runtime::enableCoroutine();
-Log\handler(new Handler(new Hub(ClientBuilder::create(['dsn' => Env\env('SENTRY_DSN')])->getClient()), Logger::WARNING));
+//Log\handler(new Handler(new Hub(ClientBuilder::create(['dsn' => Env\env('SENTRY_DSN')])->getClient()), Logger::WARNING));
 Log\handler(new ErrorLogHandler());
 
 $dbs = include "$base_dir/app/dbs.php";
@@ -39,7 +34,7 @@ $schema = schema($type_defs, $resolvers);
 $root_value = [];
 
 $dispatcher = new Dispatcher();
-$dispatcher->add(new SendGridListener(new SendGrid(Env\env('SENDGRID_API_KEY')), Env\env('SENDGRID_API_FROM')));
+//$dispatcher->add(new SendGridListener(new SendGrid(Env\env('SENDGRID_API_KEY')), Env\env('SENDGRID_API_FROM')));
 
 $context = new Context();
 $context->debug = Env\bool_val('APP_DEBUG', false);
